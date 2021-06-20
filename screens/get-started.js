@@ -1,94 +1,86 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
-import { OrangeLogo1 } from '../assets/svgs/svg-logos';
+import { StyleSheet, View, Text } from 'react-native';
 import { globalStyles, themeColors } from '../styles/global-styles';
+import { CreateAccountGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
-import { AntDesign } from '@expo/vector-icons';
 
 
-
-export default GetStartedScreen = () => (
-    
-    <ImageBackground 
-        source={require('../assets/get-started.jpg')}
-        style={{}}
-    >
+export default CreateAccountScreen = () => (
+    <View style={styles.container}>
         
-        <View style={styles.container}>
-            <View style={styles.headingContainer}>
-                <Text style={styles.subHeading}>Invest In Your Health</Text>
-                <Text style={styles.mainHeading}>Personal Trainer</Text>
+        <View style={styles.headerGraphicsContainer}>
+            <CreateAccountGraphics style={styles.graphics} />
+            <View style={styles.heading}>
+                <Text style={styles.mainHeading}>Create Account</Text>
+                <Text style={styles.subHeading}>Welcome Onboard!</Text>
             </View>
-            <View style={styles.logoAndButtonContainer}>
-                <OrangeLogo1 style={styles.logo}/>
-                
-                <ButtonType1 text={'GET STARTED'} style={styles.button}/>
-            </View>
-            <View style={styles.socialContainer}>
-                <AntDesign name="instagram" size={36} color="#434343" />
-                <AntDesign name="facebook-square" size={36} color="#434343" />
-                <AntDesign name="youtube" size={36} color="#434343" />
-            </View>
-
         </View>
-    </ImageBackground>
+
+        <View style={styles.formContainer}>
+            
+            {/* form component inside */}
+            
+            <ButtonType1 text={"SIGN UP"}/>
+        </View>
+
+        <View style={styles.footContainer}>
+            <Text style={styles.footText}>
+                Already have an account? 
+            </Text>
+            <Text style={{
+                ...styles.footText,
+                margin:2, 
+                color:themeColors.primary1,
+                fontWeight:'bold',
+                }}> Sign In</Text>
+        </View>
+
+        
+    </View>
 );
 
 const styles = StyleSheet.create({
+
     container:{
-        ...globalStyles.container,
-        justifyContent:'space-between',
-        paddingTop: 50,
-
+        ...globalStyles.formPageContainer,
+        backgroundColor: themeColors.primary2,
+    },
+    
+    headerGraphicsContainer:{
+        width:'100%',  
+    },
+    
+    graphics:{
+        width:'100%'
     },
 
-    headingContainer:{
-        flex:3,
-    },
-
-    logoAndButtonContainer:{
-        flex:4,
-        width:320,
-        justifyContent:'space-evenly',
-        alignContent:'center',
-        paddingBottom:25
-    },
-
-    socialContainer:{
-        flex:1,
-        width:'100%',
-        flexDirection:'row',
-        justifyContent:'space-evenly',
-        
-        alignItems:'center'
-    },    
-
-    subHeading:{
-        fontFamily:'ubuntu-regular',
-        alignSelf:'flex-end',
-        color:themeColors.secondary2, 
-        fontSize: 17// font size
+    heading:{
+        position:'absolute',
+        top:60,
+        left:0,
+        padding:30,
     },
 
     mainHeading:{
-        fontFamily:'ubuntu-regular',
-        letterSpacing:2,
-        color:themeColors.primary1,
-        fontSize:42,                   // font size
-        alignSelf:'center'
-        
+        ...globalStyles.formPageMainHeading,
+        color:themeColors.secondary2,
+    },
+    subHeading:{
+        ...globalStyles.formPageSubHeading,
+        color:themeColors.secondary2,
+        marginTop:5,
     },
 
-    logo:{
-        flexDirection:'row',
-        flex:1,
-        alignSelf:'flex-start',       
+    formContainer:{
+        ...globalStyles.formContainer
     },
 
-    button:{
-        width:'100%',
-        alignSelf:'center',
+    footContainer:{
+        ...globalStyles.formPageFootContainer
     },
-    
+
+    footText:{
+        ...globalStyles.formPageFootText
+    }
+
 })
-

@@ -5,6 +5,8 @@ import { View, StyleSheet } from 'react-native';
 import SplashScreen from './screens/splash-screen';
 import GetStartedScreen from './screens/get-started';
 import {globalStyles} from './styles/global-styles';
+import CreateAccountScreen from './screens/create-account';
+import SignInScreen from './screens/sign-in';
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -18,7 +20,10 @@ export default function App() {
     if(fontsLoaded){
          return(
              <View style={styles.appContainer}>
-              <GetStartedScreen />
+              {/* <SignInScreen /> */}
+              <CreateAccountScreen />
+              {/* <SplashScreen /> */}
+              {/* <GetStartedScreen /> */}
              </View>
          )
      } 
