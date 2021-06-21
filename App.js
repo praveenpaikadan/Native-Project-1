@@ -32,8 +32,8 @@ export default function App() {
 
               {/* <ForgotPasswordScreen /> */}
 
-              {/* <ResetPasswordScreen /> */}
-
+              <ResetPasswordScreen />
+{/* 
               <AuthScreen 
                 key='CreateAccountScreen'
                 graphics={<CreateAccountGraphics style={{width:'100%'}} />}
@@ -43,7 +43,7 @@ export default function App() {
                 subHeadings={['Welcome Onboard!']}
                 footText1='Already have an account?'
                 footText2='Sign In'
-              />
+              /> */}
 
              </View>
          )

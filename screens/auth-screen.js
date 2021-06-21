@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import {   View,
+  KeyboardAvoidingView,
+  TextInput,
+  StyleSheet,
+  Text,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard, } from 'react-native';
 import { themeColors, globalFonts } from '../styles/global-styles';
 import { ButtonType1 } from '../components/buttons';
 
@@ -19,42 +26,54 @@ import { ButtonType1 } from '../components/buttons';
 // />
 
 export default AuthScreen = ({graphics, fields, buttonText,  mainHeading, subHeadings, footText1, footText2}) => (
-      
-    <View style={styles.container}>
-        <View style={styles.headerGraphicsContainer}>
-            {graphics}
-            <View style={styles.heading}>
-                <Text style={styles.mainHeading}>{mainHeading}</Text>
-                {subHeadings.map(subHeading => (
-                    <Text key={subHeading} style={styles.subHeading}>{subHeading}</Text>    
-                ))}
-            </View>
-        </View>
 
     
-        <View style={styles.contentContainer}>
-            <View style={styles.formContainer}>
-                {/* form component inside */}
-                {fields.map(field => (
-                    <TextInput key={field} placeholder={field} style={styles.textInput} />    
-                ))}
-                <ButtonType1 style={styles.submitButton} text={buttonText}/>
+
+    <KeyboardAvoidingView
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+            <View style={styles.container}>
+                <View style={styles.headerGraphicsContainer}>
+                    {graphics}
+                    <View style={styles.heading}>
+                        <Text style={styles.mainHeading}>{mainHeading}</Text>
+                        {subHeadings.map(subHeading => (
+                            <Text key={subHeading} style={styles.subHeading}>{subHeading}</Text>    
+                        ))}
+                    </View>
+                </View>
+
+
+
+                <View style={styles.contentContainer}>
+                    <View style={styles.formContainer}>
+                        {/* form component inside */}
+                        {fields.map(field => (
+                            <TextInput key={field} placeholder={field} style={styles.textInput} />    
+                        ))}
+                        <ButtonType1 style={styles.submitButton} text={buttonText}/>
+                    </View>
+
+                    <View style={styles.footContainer}>
+                        <Text style={styles.footText}>
+                            {footText1} 
+                        </Text>
+                        <Text style={{
+                            ...styles.footText,
+                            margin:2, 
+                            color:themeColors.primary1,
+                            fontFamily:globalFonts.primaryBold,
+                            }}>{footText2}</Text>
+                    </View>     
+                </View>
+
             </View>
 
-            <View style={styles.footContainer}>
-                <Text style={styles.footText}>
-                    {footText1} 
-                </Text>
-                <Text style={{
-                    ...styles.footText,
-                    margin:2, 
-                    color:themeColors.primary1,
-                    fontFamily:globalFonts.primaryBold,
-                    }}>{footText2}</Text>
-            </View>     
-        </View>
+        </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
 
-    </View>
 );
 
 const styles = StyleSheet.create({

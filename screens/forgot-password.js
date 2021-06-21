@@ -1,46 +1,58 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { View,
+    KeyboardAvoidingView,
+    TextInput,
+    StyleSheet,
+    Text,
+    Platform,
+    TouchableWithoutFeedback,
+    Keyboard, } from 'react-native';
 import { globalStyles, themeColors, globalFonts } from '../styles/global-styles';
 import { ForgetPasswordGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
 
 
 export default ForgotPasswordScreen = () => (
-    
-    
-    <View style={styles.container}>
-        <View style={styles.headerGraphicsContainer}>
-            <ForgetPasswordGraphics style={styles.graphics} />
-            <View style={styles.heading}>
-                <Text style={styles.mainHeading}>Forgot Password?</Text>
-                <Text style={styles.subHeading}>Don’t worry we’ll help you</Text>
-                <Text style={styles.subHeading}>reset your password</Text>
+    <KeyboardAvoidingView
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+
+            <View style={styles.container}>
+                <View style={styles.headerGraphicsContainer}>
+                    <ForgetPasswordGraphics style={{width:'100%'}} />
+                    <View style={styles.heading}>
+                        <Text style={styles.mainHeading}>Forgot Password?</Text>
+                        <Text style={styles.subHeading}>Don’t worry we’ll help you</Text>
+                        <Text style={styles.subHeading}>reset your password</Text>
+                    </View>
+                </View>
+
+            
+                <View style={styles.contentContainer}>
+                    <View style={styles.formContainer}>
+                        {/* form component inside */}
+                        <TextInput placeholder="Email" style={styles.textInput} />
+                        <ButtonType1 style={styles.submitButton} text={"SUBMIT"}/>
+                    </View>
+
+                    <View style={styles.footContainer}>
+                        <Text style={styles.footText}>
+                        </Text>
+                        <Text style={{
+                            ...styles.footText,
+                            margin:2, 
+                            color:themeColors.primary1,
+                            fontFamily:globalFonts.primaryBold,
+                            }}> Sign In</Text>
+                    </View>     
+                </View>
+
+            </View>
                 
-
-            </View>
-        </View>
-
-    
-        <View style={styles.contentContainer}>
-            <View style={styles.formContainer}>
-                {/* form component inside */}
-                <TextInput placeholder="Email" style={styles.textInput} />
-                <ButtonType1 style={styles.submitButton} text={"SUBMIT"}/>
-            </View>
-
-            <View style={styles.footContainer}>
-                <Text style={styles.footText}>
-                </Text>
-                <Text style={{
-                    ...styles.footText,
-                    margin:2, 
-                    color:themeColors.primary1,
-                    fontFamily:globalFonts.primaryBold,
-                    }}> Sign In</Text>
-            </View>     
-        </View>
-
-    </View>
+    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
 );
 
 const styles = StyleSheet.create({
