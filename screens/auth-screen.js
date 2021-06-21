@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
-import { globalStyles, themeColors, globalFonts } from '../styles/global-styles';
-import { CreateAccountGraphics } from '../assets/svgs/svg-graphics';
+import { themeColors, globalFonts } from '../styles/global-styles';
 import { ButtonType1 } from '../components/buttons';
 
 // Boiler plate componet for all authentication related screens - Experimental
@@ -27,7 +26,7 @@ export default AuthScreen = ({graphics, fields, buttonText,  mainHeading, subHea
             <View style={styles.heading}>
                 <Text style={styles.mainHeading}>{mainHeading}</Text>
                 {subHeadings.map(subHeading => (
-                    <Text style={styles.subHeading}>{subHeading}</Text>    
+                    <Text key={subHeading} style={styles.subHeading}>{subHeading}</Text>    
                 ))}
             </View>
         </View>

@@ -12,8 +12,9 @@ export const ButtonType1 = ({text}) => (
             justifyContent:'center',
             width:'100%',
             backgroundColor:themeColors.primary1,
-            borderRadius: 10
+            borderRadius: 10,
             }}>
+                
             <Text style={{
                 fontSize:30,
                 fontFamily: 'ubuntu-bold',

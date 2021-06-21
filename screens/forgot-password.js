@@ -1,18 +1,22 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 import { globalStyles, themeColors, globalFonts } from '../styles/global-styles';
-import { SignInGraphics } from '../assets/svgs/svg-graphics';
+import { ForgetPasswordGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
 
 
-export default ForgetPasswordScreen = () => (
+export default ForgotPasswordScreen = () => (
+    
     
     <View style={styles.container}>
         <View style={styles.headerGraphicsContainer}>
-            <SignInGraphics style={styles.graphics} />
+            <ForgetPasswordGraphics style={styles.graphics} />
             <View style={styles.heading}>
-                <Text style={styles.mainHeading}>Create Account</Text>
-                <Text style={styles.subHeading}>Welcome Onboard!</Text>
+                <Text style={styles.mainHeading}>Forgot Password?</Text>
+                <Text style={styles.subHeading}>Don’t worry we’ll help you</Text>
+                <Text style={styles.subHeading}>reset your password</Text>
+                
+
             </View>
         </View>
 
@@ -20,13 +24,12 @@ export default ForgetPasswordScreen = () => (
         <View style={styles.contentContainer}>
             <View style={styles.formContainer}>
                 {/* form component inside */}
-                <TextInput placeholder="Registered Email" style={styles.textInput} />
-                <ButtonType1 style={styles.submitButton} text={"SIGN UP"}/>
+                <TextInput placeholder="Email" style={styles.textInput} />
+                <ButtonType1 style={styles.submitButton} text={"SUBMIT"}/>
             </View>
 
             <View style={styles.footContainer}>
                 <Text style={styles.footText}>
-                    Already have an account? 
                 </Text>
                 <Text style={{
                     ...styles.footText,

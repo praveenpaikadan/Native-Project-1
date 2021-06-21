@@ -39,12 +39,13 @@ export const globalStyles = StyleSheet.create({
     formPageMainHeading:{
         fontFamily:globalFonts.primaryRegular,
         letterSpacing:2,
+        marginBottom:10,
         fontSize:34,    //font size
     },
 
     
     formPageSubHeading:{
-        fontFamily:globalFonts.primaryBold,
+        fontFamily:globalFonts.primaryRegular,
         letterSpacing:2,
         fontSize:16,    //font size
         opacity:0.8,
