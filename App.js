@@ -21,9 +21,9 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
               {/* <SignInScreen /> */}
-              <CreateAccountScreen />
+              {/* <CreateAccountScreen /> */}
               {/* <SplashScreen /> */}
-              {/* <GetStartedScreen /> */}
+              <GetStartedScreen />
              </View>
          )
      } 

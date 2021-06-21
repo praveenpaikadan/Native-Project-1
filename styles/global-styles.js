@@ -11,8 +11,17 @@ export const themeColors = {
 }
 
 export const globalFonts = {
-
+    primaryLight:'ubuntu-light',
+    primaryRegular:'ubuntu-regular',
+    primaryMedium:'ubuntu-medium',
+    primaryBold:'ubuntu-bold',
 }
+
+export const globalFontSize = { 
+    content: 12
+    
+}
+
 
 export const globalStyles = StyleSheet.create({
     container: {
@@ -28,45 +37,53 @@ export const globalStyles = StyleSheet.create({
     },
 
     formPageMainHeading:{
-        fontFamily:'ubuntu-medium',
+        fontFamily:globalFonts.primaryRegular,
         letterSpacing:2,
         fontSize:34,    //font size
     },
 
     
     formPageSubHeading:{
-        fontFamily:'ubuntu-bold',
+        fontFamily:globalFonts.primaryBold,
         letterSpacing:2,
-        fontSize:20,    //font size
+        fontSize:16,    //font size
         opacity:0.8,
     },
 
     formContainer:{
         flex:1,
-        padding:15, 
+        padding:10, 
         justifyContent:'space-between',
-        marginLeft:15,
-        marginRight:15,
-        borderRadius:10,   
+        borderTopRightRadius:15,
+        borderTopLeftRadius:15,
+        backgroundColor:themeColors.primary2, 
     },
 
     formPageFootContainer:{
         flexDirection:'row',
         padding:25,
+        width:'100%',
         alignItems:'center',
         justifyContent:'center',
+        backgroundColor:themeColors.primary2
     },
 
     formPageFootText:{
-        fontFamily:'ubuntu-regular',
+        fontFamily:globalFonts.primaryMedium,
         opacity:0.7,
     },
+
     formTextInput: {
         borderColor: '#000000',
         borderBottomWidth: 1,
-        marginBottom: 5,
+        marginBottom: 10,
+        marginTop: 10,
     },
 
-
+    formSubmitButton:{
+        marginTop:15,
+        marginTop: 10,
+        flex:2
+    }
 
 });

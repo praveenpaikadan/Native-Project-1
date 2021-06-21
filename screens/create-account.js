@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
-import { globalStyles, themeColors } from '../styles/global-styles';
+import { globalStyles, themeColors, globalFonts } from '../styles/global-styles';
 import { CreateAccountGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
 
@@ -8,8 +8,8 @@ import { ButtonType1 } from '../components/buttons';
 export default CreateAccountScreen = () => (
     
     
-    <View style={{width:'100%', height:'100%'}}>
-                <View style={styles.headerGraphicsContainer}>
+    <View style={styles.container}>
+        <View style={styles.headerGraphicsContainer}>
             <CreateAccountGraphics style={styles.graphics} />
             <View style={styles.heading}>
                 <Text style={styles.mainHeading}>Create Account</Text>
@@ -18,15 +18,14 @@ export default CreateAccountScreen = () => (
         </View>
 
     
-        <View style={styles.container}>
-
+        <View style={styles.contentContainer}>
             <View style={styles.formContainer}>
                 {/* form component inside */}
                 <TextInput placeholder="Full Name" style={styles.textInput} />
                 <TextInput placeholder="Email" style={styles.textInput} />
                 <TextInput placeholder="Password" style={styles.textInput} />        
                 <TextInput placeholder="Confirm Password" style={styles.textInput} />
-                <ButtonType1 text={"SIGN UP"}/>
+                <ButtonType1 style={styles.submitButton} text={"SIGN UP"}/>
             </View>
 
             <View style={styles.footContainer}>
@@ -37,63 +36,70 @@ export default CreateAccountScreen = () => (
                     ...styles.footText,
                     margin:2, 
                     color:themeColors.primary1,
-                    fontWeight:'bold',
+                    fontFamily:globalFonts.primaryBold,
                     }}> Sign In</Text>
             </View>     
-        
         </View>
-    
+
     </View>
 );
 
 const styles = StyleSheet.create({
-
     container:{
-        ...globalStyles.formPageContainer,
-        backgroundColor: themeColors.primary2,
+        width:'100%', 
+        height:'100%', 
+        backgroundColor:themeColors.primary2,
     },
-    
     headerGraphicsContainer:{
-        width:'100%',
-        backgroundColor: themeColors.primary2,  
+        position:'absolute',
+        top:0,
+        left:0,
     },
-    
-    graphics:{
-        width:'100%'
-    },
-
     heading:{
         position:'absolute',
-        top:60,
-        left:0,
-        padding:30,
+        top:80,
+        left:30,
     },
-
     mainHeading:{
         ...globalStyles.formPageMainHeading,
-        color:themeColors.secondary2,
+        color:themeColors.secondary2
+
     },
     subHeading:{
         ...globalStyles.formPageSubHeading,
-        color:themeColors.secondary2,
-        marginTop:5,
-    },
+        color:themeColors.secondary2
 
+
+    },
+    contentContainer:{
+        width:'100%',
+        alignItems:'center',
+        position:'absolute',
+        bottom:0,
+
+    },
     formContainer:{
         ...globalStyles.formContainer,
-        backgroundColor:themeColors.primary2,
-        margin:10
+        width:'95%',
+        paddingHorizontal:20,
+
     },
     textInput:{
         ...globalStyles.formTextInput,
-    },
+        
 
+    },
+    submitButton:{
+        ...globalStyles.formSubmitButton
+    },
     footContainer:{
         ...globalStyles.formPageFootContainer
-    },
 
+    },
     footText:{
         ...globalStyles.formPageFootText
+
     }
+
 
 })
