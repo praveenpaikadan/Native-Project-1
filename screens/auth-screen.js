@@ -7,7 +7,7 @@ import {   View,
   Platform,
   TouchableWithoutFeedback,
   Keyboard, } from 'react-native';
-import { themeColors, globalFonts } from '../styles/global-styles';
+import { globalStyles, themeColors, globalFonts } from '../styles/global-styles';
 import { ButtonType1 } from '../components/buttons';
 
 // Boiler plate componet for all authentication related screens - Experimental
@@ -53,7 +53,7 @@ export default AuthScreen = ({graphics, fields, buttonText,  mainHeading, subHea
                         {fields.map(field => (
                             <TextInput key={field} placeholder={field} style={styles.textInput} />    
                         ))}
-                        <ButtonType1 style={styles.submitButton} text={buttonText}/>
+                        <ButtonType1 styling={styles.submitButton} text={buttonText}/>
                     </View>
 
                     <View style={styles.footContainer}>
@@ -76,82 +76,53 @@ export default AuthScreen = ({graphics, fields, buttonText,  mainHeading, subHea
 
 );
 
+
+
 const styles = StyleSheet.create({
     container:{
-        width:'100%', 
-        height:'100%', 
-        backgroundColor:themeColors.primary2,
+        ...globalStyles.formPageContainer,
     },
     headerGraphicsContainer:{
-        position:'absolute',
-        top:0,
-        left:0,
+        ...globalStyles.headerGraphicsContainer,
     },
+    
     heading:{
-        position:'absolute',
-        top:80,
-        left:30,
+        ...globalStyles.formPageHeadingContainer
     },
     mainHeading:{
-        fontFamily:globalFonts.primaryRegular,
-        letterSpacing:2,
-        fontSize:34,    //font size
+        ...globalStyles.formPageMainHeading,
         color:themeColors.secondary2
 
     },
     subHeading:{
-        fontFamily:globalFonts.primaryRegular,
-        letterSpacing:0.5,
-        fontSize:16,    //font size
-        opacity:0.8,
+        ...globalStyles.formPageSubHeading,
         color:themeColors.secondary2
 
 
     },
     contentContainer:{
-        width:'100%',
-        alignItems:'center',
-        position:'absolute',
-        bottom:0,
-
+        ...globalStyles.formPageContentContainer
     },
-    formContainer:{
-        flex:1,
-        padding:10, 
-        justifyContent:'space-between',
-        borderTopRightRadius:15,
-        borderTopLeftRadius:15,
-        backgroundColor:themeColors.primary2, 
-        width:'95%',
-        paddingHorizontal:20,
 
+    formContainer:{
+        ...globalStyles.formContainer,
+        
     },
     textInput:{
-        borderColor: '#000000',
-        borderBottomWidth: 1,
-        marginBottom: 10,
-        marginTop: 10,
+        ...globalStyles.formTextInput,
+        
+
     },
     submitButton:{
-        marginTop:15,
-        marginTop: 10,
-        flex:2
+        ...globalStyles.formSubmitButton
     },
     footContainer:{
-        flexDirection:'row',
-        padding:25,
-        width:'95%',
-        alignItems:'center',
-        justifyContent:'center',
-        backgroundColor:themeColors.primary2,
-        borderBottomLeftRadius:15,
-        borderBottomRightRadius:15,
-        marginBottom:10,
+        ...globalStyles.formPageFootContainer
 
     },
     footText:{
-        fontFamily:globalFonts.primaryMedium,
-        opacity:0.7,
+        ...globalStyles.formPageFootText
+
     }
 
 

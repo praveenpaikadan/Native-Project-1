@@ -35,8 +35,10 @@ export default SignInScreen = () => (
                         {/* form component inside */}
                         <TextInput placeholder="Email/Username" style={styles.textInput} />
                         <TextInput placeholder="Password" style={styles.textInput} />        
-                        <ButtonType1 style={styles.submitButton} text={"SIGN IN"}/>
+                        <ButtonType1 styling={{...styles.submitButton}} text={"SIGN IN"}/>
                     </View>
+
+                    
 
                     <View style={styles.footContainer}>
                         <Text style={{
@@ -54,23 +56,17 @@ export default SignInScreen = () => (
     </KeyboardAvoidingView>
 );
 
+
 const styles = StyleSheet.create({
     container:{
-        width:'100%', 
-        height:'100%', 
-        backgroundColor:themeColors.primary2,
+        ...globalStyles.formPageContainer,
     },
     headerGraphicsContainer:{
-        position:'absolute',
-        top:0,
-        left:0,
+        ...globalStyles.headerGraphicsContainer,
     },
+    
     heading:{
-        position:'absolute',
-        top:80,
-        left:30,
-
-
+        ...globalStyles.formPageHeadingContainer
     },
     mainHeading:{
         ...globalStyles.formPageMainHeading,
@@ -84,17 +80,12 @@ const styles = StyleSheet.create({
 
     },
     contentContainer:{
-        width:'100%',
-        alignItems:'center',
-        position:'absolute',
-        bottom:0,
-
+        ...globalStyles.formPageContentContainer
     },
+
     formContainer:{
         ...globalStyles.formContainer,
-        width:'95%',
-        paddingHorizontal:20,
-
+        
     },
     textInput:{
         ...globalStyles.formTextInput,
@@ -112,6 +103,5 @@ const styles = StyleSheet.create({
         ...globalStyles.formPageFootText
 
     }
-
 
 })

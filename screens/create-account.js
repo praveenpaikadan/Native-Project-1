@@ -22,7 +22,7 @@ export default CreateAccountScreen = () => (
         
             <View style={styles.container}>
                 <View style={styles.headerGraphicsContainer}>
-                    <CreateAccountGraphics style={{width:'100%'}} />
+                    <CreateAccountGraphics style={styles.graphics}/>
                     <View style={styles.heading}>
                         <Text style={styles.mainHeading}>Create Account</Text>
                         <Text style={styles.subHeading}>Welcome Onboard!</Text>
@@ -37,9 +37,10 @@ export default CreateAccountScreen = () => (
                         <TextInput placeholder="Email" style={styles.textInput} />
                         <TextInput placeholder="Password" style={styles.textInput} />        
                         <TextInput placeholder="Confirm Password" style={styles.textInput} />
-                        <ButtonType1 style={styles.submitButton} text={"SIGN UP"}/>
+                        <ButtonType1 styling={styles.submitButton} text={"SIGN UP"}/>
                     </View>
 
+                   
                     <View style={styles.footContainer}>
                         <Text style={styles.footText}>
                             Already have an account? 
@@ -62,19 +63,14 @@ export default CreateAccountScreen = () => (
 
 const styles = StyleSheet.create({
     container:{
-        width:'100%', 
-        height:'100%', 
-        backgroundColor:themeColors.primary2,
+        ...globalStyles.formPageContainer,
     },
     headerGraphicsContainer:{
-        position:'absolute',
-        top:0,
-        left:0,
+        ...globalStyles.headerGraphicsContainer,
     },
+    
     heading:{
-        position:'absolute',
-        top:80,
-        left:30,
+        ...globalStyles.formPageHeadingContainer
     },
     mainHeading:{
         ...globalStyles.formPageMainHeading,
@@ -88,17 +84,12 @@ const styles = StyleSheet.create({
 
     },
     contentContainer:{
-        width:'100%',
-        alignItems:'center',
-        position:'absolute',
-        bottom:0,
-
+        ...globalStyles.formPageContentContainer
     },
+
     formContainer:{
         ...globalStyles.formContainer,
-        width:'95%',
-        paddingHorizontal:20,
-
+        
     },
     textInput:{
         ...globalStyles.formTextInput,

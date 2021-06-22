@@ -10,6 +10,7 @@ import ForgotPasswordScreen from './screens/forgot-password';
 import ResetPasswordScreen from './screens/reset-password';
 import AuthScreen from './screens/auth-screen';
 import { CreateAccountGraphics, ForgetPasswordGraphics } from './assets/svgs/svg-graphics';
+import GenderScreen from './screens/gender-screen';
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -24,6 +25,8 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
+              {/* <GetStartedScreen /> */}
+
               {/* <SplashScreen /> */}
 
               {/* <CreateAccountScreen /> */}
@@ -32,9 +35,9 @@ export default function App() {
 
               {/* <ForgotPasswordScreen /> */}
 
-              <ResetPasswordScreen />
-{/* 
-              <AuthScreen 
+              {/* <ResetPasswordScreen /> */}
+
+              {/* <AuthScreen 
                 key='CreateAccountScreen'
                 graphics={<CreateAccountGraphics style={{width:'100%'}} />}
                 fields={['Full Name','Email', 'Password', 'Confirm Password']}
@@ -44,6 +47,8 @@ export default function App() {
                 footText1='Already have an account?'
                 footText2='Sign In'
               /> */}
+
+              <GenderScreen />
 
              </View>
          )
