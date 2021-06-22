@@ -3,7 +3,6 @@ import Svg, { Path, G, Defs, ClipPath } from "react-native-svg";
 import { Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 
 export const CreateAccountGraphics = (props) => (

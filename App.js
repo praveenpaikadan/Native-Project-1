@@ -25,7 +25,7 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-              {/* <GetStartedScreen /> */}
+              <GetStartedScreen />
 
               {/* <SplashScreen /> */}
 
@@ -48,7 +48,7 @@ export default function App() {
                 footText2='Sign In'
               /> */}
 
-              <GenderScreen />
+              {/* <GenderScreen /> */}
 
              </View>
          )

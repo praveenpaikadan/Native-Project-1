@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import { OrangeLogo1 } from '../assets/svgs/svg-logos';
-import { globalStyles, themeColors } from '../styles/global-styles';
+import { globalStyles, themeColors, sc } from '../styles/global-styles';
 import { ButtonType1 } from '../components/buttons';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -22,7 +22,7 @@ export default GetStartedScreen = () => (
             <View style={styles.logoAndButtonContainer}>
                 <OrangeLogo1 style={styles.logo}/>
                 
-                <ButtonType1 text={'GET STARTED'} style={styles.button}/>
+                <ButtonType1 text={'GET STARTED'} styling={styles.button}/>
             </View>
             <View style={styles.socialContainer}>
                 <AntDesign name="instagram" size={36} color="#434343" />
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         ...globalStyles.container,
         backgroundColor:'rgba(0,0,0,0.5)',
         justifyContent:'space-between',
-        paddingTop: 50,
+        paddingTop: 50*sc,
         opacity:0.9,
 
     },
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
 
     logoAndButtonContainer:{
         flex:4,
-        width:320,
+        width:320*sc,
         justifyContent:'space-evenly',
         alignContent:'center',
-        paddingBottom:25
+        paddingBottom:25*sc
     },
 
     socialContainer:{
@@ -68,14 +68,14 @@ const styles = StyleSheet.create({
         fontFamily:'ubuntu-regular',
         alignSelf:'flex-end',
         color:themeColors.secondary2, 
-        fontSize: 17// font size
+        fontSize: 17*sc// font size
     },
 
     mainHeading:{
         fontFamily:'ubuntu-regular',
-        letterSpacing:2,
+        letterSpacing:2*sc,
         color:themeColors.primary1,
-        fontSize:42,                   // font size
+        fontSize:42*sc,                   // font size
         alignSelf:'center'
         
     },
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
 
     button:{
         width:'100%',
+        maxWidth:300,
         alignSelf:'center',
     },
     

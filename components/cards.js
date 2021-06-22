@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { sc } from '../styles/global-styles'
 
 export const ElevatedCardTypeOne = (props) =>(
     
@@ -11,12 +12,12 @@ export const ElevatedCardTypeOne = (props) =>(
 
 const styles = StyleSheet.create({
     card:{
-        borderRadius:10,
-        elevation:5,
-        shadowOffset: { width:5, height: 5},
+        borderRadius:10*sc,
+        elevation:5*sc,
+        shadowOffset: { width:5*sc, height: 5*sc},
         shadowColor:'#333',
         shadowOpacity:0.3,
-        shadowRadius: 2,
+        shadowRadius: 2*sc,
     },
 
 })

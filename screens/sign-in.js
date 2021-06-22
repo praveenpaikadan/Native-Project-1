@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View,
     KeyboardAvoidingView,
     TextInput,
-    StyleSheet,
     Text,
     Platform,
     TouchableWithoutFeedback,
     Keyboard, } from 'react-native';
-import { globalStyles, themeColors } from '../styles/global-styles';
+
 import { SignInGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
+import { formPageStyles } from '../styles/form-pages-styles'
 
 
 export default SignInScreen = () => (
@@ -42,8 +42,7 @@ export default SignInScreen = () => (
 
                     <View style={styles.footContainer}>
                         <Text style={{
-                            ...styles.footText,
-                            color:themeColors.primary1,
+    
                             
                             }}>
                             Forgot your Password ? 
@@ -57,51 +56,4 @@ export default SignInScreen = () => (
 );
 
 
-const styles = StyleSheet.create({
-    container:{
-        ...globalStyles.formPageContainer,
-    },
-    headerGraphicsContainer:{
-        ...globalStyles.headerGraphicsContainer,
-    },
-    
-    heading:{
-        ...globalStyles.formPageHeadingContainer
-    },
-    mainHeading:{
-        ...globalStyles.formPageMainHeading,
-        color:themeColors.secondary2
-
-    },
-    subHeading:{
-        ...globalStyles.formPageSubHeading,
-        color:themeColors.secondary2
-
-
-    },
-    contentContainer:{
-        ...globalStyles.formPageContentContainer
-    },
-
-    formContainer:{
-        ...globalStyles.formContainer,
-        
-    },
-    textInput:{
-        ...globalStyles.formTextInput,
-        
-
-    },
-    submitButton:{
-        ...globalStyles.formSubmitButton
-    },
-    footContainer:{
-        ...globalStyles.formPageFootContainer
-
-    },
-    footText:{
-        ...globalStyles.formPageFootText
-
-    }
-
-})
+const styles = formPageStyles

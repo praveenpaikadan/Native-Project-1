@@ -2,14 +2,14 @@ import * as React from 'react';
 import { View,
     KeyboardAvoidingView,
     TextInput,
-    StyleSheet,
     Text,
     Platform,
     TouchableWithoutFeedback,
     Keyboard, } from 'react-native';
-import { globalStyles, themeColors, globalFonts } from '../styles/global-styles';
+
 import { ForgetPasswordGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
+import { formPageStyles } from '../styles/form-pages-styles';
 
 
 export default ForgotPasswordScreen = () => (
@@ -38,14 +38,9 @@ export default ForgotPasswordScreen = () => (
                     </View>
                     
                     <View style={styles.footContainer}>
-                        <Text style={styles.footText}>
+                        <Text style={styles.footText1}>
                         </Text>
-                        <Text style={{
-                            ...styles.footText,
-                            margin:2, 
-                            color:themeColors.primary1,
-                            fontFamily:globalFonts.primaryBold,
-                            }}> Sign In</Text>
+                        <Text style={styles.footText2}> Sign In</Text>
                     </View>     
                 </View>
 
@@ -56,53 +51,4 @@ export default ForgotPasswordScreen = () => (
 );
 
 
-const styles = StyleSheet.create({
-    container:{
-        ...globalStyles.formPageContainer,
-    },
-    headerGraphicsContainer:{
-        ...globalStyles.headerGraphicsContainer,
-    },
-    
-    heading:{
-        ...globalStyles.formPageHeadingContainer
-    },
-    mainHeading:{
-        ...globalStyles.formPageMainHeading,
-        color:themeColors.secondary2
-
-    },
-    subHeading:{
-        ...globalStyles.formPageSubHeading,
-        color:themeColors.secondary2
-
-
-    },
-    contentContainer:{
-        ...globalStyles.formPageContentContainer
-    },
-
-    formContainer:{
-        ...globalStyles.formContainer,
-        
-    },
-    textInput:{
-        ...globalStyles.formTextInput,
-        
-
-    },
-    submitButton:{
-        ...globalStyles.formSubmitButton
-    },
-    footContainer:{
-        ...globalStyles.formPageFootContainer
-
-    },
-    footText:{
-        ...globalStyles.formPageFootText
-
-    }
-
-
-})
-
+const styles = formPageStyles
