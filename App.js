@@ -11,6 +11,9 @@ import ResetPasswordScreen from './screens/reset-password';
 import AuthScreen from './screens/auth-screen';
 import { CreateAccountGraphics, ForgetPasswordGraphics } from './assets/svgs/svg-graphics';
 import GenderScreen from './screens/gender-screen';
+import { Header } from './components/header';
+import { TabMenu } from './components/tab-menu';
+
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -25,7 +28,7 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-              <GetStartedScreen />
+              <TabMenu />
 
               {/* <SplashScreen /> */}
 

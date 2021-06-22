@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { sc, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles'
+import { sc, sch, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles'
 
 
 
@@ -63,11 +63,10 @@ export const formPageStyles = StyleSheet.create({
         backgroundColor:themeColors.tertiary2,
         borderWidth: 2*sc,
         borderColor:'rgba(255, 76, 0, 0.4)',
-        padding:3*sc,
+        paddingVertical:3*sc,
         paddingHorizontal:15*sc,
         borderRadius:20*sc,
-        marginBottom: 5*sc,
-        marginTop: 5*sc,
+        marginVertical:5*sc,
         
 
     },
@@ -107,7 +106,7 @@ export const formPageStyles = StyleSheet.create({
         width:'100%',
         flexDirection:'row',
         justifyContent:'space-around',
-        marginBottom:20
+        marginBottom:20*sc
     },
 
     card:{
@@ -122,9 +121,16 @@ export const formPageStyles = StyleSheet.create({
 
     gendertag:{
         fontFamily:globalFonts.primaryRegular,
-        padding:5,
+        padding:5*sc,
         opacity:0.6
-    }
+    },
+
+    headerHeading:{
+        fontFamily:globalFonts.primaryRegular,
+        letterSpacing:2*sc,
+        fontSize:31*sc,    //font size
+        color: themeColors.secondary2,
+    },
     
 
 
