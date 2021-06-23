@@ -21,7 +21,7 @@
             "goal": "Muscle Building",
             "level": "Intermediate",
             "Duration": "5/Weeks",
-            "image": "require(../assets/images/get-started.jpg)",
+            "image": "require(../assets/images/muscle-gain.jpg)",
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius cursus nibh mauris lorem duis magna dolor viverra gravida. In congue et porttitor morbi tellus arcu. Convallis quam accumsan cursus elit. Eget pulvinar a ut feugiat nulla id sed.",
             "completePlan": {"price": 2000.00, "includes": "Includes: Complete workout
             plan and Diet plan and nutriton."},
@@ -35,7 +35,7 @@
             "goal": "Fat Loss",
             "level": "Beginner",
             "Duration": "8/Weeks",
-            "image": "require(../assets/images/get-started.jpg)",
+            "image": "require(../assets/images/fat-loss.jpg)",
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius cursus nibh mauris lorem duis magna dolor viverra gravida. In congue et porttitor morbi tellus arcu. Convallis quam accumsan cursus elit. Eget pulvinar a ut feugiat nulla id sed.",
             "completePlan": {"price": 3000.00, "includes": "Includes: Complete workout
             plan and Diet plan and nutriton."},
@@ -49,7 +49,7 @@
             "goal": "Gain Strength",
             "level": "Advanced",
             "Duration": "12/Weeks",
-            "image": "require(../assets/images/get-started.jpg)",
+            "image": "require(../assets/images/strength-training.jpg)",
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius cursus nibh mauris lorem duis magna dolor viverra gravida. In congue et porttitor morbi tellus arcu. Convallis quam accumsan cursus elit. Eget pulvinar a ut feugiat nulla id sed.",
             "completePlan": {"price": 5000.00, "includes": "Includes: Complete workout
             plan and Diet plan and nutriton."},
