@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, Image, Text } from 'react-native';
 import SplashScreen from './screens/splash-screen';
 import GetStartedScreen from './screens/get-started';
 import CreateAccountScreen from './screens/create-account';
@@ -14,6 +14,9 @@ import GenderScreen from './screens/gender-screen';
 import { Header } from './components/header';
 import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
+import ExerciseGuideScreen from './screens/exercise-guide';
+
+
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -22,16 +25,20 @@ const getFonts = () => Font.loadAsync({
   'ubuntu-bold': require('./assets/fonts/Ubuntu-Bold.ttf'),
 });
 
+
+
 export default function App() {
     const [fontsLoaded, setFontsLoaded] = useState(false);
     if(fontsLoaded){
          return(
              <View style={styles.appContainer}>
 
-              {/* <Header />
+               <ExerciseGuideScreen />
+
+              {/* <Header />         
               <TabMenu /> */}
 
-              <HeightWeightScreen />
+              {/*<HeightWeightScreen />*/}
               {/* <SplashScreen /> */}
 
               {/* <CreateAccountScreen /> */}

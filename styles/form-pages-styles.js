@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { sc, sch, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles'
+import { sc, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles'
 
 
 
