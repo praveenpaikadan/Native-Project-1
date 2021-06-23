@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/slider": "^3.0.3",
     "expo": "~41.0.1",
     "expo-app-loading": "^1.0.3",
     "expo-status-bar": "~1.0.4",
@@ -15,6 +16,7 @@
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
     "react-native-bootsplash": "^3.2.4",
+    "react-native-slider": "^0.11.0",
     "react-native-svg": "^12.1.1",
     "react-native-web": "^0.17.0"
   },

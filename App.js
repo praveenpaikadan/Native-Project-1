@@ -13,7 +13,7 @@ import { CreateAccountGraphics, ForgetPasswordGraphics } from './assets/svgs/svg
 import GenderScreen from './screens/gender-screen';
 import { Header } from './components/header';
 import { TabMenu } from './components/tab-menu';
-
+import HeightWeightScreen from './screens/height-weight-screen';
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -28,9 +28,10 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-              <Header />
-              <TabMenu />
+              {/* <Header />
+              <TabMenu /> */}
 
+              <HeightWeightScreen />
               {/* <SplashScreen /> */}
 
               {/* <CreateAccountScreen /> */}

@@ -44,6 +44,7 @@ export const formPageStyles = StyleSheet.create({
         alignItems:'center',
         position:'absolute',
         bottom:0,
+        alignContent:'flex-end',
         marginBottom:10*sc,
     },
 
@@ -100,7 +101,16 @@ export const formPageStyles = StyleSheet.create({
         fontFamily:globalFonts.primaryBold,
     },
 
-    
+
+    headerHeading:{
+        fontFamily:globalFonts.primaryRegular,
+        letterSpacing:2*sc,
+        fontSize:31*sc,    //font size
+        color: themeColors.secondary2,
+    },
+
+    // gender page
+
     cardscontainer:{
         display:'flex',
         width:'100%',
@@ -116,22 +126,107 @@ export const formPageStyles = StyleSheet.create({
         width:windowWidth*0.4167,
         height:windowHeight*0.28125,
         backgroundColor:themeColors.tertiary2,
-        borderRadius:10,
+        borderRadius:10*sc,
     },
 
-    gendertag:{
+    genderTag:{
         fontFamily:globalFonts.primaryRegular,
         padding:5*sc,
         opacity:0.6
     },
 
-    headerHeading:{
-        fontFamily:globalFonts.primaryRegular,
-        letterSpacing:2*sc,
-        fontSize:31*sc,    //font size
-        color: themeColors.secondary2,
+    // height weight page ///////////////////////////////////////////
+    
+    dataContainer:{
+        width:'100%',
+        justifyContent:'flex-end',
+    },
+   
+    dataTopContainer:{
+        width:'100%',
+        flexDirection:'row',
+        alignItems:'flex-end'
+
+
+    },
+
+    dataBottomContainer:{
+        width:'100%',
+        alignItems:'flex-end',
+        justifyContent:'center',
+        // display:'none'
+
+    },
+
+    infoLeftContainer:{
+        flex:4.5,
+        flexDirection:'column',
+        justifyContent:'space-around',
+        alignContent:'center',
+        backgroundColor:themeColors.primary2,
+        marginBottom:30*sc,
+        borderRadius:15*sc,
+        paddingVertical:10*sc,
+        marginHorizontal:10*sc
     },
     
+    infoRightContainer:{
+        flex:4,
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'space-between',
+        // display:'none'        
+    },
 
+    subInfoLeftContainer:{
+        justifyContent:'center',
+        alignItems:'center',
+        borderColor:'black',
+        marginVertical:10*sc,
+    },
+
+    weightContainer:{
+        alignItems:'center'
+    },
+
+    hwTag:{
+        fontFamily:globalFonts.primaryLight,
+        opacity:0.6
+    },
+
+    hwValue:{
+        fontFamily:globalFonts.primaryBold,
+        fontSize:30*sc,
+        opacity:0.65
+    },
+
+    weightSliderComponent:{
+        width:'90%',
+        alignSelf:'center',
+        justifyContent:'center',
+        alignItems:'flex-start',
+        justifyContent:'center',
+        paddingHorizontal:10*sc
+    },
+    weightSlider:{
+        alignSelf:'center',
+        width: 260*sc,
+        paddingVertical:8*sc,
+     },
+
+    hwManGraphics:{
+        marginTop:10,
+
+    },
+    heightSliderContainer:{
+        zIndex:100,
+        transform: [{ rotate: '-90deg'}, { translateY:-110*sc}],
+        marginLeft:40*sc,
+
+    },
+    heightSlider:{
+        width: 220*sc,
+        height:40*sc,
+    },
 
 })

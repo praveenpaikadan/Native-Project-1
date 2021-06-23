@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { View,
-    KeyboardAvoidingView,
-    TextInput,
-    Text,
-    Platform,
-    TouchableWithoutFeedback,
-    Keyboard, } from 'react-native';
+import { View,TextInput,Text } from 'react-native';
+import { KeyboardHideOnTouchOutside } from '../components/keyboard-responsive';
 import { CreateAccountGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
 import { formPageStyles } from '../styles/form-pages-styles'
@@ -13,10 +8,7 @@ import { formPageStyles } from '../styles/form-pages-styles'
 export default CreateAccountScreen = () => (
     
 
-    <KeyboardAvoidingView
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardHideOnTouchOutside >
         
             <View style={styles.container}>
                 <View style={styles.headerGraphicsContainer}>
@@ -51,9 +43,7 @@ export default CreateAccountScreen = () => (
 
             </View>
 
-            
-        </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </KeyboardHideOnTouchOutside>
 );
 
 const styles = formPageStyles

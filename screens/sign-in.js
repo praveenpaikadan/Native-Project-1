@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { View,
-    KeyboardAvoidingView,
-    TextInput,
-    Text,
-    Platform,
-    TouchableWithoutFeedback,
-    Keyboard, } from 'react-native';
+import { View,TextInput,Text } from 'react-native';
+import { KeyboardHideOnTouchOutside } from '../components/keyboard-responsive';
 
 import { SignInGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
@@ -15,11 +10,7 @@ import { formPageStyles } from '../styles/form-pages-styles'
 export default SignInScreen = () => (
     
 
-    <KeyboardAvoidingView
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
+    <KeyboardHideOnTouchOutside>
             <View style={styles.container}>
                 <View style={styles.headerGraphicsContainer}>
                     <SignInGraphics style={{width:'100%'}} />
@@ -51,8 +42,7 @@ export default SignInScreen = () => (
                 </View>
 
             </View>
-        </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </KeyboardHideOnTouchOutside>
 );
 
 

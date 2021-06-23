@@ -1,14 +1,14 @@
 import React from 'react';
-import Svg, { Path, G, Defs, ClipPath } from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, LinearGradient,Stop  } from "react-native-svg";
 import { Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
-
+const sc =  windowWidth/360
 
 export const CreateAccountGraphics = (props) => (
   <Svg
-  width={windowWidth}
-  height={245*windowWidth/360}
+  width={360*sc}
+  height={245*sc}
   viewBox="0 0 360 245"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
@@ -30,8 +30,8 @@ export const CreateAccountGraphics = (props) => (
 
 export const SignInGraphics = (props) => (
   <Svg
-  width={windowWidth}
-  height={454*windowWidth/360}
+  width={360*sc}
+  height={454*sc}
   viewBox="0 0 360 454"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
@@ -232,8 +232,8 @@ export const SignInGraphics = (props) => (
 
 export const ForgetPasswordGraphics = (props) => (
   <Svg
-      width={windowWidth}
-      height={468*windowWidth/360}
+      width={360*sc}
+      height={468*sc}
       viewBox="0 0 360 468"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -341,8 +341,8 @@ export const ForgetPasswordGraphics = (props) => (
 
 export const ResetPasswordGraphics = (props) => (
   <Svg
-  width={windowWidth*1}
-  height={510*windowWidth/360}
+  width={360*sc}
+  height={510*sc}
   viewBox="0 0 360 510"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
@@ -635,4 +635,35 @@ export const GenderMaleGraphics = (props) => (
     </ClipPath>
   </Defs>
 </Svg>
+)
+
+export const HeightWeightManGraphics = (props) => (
+  <Svg
+      width={68*props.size}
+      height={222*props.size}  
+      viewBox="0 0 66 220"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <Path
+        d="M26.092 219.082c-4.242 2.67-7.954-1.113-9.28-3.338l3.977-12.681s-1.347-10.352-3.314-22.027l-1.988-26.031-2.652-25.363s-5.088-44.354 6.629-50.727c2.144-6.622-1.989-14.017-1.989-14.017s-3.314-5.6-1.988-12.014c.49-2.249-1.675-2.682-1.675 0-.867 2.516-3.94 14.684-3.94 14.684v11.55c.662 2.893 1.59 9.212 0 11.348-1.592 2.136-3.757 9.789-4.64 13.349v4.672l2.65 4.005s1.125 5.054 0 6.675c-.518.544-1.325 0-1.325 0-.493-1.621 0-4.005 0-4.005H5.231v4.005c-.033 1.844.317 2.875 0 4.672-1.333 1.503-4.365.204-4.64-12.682 0-2.67-1.988-25.363 1.326-28.033l1.53-31.575C5.17 38.642 17.235 36.323 23.44 36.865c3.977 0 5.965-8.677 5.965-10.68-4.765-3.272-4.64-7.341-5.965-9.344-2.266.874-2.266-7.789 0-5.34.764-8.06 2.922-9.146 5.943-10.668l.022-.011c1.732-.872 4.33-1.3 7.363 0 3.032 1.3 6.064 4.765 6.064 10.396 2.266-2.45 2.266 6.213 0 5.34-1.325 2.002-1.733 6.355-5.965 9.344 0 1.776 3.366 10.963 6.457 10.963 0 0 19.222 0 19.222 14.684 0 0 .266 28.167 1.326 31.37 3.314 2.67 1.326 25.364 1.326 28.034-.275 12.886-3.307 14.185-4.64 12.682-.316-1.797.034-2.828 0-4.672v-4.005h-1.326s.493 2.383 0 4.005c0 0-.806.544-1.325 0-1.125-1.622 0-6.675 0-6.675l2.651-4.005v-4.672c-.884-3.56-3.049-11.213-4.64-13.35-1.59-2.135-.663-8.454 0-11.346l-1.325-11.347s-.932-12.014-1.326-14.684-1.989-2.249-1.989 0c1.084 6.414-1.325 12.014-1.325 12.014s-4.089 7.395-3.314 14.017c12.593 8.01 5.965 50.727 5.965 50.727s-2.108 15.419-2.651 25.363c2.651 6.519.95 17.127 0 28.034-.733 8.409-3.314 16.019-3.314 21.358.883 2.67 2.784 8.677 3.314 11.347.53 2.67-6.85 3.338-10.605 3.338v-14.685l1.988-4.004c.221-13.572-1.988-39.6-1.988-42.05 0-2.45-1.28-5.916 0-10.012-3.315-14.017-3.315-31.771-3.315-36.043 0-5.34-5.302-4.909-5.302 0 0 0-.46 22.38-4.64 36.043 1.147 3.23 0 10.012 0 10.012l1.147 42.05.841 6.007c-.662 2.002-1.988 7.342-1.988 12.682z"
+        fill="url(#prefix__paint0_linear)"
+      />
+      <Defs>
+        <LinearGradient
+          id="prefix__paint0_linear"
+          x1={38.411}
+          y1={0.822}
+          x2={19.02}
+          y2={217.993}
+          gradientUnits="userSpaceOnUse"
+        >
+          <Stop stopColor="#FF4C00" />
+          <Stop offset={0.44} stopColor="#FF4C00" stopOpacity={0.852} />
+          <Stop offset={0.915} stopColor="#FF4C00" stopOpacity={0.599} />
+          <Stop offset={1} stopColor="#FF4C00" stopOpacity={0} />
+        </LinearGradient>
+      </Defs>
+    </Svg>
 )

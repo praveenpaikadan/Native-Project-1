@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { View,
-    KeyboardAvoidingView,
-    TextInput,
-    Text,
-    Platform,
-    TouchableWithoutFeedback,
-    Keyboard, } from 'react-native';
+import { View,TextInput,Text } from 'react-native';
+import { KeyboardHideOnTouchOutside } from '../components/keyboard-responsive';
 
 import { ForgetPasswordGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
@@ -13,11 +8,8 @@ import { formPageStyles } from '../styles/form-pages-styles';
 
 
 export default ForgotPasswordScreen = () => (
-    <KeyboardAvoidingView
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
+    
+        <KeyboardHideOnTouchOutside>
 
             <View style={styles.container}>
                 <View style={styles.headerGraphicsContainer}>
@@ -46,8 +38,7 @@ export default ForgotPasswordScreen = () => (
 
             </View>
                 
-    </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </KeyboardHideOnTouchOutside>
 );
 
 
