@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native';
 import SplashScreen from './screens/splash-screen';
 import GetStartedScreen from './screens/get-started';
 import CreateAccountScreen from './screens/create-account';
@@ -28,6 +28,7 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
+              <Header />
               <TabMenu />
 
               {/* <SplashScreen /> */}
@@ -52,6 +53,8 @@ export default function App() {
               /> */}
 
               {/* <GenderScreen /> */}
+
+              
 
              </View>
          )

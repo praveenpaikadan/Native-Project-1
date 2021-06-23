@@ -23,7 +23,7 @@ export const globalFonts = {
 }
 
 export const globalFontSize = { 
-    content: 12
+    content: 12*sc
 }
 
 
