@@ -15,7 +15,7 @@ export const TabMenu = () =>(
             <Text style={styles.menuHeading}>Store</Text>
         </View>
         <View style={styles.menuContainer}>
-            <FontAwesome5 name="dumbbell" {...menuIconStyling} />
+            <FontAwesome5 name="dumbbell" {...menuIconStyling} size={23*sc} />
             <Text style={styles.menuHeading}>My Workouts</Text>
         </View>
 
