@@ -1,0 +1,79 @@
+{
+    "daycount": 18,
+    "user": {
+        "userId":1,
+        "userImage": "require(../assets/images/get-started.jpg)",
+        "fullName": "Olivia Charlotte",
+        "password": "password",
+        "age": 28,
+        "gender": "female",
+        "weight": 62,
+        "height": 168,
+        "programId": 1,
+        "workoutsTracked": 120,
+        "caloriesBurnt": 60000,
+    },
+
+    "programs": {
+        "pId1": {
+            "programId":1,
+            "programName": "Aboo Thahir Muscle Gain",
+            "goal": "Muscle Building",
+            "level": "Intermediate",
+            "Duration": "5/Weeks",
+            "image": "require(../assets/images/get-started.jpg)",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius cursus nibh mauris lorem duis magna dolor viverra gravida. In congue et porttitor morbi tellus arcu. Convallis quam accumsan cursus elit. Eget pulvinar a ut feugiat nulla id sed.",
+            "completePlan": {"price": 2000.00, "includes": "Includes: Complete workout
+            plan and Diet plan and nutriton."},
+            "monthly": {"price": 750.00, "includes": "Includes: Workout plan for one 
+            month."},
+        },
+
+        "pId2": {
+            "programId":2,
+            "programName": "Fat Loss",
+            "goal": "Fat Loss",
+            "level": "Beginner",
+            "Duration": "8/Weeks",
+            "image": "require(../assets/images/get-started.jpg)",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius cursus nibh mauris lorem duis magna dolor viverra gravida. In congue et porttitor morbi tellus arcu. Convallis quam accumsan cursus elit. Eget pulvinar a ut feugiat nulla id sed.",
+            "completePlan": {"price": 3000.00, "includes": "Includes: Complete workout
+            plan and Diet plan and nutriton."},
+            "monthly": {"price": 500.00, "includes": "Includes: Workout plan for one 
+            month."},
+        },
+
+        "pId3": {
+            "programId":3,
+            "programName": "Strength Training",
+            "goal": "Gain Strength",
+            "level": "Advanced",
+            "Duration": "12/Weeks",
+            "image": "require(../assets/images/get-started.jpg)",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius cursus nibh mauris lorem duis magna dolor viverra gravida. In congue et porttitor morbi tellus arcu. Convallis quam accumsan cursus elit. Eget pulvinar a ut feugiat nulla id sed.",
+            "completePlan": {"price": 5000.00, "includes": "Includes: Complete workout
+            plan and Diet plan and nutriton."},
+            "monthly": {"price": 1000.00, "includes": "Includes: Workout plan for one 
+            month."},
+        }
+        
+    },
+
+    "exercise": {
+        "eId1": {
+            "exerciseId": 1,
+            "exersiceName": "Dumbell Stepups",
+            "instructions": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Odio risus, ut odio varius sit amet proin. Velit sed libero pretium quisque aliquam.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et quis commodo ultricies nibh nulla ut metus.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam aliquam id magna hendrerit ullamcorper pretium scelerisque nullam. Tincidunt nisl, dictum eget adipiscing augue est eget. Augue pretium, id blandit ipsum ac.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et quis commodo ultricies nibh nulla ut metus."],
+            "rest": 45,
+            "target": "Legs"
+        },
+        "eId2": {
+            "exerciseId": 2,
+            "exersiceName": "Barbell Shoulder Press",
+            "instructions": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Odio risus, ut odio varius sit amet proin. Velit sed libero pretium quisque aliquam.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et quis commodo ultricies nibh nulla ut metus.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam aliquam id magna hendrerit ullamcorper pretium scelerisque nullam. Tincidunt nisl, dictum eget adipiscing augue est eget. Augue pretium, id blandit ipsum ac.", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et quis commodo ultricies nibh nulla ut metus."],
+            "rest": 45,
+            "target": "Shoulder"
+        },
+    }
+
+}
