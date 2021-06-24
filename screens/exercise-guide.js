@@ -34,7 +34,8 @@ export default ExerciseGuideScreen = () => (
             </View>
             
             <View style={styles.instructionsContainer}>
-                <ScrollView style={styles.instructionsScrollContainer}>
+                <ScrollView >
+                    <View style={styles.instructionsScrollContainer}>
                         
                         {
                             einstructions.map((item, index) => {
@@ -46,7 +47,7 @@ export default ExerciseGuideScreen = () => (
                                 )
                             })
                         }
-                
+                    </View>
                 </ScrollView>
                 </View>
         </View>
@@ -142,26 +143,29 @@ const styles = StyleSheet.create({
     instructionsContainer:{
         flex:1,
         marginHorizontal:2*sc,
-        marginTop:4*sc,
+        marginTop:10*sc,
         marginBottom:10*sc,
-        // backgroundColor:'yellow'
+
         
     },
 
     instructionsScrollContainer:{
       width:'100%',
-      paddingHorizontal:10*sc,  
+      paddingLeft:6*sc,
+      paddingRight:12*sc,
+ 
     },
 
     instructions:{
         flexDirection:'row',
         width:'100%',
-        marginBottom:6*sc,
+        marginBottom:10*sc,
         
     },
 
     content:{
-        textAlign:'justify'
+        fontFamily:globalFonts.primaryRegular,
+        textAlign:'justify',
     }
 })
 
