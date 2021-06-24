@@ -29,7 +29,7 @@ export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,
                 paddingBottom:12*sc,
                 paddingTop:12*sc,
             }}>
-                {play? <FontAwesome name="play-circle" size={34*sc} color={themeColors.secondary2} />: <Text></Text>}   
+                {play? <FontAwesome name="play-circle" size={play} color={themeColors.secondary2} />: <Text></Text>}   
                 <Text style={{
                     fontSize:30*sc,
                     fontFamily: 'ubuntu-bold',
@@ -38,7 +38,7 @@ export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,
                     ...textStyling
                 }}>{text}</Text>
 
-                {arrow? <FontAwesome name="chevron-right" size={34*sc} color={themeColors.secondary2} />: <Text></Text>}
+                {arrow? <FontAwesome name="chevron-right" size={arrow} color={themeColors.secondary2} />: <Text></Text>}
 
                 
             </View>
