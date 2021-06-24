@@ -13,6 +13,7 @@ export const themeColors = {
     secondary2: '#fff',  //white
     tertiary1: '#434343', //grey
     tertiary2: '#DFDEDE', //light grey
+    tertiary3:'#C4C4C4', //medium grey
 }
 
 export const globalFonts = {

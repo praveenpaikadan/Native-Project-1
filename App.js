@@ -14,8 +14,8 @@ import GenderScreen from './screens/gender-screen';
 import { Header } from './components/header';
 import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
+import HomePage from './screens/home-page';
 import ExerciseGuideScreen from './screens/exercise-guide';
-
 
 
 const getFonts = () => Font.loadAsync({
@@ -33,12 +33,12 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-               <ExerciseGuideScreen />
+               
 
               {/* <Header />         
               <TabMenu /> */}
 
-              {/*<HeightWeightScreen />*/}
+              {/* <HeightWeightScreen /> */}
               {/* <SplashScreen /> */}
 
               {/* <CreateAccountScreen /> */}
@@ -61,6 +61,9 @@ export default function App() {
               /> */}
 
               {/* <GenderScreen /> */}
+              
+              {/* <ExerciseGuideScreen /> */}
+              <HomePage />
 
               
 
