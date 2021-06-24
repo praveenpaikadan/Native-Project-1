@@ -16,6 +16,7 @@ import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
 import ExerciseGuideScreen from './screens/exercise-guide';
 import ProgramDetails from './screens/program-details';
+import { BuyNow } from './screens/buy-now';
 
 
 
@@ -34,7 +35,9 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-               <ProgramDetails />
+              <BuyNow />
+
+              {/* <ProgramDetails /> */}
 
               {/* <ExerciseGuideScreen /> */}
 

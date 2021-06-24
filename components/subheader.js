@@ -4,8 +4,15 @@ import { sc, themeColors, globalFonts } from '../styles/global-styles';
 import { Feather } from '@expo/vector-icons';
 
 
-export const SubHeader = ({text}) => (
-    <View style={styles.headerContainer}>
+export const SubHeader = ({text, styling}) => (
+    <View style={{
+        backgroundColor:'rgba(67,67,67,0.5)',
+        flexDirection:'row',
+        padding:10*sc,
+        paddingRight:35*sc,
+        alignItems:'center',
+        ...styling
+    }}>
         <Feather name="chevron-left" {...backIconStyling} color="white" />
         <View style={styles.textContainer}>
             <Text style={styles.heading}>{text}</Text>
@@ -20,11 +27,7 @@ const backIconStyling = {
 }
 const styles = StyleSheet.create({
     headerContainer:{
-        backgroundColor:'rgba(67,67,67,0.5)',
-        flexDirection:'row',
-        padding:10*sc,
-        paddingRight:35*sc,
-        alignItems:'center'
+        
     },
 
     textContainer:{
