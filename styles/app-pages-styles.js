@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { sc, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles'
+import { sc, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles';
 
 export const appPageStyles = StyleSheet.create({
     container: {
@@ -28,9 +28,6 @@ export const appPageStyles = StyleSheet.create({
         paddingHorizontal:10*sc,
         borderRadius:10*sc,
         marginTop: 10*sc
-        
-        
-
     },
 
     mainHeading:{
@@ -38,8 +35,6 @@ export const appPageStyles = StyleSheet.create({
         fontSize:20*sc,    //font size
         opacity:0.8,
         color:themeColors.tertiary1
-
-
     },
 
     headingContainer:{
@@ -77,7 +72,6 @@ export const appPageStyles = StyleSheet.create({
         marginLeft:10*sc,
         width:'89%',
         marginTop:5*sc
-        
     },
 
     instructions:{
@@ -95,5 +89,7 @@ export const appPageStyles = StyleSheet.create({
 
     content:{
         textAlign:'justify'
-    }
+    },
+
+    
 })
