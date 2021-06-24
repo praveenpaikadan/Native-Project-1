@@ -8,7 +8,7 @@ import { formPageStyles } from '../styles/form-pages-styles';
 import { TabMenu } from '../components/tab-menu';
 import { Header } from '../components/header';
 import { globalFonts, sc, themeColors } from '../styles/global-styles';
-import TrackNowSubAcreen from './subscreens/track-now';
+import TrackNowSubScreen from './subscreens/track-now';
 export default HomePage = () => {
 
     return(
@@ -39,7 +39,7 @@ export default HomePage = () => {
                 </View>
 
                 <View style={styles.dataContainer}>
-                    <TrackNowSubAcreen />
+                    <TrackNowSubScreen />
                 </View>
             </View>
 
