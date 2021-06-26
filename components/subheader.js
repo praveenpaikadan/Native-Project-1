@@ -13,7 +13,7 @@ export const SubHeader = ({text, styling}) => (
         alignItems:'center',
         ...styling
     }}>
-        <Feather name="chevron-left" {...backIconStyling} color="white" />
+        <Feather name="chevron-left" {...backIconStyling} />
         <View style={styles.textContainer}>
             <Text style={styles.heading}>{text}</Text>
         </View>
