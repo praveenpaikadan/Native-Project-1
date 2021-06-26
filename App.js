@@ -16,7 +16,7 @@ import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
 import ExerciseGuideScreen from './screens/exercise-guide';
 import ProgramDetails from './screens/program-details';
-
+import HomePage from './screens/home-page';
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -33,7 +33,7 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-               <ProgramDetails />
+               {/* <ProgramDetails /> */}
 
               {/* <ExerciseGuideScreen /> */}
 
@@ -63,6 +63,9 @@ export default function App() {
               /> */}
 
               {/* <GenderScreen /> */}
+
+              
+              <HomePage />
 
 
              </View>

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { View,TextInput,Text, StyleSheet, Image } from 'react-native';
+import { View,TextInput,Text, StyleSheet, Image, ImageBackground } from 'react-native';
 import { KeyboardHideOnTouchOutside } from '../components/keyboard-responsive';
-
 import { ForgetPasswordGraphics } from '../assets/svgs/svg-graphics';
 import { ButtonType1 } from '../components/buttons';
 import { formPageStyles } from '../styles/form-pages-styles';
@@ -9,6 +8,8 @@ import { TabMenu } from '../components/tab-menu';
 import { Header } from '../components/header';
 import { globalFonts, sc, themeColors } from '../styles/global-styles';
 import TrackNowSubScreen from './subscreens/track-now';
+import ProgramList from './subscreens/program-list';
+
 export default HomePage = () => {
 
     return(
@@ -16,30 +17,32 @@ export default HomePage = () => {
            <Header />
             
             <View style={styles.contentContainer}>
-                
-                <View style={styles.profileContainer}>
-                    <View style={styles.profilePhotoContainer}>
-                    <Image source={require('../assets/images/profile.jpg')} style={styles.profilePhoto} />
-                    </View>
-                    <View style={styles.profileDataContainer}>
-                        <View style={styles.profileDataRowContainer1}>
-                            <Text style={styles.profileName}>{'Olivia Charlotte'}</Text>
+                <ImageBackground source={require('../assets/images/dead-lift.jpg')} style={styles.profileWrapper}>    
+                    <View style={styles.profileContainer}>
+                        <View style={styles.profilePhotoContainer}>
+                        <Image source={require('../assets/images/profile.jpg')} style={styles.profilePhoto} />
                         </View>
-                        <View style={styles.profileDataRowContainer2}>
-                            <View style={styles.profileDataRowItem}>
-                                <Text style={styles.rowItemValue}>{95}</Text>
-                                <Text style={styles.rowItemTag}>Workout Tracked</Text>
+                        <View style={styles.profileDataContainer}>
+                            <View style={styles.profileDataRowContainer1}>
+                                <Text style={styles.profileName}>{'Olivia Charlotte'}</Text>
                             </View>
-                            <View style={styles.profileDataRowItem}>
-                                <View style={{flexDirection:'row',justifyContent:'center'}}><Text style={styles.rowItemValue}>{152}</Text><Text style={styles.rowItemTag}>kg</Text></View>
-                                <Text style={styles.rowItemTag}>Weight Lifted</Text>
+                            <View style={styles.profileDataRowContainer2}>
+                                <View style={styles.profileDataRowItem}>
+                                    <Text style={styles.rowItemValue}>{95}</Text>
+                                    <Text style={styles.rowItemTag}>Workout Tracked</Text>
+                                </View>
+                                <View style={styles.profileDataRowItem}>
+                                    <View style={{flexDirection:'row',justifyContent:'center'}}><Text style={styles.rowItemValue}>{152}</Text><Text style={styles.rowItemTag}>kg</Text></View>
+                                    <Text style={styles.rowItemTag}>Weight Lifted</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
-                </View>
+                </ImageBackground>
 
                 <View style={styles.dataContainer}>
-                    <TrackNowSubScreen />
+                    {/* <TrackNowSubScreen /> */}
+                    <ProgramList />
                 </View>
             </View>
 
@@ -58,13 +61,18 @@ const styles = StyleSheet.create({
     contentContainer:{
         flex:1,
         width:'100%',
+        backgroundColor:themeColors.tertiary2,
         
     },
 
     //////profile container
 
+    profileWrapper:{
+        width:'100%',
+        height:120*sc
+    },
+
     profileContainer:{
-        flex:2,
         flexDirection:'row',
         margin:10*sc,
         alignSelf:'center',
@@ -136,10 +144,9 @@ const styles = StyleSheet.create({
 
     },
 
-
     //////data container
     dataContainer:{
-        flex:7,
+        flex:1,
         width:'100%',
     },
 })

@@ -13,11 +13,16 @@ export const ElevatedCardTypeOne = (props) =>(
 const styles = StyleSheet.create({
     card:{
         borderRadius:10*sc,
-        elevation:2*sc,
+        elevation:3*sc,
         shadowOffset: { width:5*sc, height: 5*sc},
         shadowColor:'#333',
         shadowOpacity:0.3,
         shadowRadius: 2*sc,
+        overflow:'hidden',
+       
+    
+    
+    
     },
 
 })

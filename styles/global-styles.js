@@ -27,6 +27,15 @@ export const globalFontSize = {
     content: 12*sc
 }
 
+export const globalShadows = {
+    orangeTextShadow1:{
+        textShadowColor: 'rgba(255, 51, 0, 0.4)',
+        textShadowOffset: {width: 0, height: 2},
+        textShadowRadius: 50       
+    }
+ 
+}
+
 
 export const globalStyles = StyleSheet.create({
     container: {

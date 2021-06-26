@@ -17,6 +17,7 @@ export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,
             backgroundColor:themeColors.primary1,
             borderRadius: 10*sc,
             minWidth:250*sc,
+            minWidth:150*sc,
             ...styling
             }}>
 
