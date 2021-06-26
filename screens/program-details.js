@@ -24,16 +24,9 @@ export default ProgramDetails = () => (
                 </View>
             </ImageBackground>
         </View>
-        <View style={styles.descriptionContainer}>
-            <ScrollView >
-                <Text style={styles.content}>{data.programs.pId1.description}</Text>
-                <Text style={styles.content}>{data.programs.pId1.description}</Text>
-                <Text style={styles.content}>{data.programs.pId1.description}</Text>
-                <Text style={styles.content}>{data.programs.pId1.description}</Text>
-                <Text style={styles.content}>{data.programs.pId1.description}</Text>
-                <Text style={styles.content}>{data.programs.pId1.description}</Text>
-            </ScrollView>
-        </View>
+        <ScrollView style={styles.descriptionContainer}>
+            <Text style={styles.content}>{data.programs.pId1.description}</Text>
+        </ScrollView>
     </View>
     
 )
@@ -86,9 +79,7 @@ const styles = StyleSheet.create({
 
     descriptionContainer:{
         flex:1,
-        paddingHorizontal:11*sc,
-        paddingBottom:20*sc
-        
+        padding:15*sc
     },
 
     content:{
