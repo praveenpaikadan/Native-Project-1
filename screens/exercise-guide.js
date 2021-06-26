@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Platform } from 'react-native';
 import { ButtonType1 } from '../components/buttons';
 import data from '../assets/data/data.json';
 import { Header } from '../components/header';
@@ -117,8 +117,13 @@ const styles = StyleSheet.create({
 
     button:{
         width:250*sc,
-        height:45*sc,
         alignSelf:'center',
+        ...Platform.select({
+                android:{
+                    height:45*sc,
+                }
+        })
+        
     },
 
     buttonText:{
@@ -152,7 +157,7 @@ const styles = StyleSheet.create({
     instructionsScrollContainer:{
       width:'100%',
       paddingLeft:6*sc,
-      paddingRight:12*sc,
+      paddingRight:18*sc,
  
     },
 
