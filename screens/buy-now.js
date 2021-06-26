@@ -72,7 +72,7 @@ export default BuyNow = () => {
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <ButtonType1 arrow={false} text={'Buy Now'}/>
+                    <ButtonType1 arrow={false} text={'Buy Now'} styling={{width:320*sc}}/>
                     <Text style={styles.footText}>Subscription Terms & Details</Text>
                 </View>
             </View>

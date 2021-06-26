@@ -73,7 +73,7 @@ export default function App() {
               {/* <GenderScreen /> */}
 
               
-              <HomePage />
+              {/* <HomePage /> */}
 
 
              </View>
