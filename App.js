@@ -16,15 +16,10 @@ import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
 import ExerciseGuideScreen from './screens/exercise-guide';
 import ProgramDetails from './screens/program-details';
-<<<<<<< HEAD
+
 import HomePage from './screens/home-page';
-=======
+
 import BuyNow from './screens/buy-now';
-
-
-
-
->>>>>>> 7390188ebb35071b765c0543eeb1bc772720161f
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -41,15 +36,12 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-<<<<<<< HEAD
                {/* <ProgramDetails /> */}
-=======
-              
+   
               
               <BuyNow />
 
               {/* <ProgramDetails /> */}
->>>>>>> 7390188ebb35071b765c0543eeb1bc772720161f
 
               {/* <ExerciseGuideScreen /> */}
 
