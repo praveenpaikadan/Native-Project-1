@@ -41,8 +41,8 @@ export default HomePage = () => {
                 </ImageBackground>
 
                 <View style={styles.dataContainer}>
-                    {/* <TrackNowSubScreen /> */}
-                    <ProgramList />
+                    <TrackNowSubScreen />
+                    {/* <ProgramList /> */}
                 </View>
             </View>
 
@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
 
     profilePhotoContainer:{
         flex:1,
-        // backgroundColor:'red',
         marginRight:2*sc,
     },
     profilePhoto:{

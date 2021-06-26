@@ -39,7 +39,7 @@ export default function App() {
                {/* <ProgramDetails /> */}
    
               
-              <BuyNow />
+              {/* <BuyNow /> */}
 
               {/* <ProgramDetails /> */}
 
@@ -73,7 +73,7 @@ export default function App() {
               {/* <GenderScreen /> */}
 
               
-              {/* <HomePage /> */}
+              <HomePage />
 
 
              </View>

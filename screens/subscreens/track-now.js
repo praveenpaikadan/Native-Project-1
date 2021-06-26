@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     },
 
     trackNowButton:{
-        height:40*sc,
+        // height:40*sc,
         alignSelf:'center',
         width:160*sc
 
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     },
     card:{
         height:200*sc,
-        width:150,
+        width:150*sc,
         overflow:'hidden',
         justifyContent:'center',
 
