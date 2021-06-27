@@ -10,13 +10,10 @@ import { sc } from '../styles/global-styles'
 export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,}) => (
     <TouchableOpacity>
         <View style={{
-            display:'flex',
             alignItems:'center',
-            alignContent:'center',
             justifyContent:'center',
             backgroundColor:themeColors.primary1,
             borderRadius: 10*sc,
-            minWidth:250*sc,
             minWidth:150*sc,
             ...styling
             }}>
@@ -39,7 +36,11 @@ export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,
                     ...textStyling
                 }}>{text}</Text>
 
-                {arrow? <FontAwesome name="chevron-right" size={arrow} color={themeColors.secondary2} />: <Text></Text>}
+                {arrow?
+                    (arrow!=true?
+                        <FontAwesome name="chevron-right" size={arrow} style={{paddingTop:1*sc}} color={themeColors.secondary2} />
+                            :<FontAwesome name="chevron-right" size={28*sc} style={{paddingTop:1*sc}} color={themeColors.secondary2}/>) 
+                    : <Text></Text>}
 
                 
             </View>
