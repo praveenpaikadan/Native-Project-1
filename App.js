@@ -36,19 +36,19 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-               {/* <ProgramDetails /> */}
+               
    
               
               {/* <BuyNow /> */}
 
               {/* <ProgramDetails /> */}
 
-              {/* <ExerciseGuideScreen /> */}
+              <ExerciseGuideScreen />
 
               {/* <Header />         
               <TabMenu /> */}
 
-              {/*<HeightWeightScreen />*/}
+              {/* <HeightWeightScreen /> */}
               {/* <SplashScreen /> */}
 
               {/* <CreateAccountScreen /> */}
@@ -73,7 +73,7 @@ export default function App() {
               {/* <GenderScreen /> */}
 
               
-              <HomePage />
+              {/* <HomePage /> */}
 
 
              </View>
