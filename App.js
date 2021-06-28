@@ -1,4 +1,6 @@
+import 'react-native-gesture-handler';
 import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { View, StyleSheet, TextInput, Image, Text } from 'react-native';
@@ -16,10 +18,12 @@ import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
 import ExerciseGuideScreen from './screens/exercise-guide';
 import ProgramDetails from './screens/program-details';
-
+import { BodyCalendar } from './components/body-calendar';
 import HomePage from './screens/home-page';
-
 import BuyNow from './screens/buy-now';
+import { BodyCalendarCurrent } from './screens/modal/body-calender-current';
+import { BodyCalendarOld } from './screens/modal/body-calender-old';
+
 
 const getFonts = () => Font.loadAsync({
   'ubuntu-light': require('./assets/fonts/Ubuntu-Light.ttf'),
@@ -36,17 +40,19 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-               
-   
+              
               
               {/* <BuyNow /> */}
 
               {/* <ProgramDetails /> */}
 
-              <ExerciseGuideScreen />
+              {/* <ExerciseGuideScreen /> */}
 
-              {/* <Header />         
-              <TabMenu /> */}
+              {/* <Header /> */}
+              {/* <BodyCalendarCurrent /> */}
+              <BodyCalendarOld />
+
+              {/* <TabMenu /> */}
 
               {/* <HeightWeightScreen /> */}
               {/* <SplashScreen /> */}

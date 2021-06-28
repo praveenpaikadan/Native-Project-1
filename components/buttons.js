@@ -7,7 +7,7 @@ import { sc } from '../styles/global-styles'
 // pass extra styling as styling={{style1:value,....}}
 // pass arrow={false} to remove arrow
 
-export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,}) => (
+export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false}) => (
     <TouchableOpacity>
         <View style={{
             alignItems:'center',
@@ -26,7 +26,7 @@ export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false,
                 padding:10*sc,
                 paddingBottom:12*sc,
                 paddingTop:12*sc,
-            }}>
+                }}>
                 {play? <FontAwesome name="play-circle" size={play} color={themeColors.secondary2} />: <Text></Text>}   
                 <Text style={{
                     fontSize:30*sc,

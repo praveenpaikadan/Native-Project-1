@@ -10,11 +10,12 @@ import { globalFonts, sc, themeColors } from '../styles/global-styles';
 import TrackNowSubScreen from './subscreens/track-now';
 import ProgramList from './subscreens/program-list';
 
+
 export default HomePage = () => {
 
     return(
         <View style={styles.container}>
-           <Header />
+            <Header />
             
             <View style={styles.contentContainer}>
                 <ImageBackground source={require('../assets/images/dead-lift.jpg')} style={styles.profileWrapper}>    
@@ -44,7 +45,9 @@ export default HomePage = () => {
                     <TrackNowSubScreen />
                     {/* <ProgramList /> */}
                 </View>
+                
             </View>
+            
 
             <TabMenu />
         </View>

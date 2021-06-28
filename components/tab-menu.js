@@ -1,26 +1,37 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { sc, globalFonts, globalFontSize, globalStyles, themeColors } from '../styles/global-styles';
+import { sc, globalFonts, globalFontSize, themeColors } from '../styles/global-styles';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-export const TabMenu = () =>(
-    <View style={styles.tabContainer}>
-        <View style={styles.menuContainer}>
-            <FontAwesome5 name="calendar-alt" {...menuIconStyling} />
-            <Text style={styles.menuHeading}>Body Calendar</Text>
-            
-        </View>
-        <View style={styles.menuContainer}>
-            <FontAwesome5 name="shopping-bag" {...menuIconStyling} />
-            <Text style={styles.menuHeading}>Store</Text>
-        </View>
-        <View style={styles.menuContainer}>
-            <FontAwesome5 name="dumbbell" {...menuIconStyling} size={23*sc} />
-            <Text style={styles.menuHeading}>My Workouts</Text>
-        </View>
 
-    </View>
-)
+
+export const TabMenu = () =>{
+    
+    return(
+        
+        <View style={styles.tabContainer}>
+            <View style={styles.menuContainer}>
+                <TouchableOpacity>
+                    <View style={styles.menuContainer}>
+                        <FontAwesome5 name="calendar-alt" {...menuIconStyling} />
+                        <Text style={styles.menuHeading}>Body Calendar</Text>
+                    </View>
+                </TouchableOpacity>
+                
+                
+            </View>
+            <View style={styles.menuContainer}>
+                <FontAwesome5 name="shopping-bag" {...menuIconStyling} />
+                <Text style={styles.menuHeading}>Store</Text>
+            </View>
+            <View style={styles.menuContainer}>
+                <FontAwesome5 name="dumbbell" {...menuIconStyling} size={23*sc} />
+                <Text style={styles.menuHeading}>My Workouts</Text>
+            </View>
+
+        </View>
+    )
+}
 
 const menuIconStyling = {
     color: themeColors.tertiary1,
