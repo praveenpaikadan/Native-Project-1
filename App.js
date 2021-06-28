@@ -16,6 +16,7 @@ import { TabMenu } from './components/tab-menu';
 import HeightWeightScreen from './screens/height-weight-screen';
 import ExerciseGuideScreen from './screens/exercise-guide';
 import ProgramDetails from './screens/program-details';
+import {BodyCalendar} from './components/calendar';
 
 import HomePage from './screens/home-page';
 
@@ -36,14 +37,14 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-               
+               {/* <ProgramDetails /> */}
    
               
               {/* <BuyNow /> */}
 
               {/* <ProgramDetails /> */}
 
-              <ExerciseGuideScreen />
+              {/* <ExerciseGuideScreen /> */}
 
               {/* <Header />         
               <TabMenu /> */}
@@ -74,6 +75,10 @@ export default function App() {
 
               
               {/* <HomePage /> */}
+
+              <BodyCalendar />
+
+              
 
 
              </View>
