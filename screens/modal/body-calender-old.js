@@ -9,13 +9,16 @@ export const BodyCalendarOld = () => {
     return (
         <BodyCalendar>
             <View style={styles.container}>
-                <View style={styles.textContainer}>
-                    <FontAwesome name="check-circle" size={24} color={themeColors.primary1} />
-                    <Text style={styles.content}>ABOO THAHIR'S MUSCLE GAIN PROGRAM, DAY 18 - SHOULDERS, LEGS, CALVES</Text>
+                <View style={styles.row}>
+                    <View style={styles.textContainer}>
+                        <FontAwesome name="check-circle" size={24} color={themeColors.primary1} />
+                        <Text style={styles.content}>ABOO THAHIR'S MUSCLE GAIN PROGRAM, DAY 18 - SHOULDERS, LEGS, CALVES</Text>
+                    </View>
+                    <View>
+                        <ButtonType1 text={'VIEW LOG'} styling={styles.button} arrow={false} textStyling={styles.buttonText} buttonPadding={styles.buttonPadding} />
+                    </View>
                 </View>
-                <View>
-                    <ButtonType1 text={'VIEW LOG'} styling={styles.button} arrow={false} textStyling={styles.buttonText} buttonPadding={styles.buttonPadding} />
-                </View>
+                <View style={styles.footLine}></View>
             </View>
         </BodyCalendar>
     );
@@ -23,11 +26,13 @@ export const BodyCalendarOld = () => {
 
 const styles = StyleSheet.create({
     container:{
-        flexDirection:'row',
         marginTop:10*sc,
         padding:5*sc,
         height:100*sc,
-        alignItems:'flex-start'
+    },
+
+    row:{
+        flexDirection:'row',
     },
 
     textContainer:{
@@ -42,6 +47,7 @@ const styles = StyleSheet.create({
     content:{
         marginHorizontal:10*sc,
         fontFamily:globalFonts.primaryLight,
+        color:themeColors.tertiary1,
         textDecorationLine:'line-through',
     },
 
@@ -59,4 +65,11 @@ const styles = StyleSheet.create({
         marginLeft:10*sc,
         backgroundColor:themeColors.tertiary1
     },
+
+    footLine:{
+        width:'100%',
+        height:2*sc,
+        backgroundColor:themeColors.tertiary2,
+        marginTop:10*sc
+    }
 })

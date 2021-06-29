@@ -23,6 +23,9 @@ import HomePage from './screens/home-page';
 import BuyNow from './screens/buy-now';
 import { BodyCalendarCurrent } from './screens/modal/body-calender-current';
 import { BodyCalendarOld } from './screens/modal/body-calender-old';
+import { BodyCalendarRest } from './screens/modal/body-calendar-rest';
+import { BodyCalendarFuture } from './screens/modal/body-calendar-future';
+import { MyWorkouts } from './screens/modal/my-workouts';
 
 
 const getFonts = () => Font.loadAsync({
@@ -50,7 +53,10 @@ export default function App() {
 
               {/* <Header /> */}
               {/* <BodyCalendarCurrent /> */}
-              <BodyCalendarOld />
+              {/* <BodyCalendarFuture /> */}
+              {/* <BodyCalendarOld /> */}
+              {/* <BodyCalendarRest /> */}
+              {/* <MyWorkouts /> */}
 
               {/* <TabMenu /> */}
 
@@ -79,7 +85,7 @@ export default function App() {
               {/* <GenderScreen /> */}
 
               
-              {/* <HomePage /> */}
+              <HomePage />
 
 
              </View>

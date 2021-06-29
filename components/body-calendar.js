@@ -94,10 +94,9 @@ currentDate();
 
 
 export const BodyCalendar = ({children}) => {
-    const [closeCalendar, setCloseCalendar] = useState(true)
     
     return(
-        <Modal transparent={true} visible={closeCalendar? true : false}>
+        <Modal transparent={true} visible>
             <View style={{...styles.overlay}}>
                 <View style={styles.container}>
                     <View 

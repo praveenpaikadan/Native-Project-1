@@ -5,7 +5,7 @@ import { themeColors, sc, globalFonts } from '../../styles/global-styles';
 import { BodyCalendar } from '../../components/body-calendar';
 import { ButtonType1 } from '../../components/buttons';
 
-export const BodyCalendarCurrent = () => {
+export const BodyCalendarFuture = () => {
     return (
         <BodyCalendar>
             <View style={styles.container}>
@@ -15,11 +15,12 @@ export const BodyCalendarCurrent = () => {
                         <Text style={styles.content}>ABOO THAHIR'S MUSCLE GAIN PROGRAM, DAY 18 - SHOULDERS, LEGS, CALVES</Text>
                     </View>
                     <View>
-                        <ButtonType1 text={'TRACK NOW'} styling={styles.button} arrow={false} textStyling={styles.buttonText} buttonPadding={styles.buttonPadding} />
+                        <ButtonType1 text={'VIEW'} styling={styles.button} arrow={false} textStyling={styles.buttonText} buttonPadding={styles.buttonPadding} />
                     </View>
                 </View>
                 
                 <View style={styles.footLine}></View>
+                
             </View>
         </BodyCalendar>
     );
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
         marginTop:10*sc,
         padding:5*sc,
         height:100*sc,
+        alignItems:'flex-start'
     },
 
     row:{
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText:{
-        fontSize:10*sc
+        fontSize:12*sc
     },
 
     buttonContainer:{
@@ -63,6 +65,7 @@ const styles = StyleSheet.create({
         height:35*sc,
         minWidth:90*sc,
         marginLeft:10*sc,
+        backgroundColor:themeColors.tertiary1
         
     },
 
