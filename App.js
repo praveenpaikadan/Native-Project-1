@@ -26,6 +26,8 @@ import { BodyCalendarOld } from './screens/modal/body-calender-old';
 import { BodyCalendarRest } from './screens/modal/body-calendar-rest';
 import { BodyCalendarFuture } from './screens/modal/body-calendar-future';
 import { MyWorkouts } from './screens/modal/my-workouts';
+import TrackingScreen from './screens/tracking-screen';
+
 
 
 const getFonts = () => Font.loadAsync({
@@ -43,7 +45,7 @@ export default function App() {
          return(
              <View style={styles.appContainer}>
 
-              
+              <TrackingScreen />
               
               {/* <BuyNow /> */}
 
@@ -85,7 +87,7 @@ export default function App() {
               {/* <GenderScreen /> */}
 
               
-              <HomePage />
+              {/* <HomePage /> */}
 
 
              </View>
