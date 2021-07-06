@@ -42,8 +42,8 @@ export default HomePage = () => {
                 </ImageBackground>
 
                 <View style={styles.dataContainer}>
-                    <TrackNowSubScreen />
-                    {/* <ProgramList /> */}
+                    {/* <TrackNowSubScreen /> */}
+                    <ProgramList />
                 </View>
                 
             </View>

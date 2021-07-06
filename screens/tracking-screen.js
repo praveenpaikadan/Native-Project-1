@@ -4,50 +4,52 @@ import { globalStyles, themeColors, sc, globalFonts } from '../styles/global-sty
 import { ButtonType1 } from '../components/buttons';
 import { Header } from '../components/header';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { ExerciseList } from './subscreens/exerciselist';
+import { Feather } from '@expo/vector-icons';
 
 
 export default TrackingScreen = () => {
     return (
         <View style={styles.container}>
             <Header />
-            <View>
+            <View style={styles.trackingContainer}>
                 <View style={styles.headingContainer}>
                     <FontAwesome5 name="dumbbell" {...dumbbellIconStyling} />
-                    <Text style={styles.heading}>Aboo Thahir’s Muscle Gain Program: Day 18 - Shoulders, Legs, Calves</Text>
+                    <Text style={styles.heading}>Aboo Thahir’s Muscle Gain Program: {'\n'} Day 18 - Shoulders, Legs, Calves</Text>
                 </View>
-                <View>
-                    <Text>Goal: Muscle Building</Text>
-                    <Text>Level: Intermediate</Text>
+                <View style={styles.subHeadingContainer}>
+                    <Text style={styles.subHeading}>Goal: Muscle Building</Text>
+                    <Text style={styles.subHeading}>Level: Intermediate</Text>
                 </View>
-                <View>
-                    <View>
-                        <Text>TOTAL EXERCISES</Text>
+                <View style={styles.detailsContainer}>
+                    <View style={styles.detailsHeadingContainer}>
+                        <Text style={styles.detailsHeading}>TOTAL{'\n'}EXERCISES</Text>
                         <View>
-                            <Text>18</Text>
+                            <Text style={styles.details}>18</Text>
                         </View>
                     </View>
-                    <View>
-                        <Text>TOTAL SETS</Text>
+                    <View style={styles.detailsHeadingContainer}>
+                        <Text style={styles.detailsHeading}>TOTAL{'\n'}SETS</Text>
                         <View>
-                            <Text>29</Text>
+                            <Text style={styles.details}>29</Text>
                         </View>
                     </View>
-                    <View>
-                        <Text>TOTAL WORKOUT TIME</Text>
-                        <View>
-                            <Text>01:30</Text>
-                            <Text>HR    MIN</Text>
+                    <View style={styles.detailsHeadingContainer}>
+                        <Text style={styles.detailsHeading}>TOTAL{'\n'}WORKOUT TIME</Text>
+                        <View style={styles.durationContainer}>
+                            <Text style={styles.duration}>01:30</Text>
+                            <Text style={styles.durationUnit}>HR    MIN</Text> 
                         </View>
                     </View>
                 </View>
             </View>
             <View style={styles.line}></View>
-            <ButtonType1 />
-            <FlatList>
+            <ButtonType1 styling={styles.button} arrow={false} text={'TRACK NOW'} textStyling={styles.buttonText} />
+            <View style={styles.listContainer}>
+                <ExerciseList />
+                <Feather name="chevrons-down" {...chevronIconStyling} />
 
-            </FlatList>
-
-
+            </View>
         </View>
 
     )
@@ -58,14 +60,20 @@ const dumbbellIconStyling = {
     size: 25*sc
 }
 
+const chevronIconStyling = {
+    color: themeColors.primary1,
+    size: 30*sc
+}
+
 const styles = StyleSheet.create({
 
     container: {
-        width:'100%', 
-        height:'100%', 
-        backgroundColor:themeColors.tertiary2,
-        justifyContent:'center',
-        alignItems:'center'
+        flex:1,
+        width:'100%'
+    },
+
+    trackingContainer:{
+        backgroundColor:themeColors.tertiary2
     },
 
     headingContainer:{
@@ -81,7 +89,98 @@ const styles = StyleSheet.create({
         fontSize:16*sc,
         marginHorizontal:10*sc,
         marginRight:15*sc
-    }
+    },
+
+    subHeadingContainer:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        marginBottom:20*sc,
+        paddingHorizontal:35*sc
+    },
+
+    subHeading:{
+        fontFamily:globalFonts.primaryMedium,
+        color:themeColors.tertiary1,
+        fontSize:14.5*sc
+    },
+
+    detailsContainer:{
+        flexDirection:'row',
+        justifyContent:'center',
+        marginHorizontal:30*sc,
+        backgroundColor:themeColors.secondary2,
+        borderTopLeftRadius:10*sc,
+        borderTopRightRadius:10*sc,
+        paddingVertical:10*sc,
+        paddingHorizontal:10*sc
+    },
+
+    detailsHeadingContainer:{
+        alignItems:'center',
+        justifyContent:'center',
+        marginHorizontal:20*sc
+    },
+
+    durationContainer:{
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:themeColors.primary2,
+        padding:6*sc,
+        paddingHorizontal:13*sc,
+        borderRadius:10*sc
+    },
+
+    detailsHeading:{
+        textAlign:'center',
+        fontFamily:globalFonts.primaryRegular,
+        color:themeColors.tertiary1,
+        fontSize:10*sc,
+        marginBottom:5*sc
+    },
+
+    details:{
+        padding:8*sc,
+        paddingHorizontal:18*sc,
+        fontFamily:globalFonts.primaryBold,
+        fontSize:25*sc,
+        color:themeColors.primary1,
+        backgroundColor:themeColors.primary2,
+        borderRadius:10*sc
+    },
+
+    duration:{
+        fontFamily:globalFonts.primaryBold,
+        fontSize:18*sc,
+        color:themeColors.primary1
+    },
+
+    durationUnit:{
+        fontFamily:globalFonts.primaryLight,
+        fontSize:10*sc,
+        color:themeColors.tertiary1
+    },
+
+    line:{
+        width:'100%',
+        height:5*sc,
+        backgroundColor:themeColors.primary1
+    },
+
+    button:{
+        marginHorizontal:30*sc,
+        marginTop:15*sc
+    },
+
+    buttonText:{
+        fontSize:25*sc
+    },
+
+    listContainer:{
+        flex:1,
+        width:'100%',
+        alignItems:'center',
+        marginTop:10*sc
+    },
 
 
 })
