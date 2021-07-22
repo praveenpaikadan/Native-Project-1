@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, StatusBar } from 'react-native';
 import { OrangeLogo1 } from '../assets/svgs/svg-logos';
 import { globalStyles, themeColors, sc } from '../styles/global-styles';
 import { ButtonType1 } from '../components/buttons';
@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 
 
-export default GetStartedScreen = () => (
+export default GetStartedScreen = ({navigation}) => (
     
     <ImageBackground 
         source={require('../assets/images/get-started.jpg')}
@@ -22,7 +22,7 @@ export default GetStartedScreen = () => (
             <View style={styles.logoAndButtonContainer}>
                 <OrangeLogo1 style={styles.logo}/>
                 
-                <ButtonType1 text={'GET STARTED'} styling={styles.button}/>
+                <ButtonType1 text={'GET STARTED'} styling={styles.button} onClick={() => navigation.push('SignUp')}/>
             </View>
             <View style={styles.socialContainer}>
                 <AntDesign name="instagram" size={36} color="#434343" />
@@ -32,15 +32,18 @@ export default GetStartedScreen = () => (
 
         </View>
     </ImageBackground>
+    
 );
 
 const styles = StyleSheet.create({
     container:{
-        ...globalStyles.container,
+        height:'100%',
+        width:'100%',
         backgroundColor:'rgba(0,0,0,0.5)',
         justifyContent:'space-between',
         paddingTop: 50*sc,
         opacity:0.9,
+        alignItems:'center'
 
     },
 

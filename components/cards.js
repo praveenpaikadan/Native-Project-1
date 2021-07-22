@@ -4,7 +4,7 @@ import { sc } from '../styles/global-styles'
 
 export const ElevatedCardTypeOne = (props) =>(
     
-        <View style={{...styles.card, ...props.styling}}>
+        <View style={{...styles.card, ...props.styling}} onPress={props.onPress} >
                 { props.children }
         </View>
     )

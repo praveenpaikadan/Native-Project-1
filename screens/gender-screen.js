@@ -9,9 +9,35 @@ import { ButtonType1 } from '../components/buttons';
 import { ElevatedCardTypeOne } from '../components/cards';
 import { formPageStyles } from '../styles/form-pages-styles';
 
-export default GenderScreen = () => (
-    
+export default GenderScreen = ({navigation, route}) => {
+    const [maleSelected, setMaleSelected] = React.useState(false)
+    const [femaleSelected, setFemaleSelected] = React.useState(false)
+    const [gender, setGender] = React.useState('')
+    const [validationMessage, setValidationMessage] = React.useState('')
+    const data = {...route.params}
 
+    const selectionHandlerMale = () =>{
+        setMaleSelected(true)
+        setFemaleSelected(false)
+        setGender('male')
+        setValidationMessage('')
+    }
+    const selectionHandlerFemale = () =>{
+        setMaleSelected(false)
+        setFemaleSelected(true)
+        setGender('female')
+        setValidationMessage('')
+    }
+
+    const buttonClickHandler = () =>{
+        if(gender === ''){
+            setValidationMessage('Please select gender')
+        }else{
+            navigation.push('HeightWeight', {...data, gender: gender})
+        }
+    }
+
+    return(
     <View
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
         style={styles.container}>
@@ -28,14 +54,15 @@ export default GenderScreen = () => (
             <View style={styles.contentContainer}>
                 <View style={styles.cardscontainer}>
 
-                    {
+                    {/* {
                         [   
                             ['Male', <GenderMaleGraphics size={'75%'}/>],
                             ['Female',<GenderFemaleGraphics size={'75%'}/>]
                         ].map(data => (
                             
                             <TouchableOpacity key={data[0]}>   
-                                <ElevatedCardTypeOne styling={styles.card}>
+                                <ElevatedCardTypeOne
+                                styling={styles.card}>
                                     {data[1]}
                                     <Text style={styles.genderTag}>{data[0]}</Text>
                                 </ElevatedCardTypeOne>
@@ -43,13 +70,28 @@ export default GenderScreen = () => (
                             
                             )
                         )
-                    }
+                    } */}
+
+                    <TouchableOpacity onPress={selectionHandlerMale}>
+                        <ElevatedCardTypeOne styling={maleSelected ? styles.cardSelected : styles.card}>
+                            <GenderMaleGraphics size={'75%'}/>
+                            <Text style={styles.genderTag}>Male</Text>
+                        </ElevatedCardTypeOne>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={selectionHandlerFemale}>
+                        <ElevatedCardTypeOne styling={femaleSelected ? styles.cardSelected : styles.card}>
+                            <GenderFemaleGraphics size={'75%'}/>
+                            <Text style={styles.genderTag}>Female</Text>
+                        </ElevatedCardTypeOne>
+                    </TouchableOpacity>
+                    
                            
 
                 </View>
 
                 <View style={styles.formContainer}>
-                    <ButtonType1 styling={styles.submitButton} text={"NEXT"}/>                
+                    <Text style={styles.errorText}>{validationMessage}</Text>
+                    <ButtonType1 styling={styles.submitButton} text={"NEXT"} onClick={buttonClickHandler}/>                
                 </View>
 
                 <View style={styles.footContainer}>
@@ -62,7 +104,7 @@ export default GenderScreen = () => (
         </View>
 
     </View>
-);
+)}
 
 
 

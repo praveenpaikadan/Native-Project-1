@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { sc, themeColors, globalFonts, windowWidth, windowHeight, } from './global-styles'
 
 
@@ -64,12 +64,17 @@ export const formPageStyles = StyleSheet.create({
         backgroundColor:themeColors.tertiary2,
         borderWidth: 2*sc,
         borderColor:'rgba(255, 76, 0, 0.4)',
-        paddingVertical:3*sc,
+        paddingVertical: Platform.OS === 'ios' ? 8*sc : 3*sc,
         paddingHorizontal:15*sc,
         borderRadius:20*sc,
-        marginVertical:5*sc,
         
+    },
 
+    errorText:{
+        fontFamily:globalFonts.primaryLight,
+        textAlign:'center',
+        color: themeColors.secondary1,
+        
     },
     submitButton:{
         width:200*sc,
@@ -127,6 +132,17 @@ export const formPageStyles = StyleSheet.create({
         height:windowHeight*0.28125,
         backgroundColor:themeColors.tertiary2,
         borderRadius:10*sc,
+    },
+
+    cardSelected:{
+        display:'flex',
+        alignItems:'center',
+        justifyContent: 'center',
+        width:windowWidth*0.4167,
+        height:windowHeight*0.28125,
+        backgroundColor:themeColors.tertiary1,
+        borderRadius:10*sc,
+        color:themeColors.secondary2
     },
 
     genderTag:{

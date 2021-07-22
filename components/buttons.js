@@ -7,8 +7,8 @@ import { sc } from '../styles/global-styles'
 // pass extra styling as styling={{style1:value,....}}
 // pass arrow={false} to remove arrow
 
-export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false}) => (
-    <TouchableOpacity>
+export const ButtonType1 = ({text, styling, textStyling, arrow=true, play=false, onClick}) => (
+    <TouchableOpacity onPress={onClick}>
         <View style={{
             alignItems:'center',
             justifyContent:'center',

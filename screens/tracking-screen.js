@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, ImageBackground, FlatList } from 'react-native';
-import { globalStyles, themeColors, sc, globalFonts } from '../styles/global-styles';
+import { StyleSheet, View, Text } from 'react-native';
+import { themeColors, sc, globalFonts } from '../styles/global-styles';
 import { ButtonType1 } from '../components/buttons';
 import { Header } from '../components/header';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -24,13 +24,13 @@ export default TrackingScreen = () => {
                 <View style={styles.detailsContainer}>
                     <View style={styles.detailsHeadingContainer}>
                         <Text style={styles.detailsHeading}>TOTAL{'\n'}EXERCISES</Text>
-                        <View>
+                        <View style={styles.numberContainer}>
                             <Text style={styles.details}>18</Text>
                         </View>
                     </View>
                     <View style={styles.detailsHeadingContainer}>
                         <Text style={styles.detailsHeading}>TOTAL{'\n'}SETS</Text>
-                        <View>
+                        <View style={styles.numberContainer}>
                             <Text style={styles.details}>29</Text>
                         </View>
                     </View>
@@ -138,14 +138,20 @@ const styles = StyleSheet.create({
         marginBottom:5*sc
     },
 
-    details:{
+    numberContainer:{
         padding:8*sc,
         paddingHorizontal:18*sc,
+        borderRadius:10*sc,
+        backgroundColor:themeColors.primary2,
+    },
+
+    details:{
+        
         fontFamily:globalFonts.primaryBold,
         fontSize:25*sc,
         color:themeColors.primary1,
-        backgroundColor:themeColors.primary2,
-        borderRadius:10*sc
+        
+        
     },
 
     duration:{
