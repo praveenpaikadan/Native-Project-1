@@ -1,11 +1,11 @@
 import * as React from "react";
-import { View, TextInput, Text } from "react-native";
+import { View, TextInput, Text, ActivityIndicator } from "react-native";
 import { KeyboardHideOnTouchOutside } from "../components/keyboard-responsive";
 
 import { SignInGraphics } from "../assets/svgs/svg-graphics";
 import { ButtonType1 } from "../components/buttons";
 import { formPageStyles } from "../styles/form-pages-styles";
-import { sc } from "../styles/global-styles";
+import { sc, themeColors } from "../styles/global-styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
@@ -16,6 +16,9 @@ export default SignInScreen = ({ navigation, route }) => {
     userName: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { storedCredentials, setStoredCredentials } =
+    React.useContext(AuthContext);
 
   const emailChangeHandler = (value) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -41,12 +44,14 @@ export default SignInScreen = ({ navigation, route }) => {
 
   const buttonPressHandler = () => {
     const url = "https://reqres.in/api/register";
+    setIsLoading(true);
     if (
       errorMessage === "Inavalid Email/Password" ||
       userInfo.userName === "" ||
       userInfo.password === ""
     ) {
       setErrorMessage("Please check credentials provided");
+      setIsLoading(false);
     } else {
       axios
         .post(url, {
@@ -59,18 +64,27 @@ export default SignInScreen = ({ navigation, route }) => {
             id: response.data.id,
             token: response.data.token,
           };
-          console.log(result);
           if (result.status !== 200) {
             setErrorMessage("Please check your network and try again");
+            setIsLoading(false);
           } else {
             setErrorMessage("");
-            navigation.navigate("Home");
+            persistLogin(result);
+            setIsLoading(false);
           }
         })
         .catch((error) => {
           console.log(error);
         });
     }
+  };
+
+  const persistLogin = (credentials) => {
+    AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
+      .then(() => {
+        setStoredCredentials(credentials);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -92,6 +106,7 @@ export default SignInScreen = ({ navigation, route }) => {
               placeholder="Email"
               style={{ ...styles.textInput, marginBottom: 15 * sc }}
               onChangeText={emailChangeHandler}
+              keyboardType="email-address"
             />
             <TextInput
               placeholder="Password"
@@ -101,7 +116,18 @@ export default SignInScreen = ({ navigation, route }) => {
             />
             <ButtonType1
               styling={{ ...styles.submitButton }}
-              text={"SIGN IN"}
+              arrow={isLoading ? false : true}
+              disabled={isLoading ? true : false}
+              text={
+                isLoading ? (
+                  <ActivityIndicator
+                    size="large"
+                    color={themeColors.secondary2}
+                  />
+                ) : (
+                  "SIGN IN"
+                )
+              }
               onClick={buttonPressHandler}
             />
           </View>

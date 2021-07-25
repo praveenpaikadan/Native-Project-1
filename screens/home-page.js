@@ -1,30 +1,23 @@
 import * as React from "react";
-import {
-  View,
-  TextInput,
-  Text,
-  StyleSheet,
-  Image,
-  ImageBackground,
-} from "react-native";
-import { KeyboardHideOnTouchOutside } from "../components/keyboard-responsive";
-import { ForgetPasswordGraphics } from "../assets/svgs/svg-graphics";
-import { ButtonType1 } from "../components/buttons";
-import { formPageStyles } from "../styles/form-pages-styles";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import { TabMenu } from "../components/tab-menu";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
-import TrackNowSubScreen from "./subscreens/track-now";
 import ProgramList from "./subscreens/program-list";
+import TrackNowSubScreen from "./subscreens/track-now";
 import { AuthContext } from "../components/auth-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useContext } from "react/cjs/react.development";
+import { StatusBar } from "expo-status-bar";
 
-export default HomePage = ({ navigation, route }) => {
+export default HomePage = ({ navigation }) => {
+  const { storedCredentials, setStoredCredentials } =
+    React.useContext(AuthContext);
+  const { status, id, token } = storedCredentials;
+
   return (
     <View style={styles.container}>
-      <Header />
-      <Text>Logout</Text>
+      <StatusBar translucent={true} />
+      <Header onPressMenu={() => navigation.openDrawer()} />
 
       <View style={styles.contentContainer}>
         <ImageBackground
@@ -62,8 +55,19 @@ export default HomePage = ({ navigation, route }) => {
         </ImageBackground>
 
         <View style={styles.dataContainer}>
-          {/* <TrackNowSubScreen /> */}
-          <ProgramList />
+          {status !== 200 ? (
+            <TrackNowSubScreen
+              onClick={navigation.navigate("Root", { screen: "TrackNow" })}
+            />
+          ) : (
+            <ProgramList
+              onPress={() =>
+                navigation.navigate("Root", {
+                  screen: "ProgramDetails",
+                })
+              }
+            />
+          )}
         </View>
       </View>
 

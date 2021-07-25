@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Keyboard } from "react-native";
+import { View, Text, Keyboard, ActivityIndicator } from "react-native";
 import { KeyboardHideOnTouchOutside } from "../components/keyboard-responsive";
 
 import { CreateAccountGraphics } from "../assets/svgs/svg-graphics";
@@ -17,6 +17,9 @@ export default HeightWeightScreen = ({ navigation, route }) => {
   const [height, setHeight] = useState(160);
   const [displayStatus, setDisplayStatus] = useState("flex");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const { storedCredentials, setStoredCredentials } = useContext(AuthContext);
 
   const minHeight = 120;
   const maxHeight = 220;
@@ -48,6 +51,7 @@ export default HeightWeightScreen = ({ navigation, route }) => {
 
   const buttonClickHandler = () => {
     const url = "https://reqres.in/api/register";
+    setIsLoading(true);
     axios
       .post(url, {
         email: "eve.holt@reqres.in",
@@ -62,14 +66,24 @@ export default HeightWeightScreen = ({ navigation, route }) => {
         console.log(result.status);
         if (result.status !== 200) {
           setErrorMessage("Please check your network and try again");
+          setIsLoading(false);
         } else {
           setErrorMessage("");
-          navigation.navigate("Home");
+          persistLogin(result);
+          setIsLoading(false);
         }
       })
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  const persistLogin = (credentials) => {
+    AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
+      .then(() => {
+        setStoredCredentials(credentials);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -171,7 +185,17 @@ export default HeightWeightScreen = ({ navigation, route }) => {
               <Text style={styles.errorText}>{errorMessage}</Text>
               <ButtonType1
                 styling={styles.submitButton}
-                text={"NEXT"}
+                arrow={isLoading ? false : true}
+                text={
+                  isLoading ? (
+                    <ActivityIndicator
+                      size="large"
+                      color={themeColors.secondary2}
+                    />
+                  ) : (
+                    "NEXT"
+                  )
+                }
                 onClick={buttonClickHandler}
               />
             </View>
