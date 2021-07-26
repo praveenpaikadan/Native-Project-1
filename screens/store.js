@@ -16,8 +16,9 @@ export default HomePage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" translucent={true} />
+      <StatusBar translucent={true} />
       <Header onPressMenu={() => navigation.openDrawer()} />
+
       <View style={styles.contentContainer}>
         <ImageBackground
           source={require("../assets/images/dead-lift.jpg")}
@@ -54,11 +55,9 @@ export default HomePage = ({ navigation }) => {
         </ImageBackground>
 
         <View style={styles.dataContainer}>
-          {status === 200 ? (
+          {status !== 200 ? (
             <TrackNowSubScreen
-              onClick={() =>
-                navigation.navigate("Root", { screen: "TrackNow" })
-              }
+              onClick={navigation.navigate("Root", { screen: "TrackNow" })}
             />
           ) : (
             <ProgramList

@@ -20,6 +20,7 @@ import BuyNow from "../screens/buy-now";
 import DrawerContent from "./drawer-content";
 import ProfileScreen from "../screens/profile-screen";
 import EditProfileScreen from "../screens/edit-profile-screen";
+import Store from "../screens/store";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -38,6 +39,7 @@ const Root = () => {
       <Stack.Screen name="BuyNow" component={BuyNow} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="Store" component={Store} />
     </Stack.Navigator>
   );
 };

@@ -8,8 +8,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../components/auth-context";
 
 export default DrawerContent = (props) => {
+  const { storedCredentials, setStoredCredentials } =
+    React.useContext(AuthContext);
+
   const logout = () => {
     AsyncStorage.removeItem("Credentials")
       .then(() => {
@@ -61,6 +65,7 @@ export default DrawerContent = (props) => {
             label="Store"
             labelStyle={styles.menuText}
             icon={() => <FontAwesome5 name="shopping-bag" {...iconStyling} />}
+            onPress={() => props.navigation.navigate("Store")}
           />
           <DrawerItem
             label="Track Now"
