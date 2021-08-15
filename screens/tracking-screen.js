@@ -6,48 +6,62 @@ import { Header } from "../components/header";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ExerciseList } from "./subscreens/exerciselist";
 import { Feather } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { WorkoutContext } from "../components/workout-context";
 
-export default TrackingScreen = () => {
-  const navigation = useNavigation();
+export default TrackingScreen = ({ navigation }) => {
+  storedWorkoutData = React.useContext(WorkoutContext);
+  workoutData = storedWorkoutData.storedWorkoutData;
+
   return (
     <View style={styles.container}>
-      <StatusBar translucent={true} />
+      <StatusBar translucent={true} style="light" />
       <Header
         backButton={true}
-        onPress={navigation.goBack}
+        onPress={() => navigation.goBack()}
         onPressMenu={() => navigation.openDrawer()}
       />
       <View style={styles.trackingContainer}>
         <View style={styles.headingContainer}>
           <FontAwesome5 name="dumbbell" {...dumbbellIconStyling} />
           <Text style={styles.heading}>
-            Aboo Thahir’s Muscle Gain Program: {"\n"} Day 18 - Shoulders, Legs,
-            Calves
+            {workoutData.programName +
+              ": " +
+              "Day " +
+              workoutData.day +
+              " -" +
+              workoutData.target}
           </Text>
         </View>
         <View style={styles.subHeadingContainer}>
-          <Text style={styles.subHeading}>Goal: Muscle Building</Text>
-          <Text style={styles.subHeading}>Level: Intermediate</Text>
+          <Text style={styles.subHeading}>{"Goal: " + workoutData.goal}</Text>
+          <Text style={styles.subHeading}>{"Level: " + workoutData.level}</Text>
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsHeadingContainer}>
             <Text style={styles.detailsHeading}>TOTAL{"\n"}EXERCISES</Text>
             <View style={styles.numberContainer}>
-              <Text style={styles.details}>18</Text>
+              <Text style={styles.details}>
+                {workoutData.exerciselist.length}
+              </Text>
             </View>
           </View>
           <View style={styles.detailsHeadingContainer}>
             <Text style={styles.detailsHeading}>TOTAL{"\n"}SETS</Text>
             <View style={styles.numberContainer}>
-              <Text style={styles.details}>29</Text>
+              <Text style={styles.details}>
+                {workoutData.exerciselist.reduce((a, c) => {
+                  return a + c.targetSets;
+                }, 0)}
+              </Text>
             </View>
           </View>
           <View style={styles.detailsHeadingContainer}>
             <Text style={styles.detailsHeading}>TOTAL{"\n"}WORKOUT TIME</Text>
             <View style={styles.durationContainer}>
-              <Text style={styles.duration}>01:30</Text>
+              <Text style={styles.duration}>
+                {workoutData.totalWorkoutTime}
+              </Text>
               <Text style={styles.durationUnit}>HR MIN</Text>
             </View>
           </View>
@@ -59,10 +73,12 @@ export default TrackingScreen = () => {
         arrow={false}
         text={"TRACK NOW"}
         textStyling={styles.buttonText}
-        onClick={() => navigation.navigate("Exercise")}
+        onClick={() => {
+          navigation.navigate("Exercise");
+        }}
       />
       <View style={styles.listContainer}>
-        <ExerciseList />
+        <ExerciseList data={workoutData.exerciselist} />
         <Feather name="chevrons-down" {...chevronIconStyling} />
       </View>
     </View>
@@ -101,6 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 16 * sc,
     marginHorizontal: 10 * sc,
     marginRight: 15 * sc,
+    width: 300 * sc,
   },
 
   subHeadingContainer: {

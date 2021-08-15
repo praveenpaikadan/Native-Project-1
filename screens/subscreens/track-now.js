@@ -4,7 +4,7 @@ import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
 import { ElevatedCardTypeOne } from "../../components/cards";
 
-export default TrackNowSubScreen = ({ onClick }) => {
+export default TrackNowSubScreen = ({ onClick, program }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topBox}>
@@ -12,9 +12,7 @@ export default TrackNowSubScreen = ({ onClick }) => {
           <Text style={styles.topBoxTagText}>Next Workout</Text>
           <View style={styles.triangle} />
         </View>
-        <Text style={styles.topBoxMainText}>
-          Aboo Thahir’s Muscle gain program: Day 18 - Shoulders, Legs, Calves
-        </Text>
+        <Text style={styles.topBoxMainText}>{program}</Text>
         <ButtonType1
           text={"TRACK NOW"}
           arrow={20 * sc}

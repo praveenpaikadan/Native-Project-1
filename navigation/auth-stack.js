@@ -8,12 +8,13 @@ import HeightWeightScreen from "../screens/height-weight-screen";
 import HomePage from "../screens/home-page";
 import SignIn from "../screens/sign-in";
 import { AuthContext } from "../components/auth-context";
+import { WorkoutContext } from "../components/workout-context";
 import { NavigationContainer } from "@react-navigation/native";
 import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "../screens/modal/my-workouts";
 import TrackingScreen from "../screens/tracking-screen";
 import workoutHistory from "../screens/workout-history";
-import ExerciseScreen from "../screens/exercise-screen";
+import ExerciseScreen1 from "../screens/exercise-screen1";
 import ShowExerciseList from "../screens/showexerciselist";
 import programDetails from "../screens/program-details";
 import BuyNow from "../screens/buy-now";
@@ -33,7 +34,7 @@ const Root = () => {
       <Stack.Screen name="Workout" component={MyWorkouts} />
       <Stack.Screen name="TrackNow" component={TrackingScreen} />
       <Stack.Screen name="WorkoutHistory" component={workoutHistory} />
-      <Stack.Screen name="Exercise" component={ExerciseScreen} />
+      <Stack.Screen name="Exercise" component={ExerciseScreen1} />
       <Stack.Screen name="ExerciseList" component={ShowExerciseList} />
       <Stack.Screen name="ProgramDetails" component={programDetails} />
       <Stack.Screen name="BuyNow" component={BuyNow} />
@@ -50,15 +51,19 @@ export const AuthStack = () => {
       {({ storedCredentials }) => (
         <NavigationContainer>
           {storedCredentials ? (
-            <Drawer.Navigator
-              drawerType="slide"
-              drawerPosition="right"
-              headerMode="none"
-              drawerContent={(props) => <DrawerContent {...props} />}
-              drawerStyle={{ width: "85%" }}
-            >
-              <Drawer.Screen name="Root" component={Root} />
-            </Drawer.Navigator>
+            <WorkoutContext.Consumer>
+              {({ storedWorkoutData }) => (
+                <Drawer.Navigator
+                  drawerType="slide"
+                  drawerPosition="right"
+                  headerMode="none"
+                  drawerContent={(props) => <DrawerContent {...props} />}
+                  drawerStyle={{ width: "85%" }}
+                >
+                  <Drawer.Screen name="Root" component={Root} />
+                </Drawer.Navigator>
+              )}
+            </WorkoutContext.Consumer>
           ) : (
             <Stack.Navigator headerMode="none" initialRouteName="GetStarted">
               <Stack.Screen name="GetStarted" component={GetStartedScreen} />

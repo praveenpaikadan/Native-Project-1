@@ -9,8 +9,9 @@ import { sc, themeColors } from "../styles/global-styles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
+import { WorkoutContext } from "../components/workout-context";
 
-export default SignInScreen = ({ navigation, route }) => {
+export default SignInScreen = () => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [userInfo, setUserInfo] = React.useState({
     userName: "",
@@ -19,6 +20,8 @@ export default SignInScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const { storedCredentials, setStoredCredentials } =
     React.useContext(AuthContext);
+  const { storedWorkoutData, setStoredWorkoutData } =
+    React.useContext(WorkoutContext);
 
   const emailChangeHandler = (value) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -43,6 +46,71 @@ export default SignInScreen = ({ navigation, route }) => {
   };
 
   const buttonPressHandler = () => {
+    const data = {
+      userId: 1,
+      programId: 1,
+      programName: "Muscle gain program",
+      day: 16,
+      target: "Shoulders, Legs, Calves",
+      goal: "Muscle Building",
+      level: "Intermediate",
+      totalSets: 29,
+      totalWorkoutTime: "01:30",
+      exerciselist: [
+        {
+          exerciseId: "1",
+          exerciseName: "Dumbbell Step Ups",
+          targetSets: 3,
+          targetReps: "8 - 12",
+          sets: [
+            { set: "01", weight: "", reps: "" },
+            { set: "02", weight: "", reps: "" },
+            { set: "03", weight: "", reps: "" },
+          ],
+          rest: "00:45",
+        },
+        {
+          exerciseId: "2",
+          exerciseName: "Barbell Shrug",
+          targetSets: 4,
+          targetReps: "8 - 12",
+          sets: [
+            { set: "01", weight: "", reps: "" },
+            { set: "02", weight: "", reps: "" },
+            { set: "03", weight: "", reps: "" },
+            { set: "04", weight: "", reps: "" },
+          ],
+
+          rest: "00:30",
+        },
+        {
+          exerciseId: "3",
+          exerciseName: "Leg Extensions",
+          targetSets: 3,
+          targetReps: "8 - 12",
+          sets: [
+            { set: "01", weight: "", reps: "" },
+            { set: "02", weight: "", reps: "" },
+            { set: "03", weight: "", reps: "" },
+          ],
+          rest: "00:45",
+        },
+        {
+          exerciseId: "4",
+          exerciseName: "Standing Calf Raise",
+          targetSets: 3,
+          targetReps: "8 - 12",
+          sets: [
+            { set: "01", weight: "", reps: "" },
+            { set: "02", weight: "", reps: "" },
+            { set: "03", weight: "", reps: "" },
+          ],
+          rest: "01:00",
+        },
+      ],
+      image1: require("../assets/images/Dumbbell-Step-Ups-1.jpg"),
+      image2: require("../assets/images/Dumbbell-Step-Ups-2.jpg"),
+    };
     const url = "https://reqres.in/api/register";
     setIsLoading(true);
     if (
@@ -71,6 +139,7 @@ export default SignInScreen = ({ navigation, route }) => {
             setErrorMessage("");
             persistLogin(result);
             setIsLoading(false);
+            persistWorkoutData(data);
           }
         })
         .catch((error) => {
@@ -83,6 +152,14 @@ export default SignInScreen = ({ navigation, route }) => {
     AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
       .then(() => {
         setStoredCredentials(credentials);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const persistWorkoutData = (workOutData) => {
+    AsyncStorage.setItem("WorkoutData", JSON.stringify(workOutData))
+      .then(() => {
+        setStoredWorkoutData(workoutdata);
       })
       .catch((error) => console.log(error));
   };

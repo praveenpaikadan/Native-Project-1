@@ -8,11 +8,29 @@ import TrackNowSubScreen from "./subscreens/track-now";
 import { AuthContext } from "../components/auth-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
+import { WorkoutContext } from "../components/workout-context";
 
-export default HomePage = ({ navigation }) => {
+const data = {
+  userId: 1,
+  name: "Olivia Charlotte",
+  avatar: require("../assets/images/profile.jpg"),
+  gender: "Female",
+  dob: "01-01-1986",
+  height: 168,
+  weigth: 55,
+  status: "active",
+  subscription: "complete",
+  workoutsTracked: 28,
+  caloriesBurnt: 14000,
+};
+
+export default HomePage = ({ navigation, route }) => {
   const { storedCredentials, setStoredCredentials } =
     React.useContext(AuthContext);
   const { status, id, token } = storedCredentials;
+
+  const storedWorkoutData = React.useContext(WorkoutContext);
+  const workoutData = storedWorkoutData.storedWorkoutData;
 
   return (
     <View style={styles.container}>
@@ -25,28 +43,29 @@ export default HomePage = ({ navigation }) => {
         >
           <View style={styles.profileContainer}>
             <View style={styles.profilePhotoContainer}>
-              <Image
-                source={require("../assets/images/profile.jpg")}
-                style={styles.profilePhoto}
-              />
+              <Image source={data.avatar} style={styles.profilePhoto} />
             </View>
             <View style={styles.profileDataContainer}>
               <View style={styles.profileDataRowContainer1}>
-                <Text style={styles.profileName}>{"Olivia Charlotte"}</Text>
+                <Text style={styles.profileName}>{data.name}</Text>
               </View>
               <View style={styles.profileDataRowContainer2}>
                 <View style={styles.profileDataRowItem}>
-                  <Text style={styles.rowItemValue}>{95}</Text>
+                  <Text style={styles.rowItemValue}>
+                    {data.workoutsTracked}
+                  </Text>
                   <Text style={styles.rowItemTag}>Workout Tracked</Text>
                 </View>
                 <View style={styles.profileDataRowItem}>
                   <View
                     style={{ flexDirection: "row", justifyContent: "center" }}
                   >
-                    <Text style={styles.rowItemValue}>{152}</Text>
-                    <Text style={styles.rowItemTag}>kg</Text>
+                    <Text style={styles.rowItemValue}>
+                      {data.caloriesBurnt / 1000}
+                    </Text>
+                    <Text style={styles.rowItemTag}>kCal</Text>
                   </View>
-                  <Text style={styles.rowItemTag}>Weight Lifted</Text>
+                  <Text style={styles.rowItemTag}>Calories Burnt</Text>
                 </View>
               </View>
             </View>
@@ -56,8 +75,15 @@ export default HomePage = ({ navigation }) => {
         <View style={styles.dataContainer}>
           {status === 200 ? (
             <TrackNowSubScreen
+              program={
+                workoutData.programName +
+                ": Day " +
+                workoutData.day +
+                " " +
+                workoutData.target
+              }
               onClick={() =>
-                navigation.navigate("Root", { screen: "TrackNow" })
+                navigation.navigate("Root", { screen: "TrackNow" }, data.userId)
               }
             />
           ) : (

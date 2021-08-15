@@ -30,18 +30,21 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 
-export default ExerciseScreen = ({ navigation, route }) => {
+export default ExerciseScreen1 = ({ navigation, route }) => {
+  const [weight, setWeight] = useState(null);
+  const [reps, setReps] = useState(null);
+  const [initialIndex, setInitialIndex] = useState(0);
+  const [isFocussed, setIsFocussed] = useState("01");
+
   const data = { ...route.params };
   const index = data.index === undefined ? 0 : data.index;
 
-  const [weight, setWeight] = useState("");
-  const [reps, setReps] = useState("");
-  const [initialIndex, setInitialIndex] = useState(0);
-  const [isFocussed, setIsFocussed] = useState("01");
   const storedWorkoutData = useContext(WorkoutContext);
   const workoutData = storedWorkoutData.storedWorkoutData;
 
   const scrollRef = useRef();
+  const weightRef = useRef();
+  const repsRef = useRef();
 
   useEffect(
     useCallback(() => {
@@ -49,11 +52,11 @@ export default ExerciseScreen = ({ navigation, route }) => {
     })
   );
 
-  const onChangeWeight = (value) => {
+  const onChangeWeight = () => {
     setWeight(value);
   };
 
-  const onChangeReps = (value) => {
+  const onChangeReps = () => {
     setReps(value);
   };
 
@@ -64,23 +67,24 @@ export default ExerciseScreen = ({ navigation, route }) => {
   const setHandler = (sets) => {
     const setNumber = parseInt(isFocussed) - 1;
     const currentSetNumber = "0" + (parseInt(isFocussed) + 1);
-    if (weight === "" || reps === "") {
+    if (weight === null || reps === null) {
       null;
     } else {
       sets[setNumber].weight = weight;
       sets[setNumber].reps = reps;
-      setWeight("");
-      setReps("");
+
+      setWeight(null);
+      setReps(null);
     }
   };
 
-  // const workoutData = (credentials) => {
-  //   AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
-  //     .then(() => {
-  //       setStoredCredentials(credentials);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
+  //   const workoutData = (credentials) => {
+  //     AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
+  //       .then(() => {
+  //         setStoredCredentials(credentials);
+  //       })
+  //       .catch((error) => console.log(error));
+  //   };
 
   const Line = () => <View style={styles.line}></View>;
 
@@ -93,6 +97,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
         onPressMenu={() => navigation.openDrawer()}
         onPress={() => navigation.navigate("ExerciseList", workoutData)}
       />
+
       <FlatList
         initialScrollIndex={initialIndex}
         ref={scrollRef}
@@ -128,11 +133,11 @@ export default ExerciseScreen = ({ navigation, route }) => {
               </Text>
               <View style={styles.quantityContainer}>
                 <TextInput
+                  ref={weightRef}
                   placeholder="--"
                   placeholderTextColor={themeColors.primary1}
                   style={styles.input}
-                  onChangeText={onChangeWeight}
-                  value={weight}
+                  onChangeText={setWeight}
                   keyboardType="numeric"
                   maxLength={4}
                 />
@@ -144,12 +149,13 @@ export default ExerciseScreen = ({ navigation, route }) => {
 
               <View style={styles.quantityContainer}>
                 <TextInput
+                  ref={repsRef}
                   placeholder="--"
                   placeholderTextColor={themeColors.primary1}
                   style={styles.input}
-                  onChangeText={onChangeReps}
-                  value={reps}
+                  onChangeText={setReps}
                   keyboardType="numeric"
+                  maxLength={4}
                 />
                 <Text style={styles.unit}>REPS</Text>
               </View>
