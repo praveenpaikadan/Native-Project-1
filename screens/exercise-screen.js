@@ -29,6 +29,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
+import { set } from "react-native-reanimated";
 
 export default ExerciseScreen = ({ navigation, route }) => {
   const data = { ...route.params };
@@ -36,18 +37,15 @@ export default ExerciseScreen = ({ navigation, route }) => {
 
   const [weight, setWeight] = useState("");
   const [reps, setReps] = useState("");
-  const [initialIndex, setInitialIndex] = useState(0);
   const [isFocussed, setIsFocussed] = useState("01");
   const storedWorkoutData = useContext(WorkoutContext);
   const workoutData = storedWorkoutData.storedWorkoutData;
 
   const scrollRef = useRef();
 
-  useEffect(
-    useCallback(() => {
-      scrollToIndex();
-    })
-  );
+  useEffect(() => {
+    scrollIndex();
+  }, [data.index]);
 
   const onChangeWeight = (value) => {
     setWeight(value);
@@ -57,21 +55,37 @@ export default ExerciseScreen = ({ navigation, route }) => {
     setReps(value);
   };
 
-  const scrollToIndex = () => {
-    scrollRef.current.scrollToIndex({ animated: false, index: index });
+  const scrollIndex = () => {
+    scrollRef.current.scrollToIndex({
+      animated: false,
+      index: index,
+    });
   };
 
-  const setHandler = (sets) => {
-    const setNumber = parseInt(isFocussed) - 1;
-    const currentSetNumber = "0" + (parseInt(isFocussed) + 1);
+  const setHandler = (sets, item) => {
+    const setIndex = parseInt(isFocussed) - 1;
+    const nextSetNumber = "0" + (parseInt(isFocussed) + 1);
     if (weight === "" || reps === "") {
       null;
-    } else {
-      sets[setNumber].weight = weight;
-      sets[setNumber].reps = reps;
+      console.log(item);
+    } else if (sets.length == isFocussed) {
+      sets[setIndex].weight = weight;
+      sets[setIndex].reps = reps;
       setWeight("");
       setReps("");
+      scrollRef.current.scrollToIndex({
+        animated: false,
+        index: item.index + 1,
+      });
+    } else if (sets.length !== isFocussed) {
+      sets[setIndex].weight = weight;
+      sets[setIndex].reps = reps;
+      setIsFocussed(nextSetNumber);
     }
+  };
+
+  const swipeHandler = () => {
+    setIsFocussed("01");
   };
 
   // const workoutData = (credentials) => {
@@ -94,8 +108,8 @@ export default ExerciseScreen = ({ navigation, route }) => {
         onPress={() => navigation.navigate("ExerciseList", workoutData)}
       />
       <FlatList
-        initialScrollIndex={initialIndex}
         ref={scrollRef}
+        onScroll={swipeHandler}
         showsHorizontalScrollIndicator={false}
         horizontal
         pagingEnabled
@@ -120,7 +134,9 @@ export default ExerciseScreen = ({ navigation, route }) => {
               />
             </View>
             <View style={styles.subHeadingContainer}>
-              <Text style={styles.subHeading}>Exercise 01 - Set 01</Text>
+              <Text style={styles.subHeading}>
+                {"Exercise " + (item.index + 1) + " - Set " + isFocussed}
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.inputHeading}>
@@ -160,7 +176,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
                 text={"SAVE SET"}
                 styling={styles.button}
                 textStyling={styles.buttonText}
-                onClick={() => setHandler(item.item.sets)}
+                onClick={() => setHandler(item.item.sets, item)}
               />
             </View>
             <View style={{ alignItems: "center" }}>
