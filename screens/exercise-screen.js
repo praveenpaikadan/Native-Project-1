@@ -12,6 +12,7 @@ import {
   TextInput,
   FlatList,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 import {
   themeColors,
@@ -29,17 +30,21 @@ import { Fontisto } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
-import { set } from "react-native-reanimated";
+import { WorkoutCompleteModal } from "./modal/workout-complete";
 
 export default ExerciseScreen = ({ navigation, route }) => {
   const data = { ...route.params };
   const index = data.index === undefined ? 0 : data.index;
+  const storedWorkoutData = useContext(WorkoutContext);
+  // const workoutData = storedWorkoutData.storedWorkoutData;
 
   const [weight, setWeight] = useState("");
   const [reps, setReps] = useState("");
   const [isFocussed, setIsFocussed] = useState("01");
-  const storedWorkoutData = useContext(WorkoutContext);
-  const workoutData = storedWorkoutData.storedWorkoutData;
+  const [showWorkoutComplete, setShowWorkoutComplete] = useState(false);
+  const [workoutData, setWorkoutdata] = useState(
+    storedWorkoutData.storedWorkoutData
+  );
 
   const scrollRef = useRef();
 
@@ -67,14 +72,25 @@ export default ExerciseScreen = ({ navigation, route }) => {
     const nextSetNumber = "0" + (parseInt(isFocussed) + 1);
     if (weight === "" || reps === "") {
       null;
-      console.log(item);
+      const sets =
+        storedWorkoutData.storedWorkoutData.exerciselist[
+          storedWorkoutData.storedWorkoutData.exerciselist.length - 1
+        ].sets;
+      console.log(sets);
+    } else if (
+      sets.length == isFocussed &&
+      workoutData.exerciselist.length == item.index + 1
+    ) {
+      sets[setIndex].weight = weight;
+      sets[setIndex].reps = reps;
+      setShowWorkoutComplete(true);
     } else if (sets.length == isFocussed) {
       sets[setIndex].weight = weight;
       sets[setIndex].reps = reps;
       setWeight("");
       setReps("");
       scrollRef.current.scrollToIndex({
-        animated: false,
+        animated: true,
         index: item.index + 1,
       });
     } else if (sets.length !== isFocussed) {
@@ -86,6 +102,22 @@ export default ExerciseScreen = ({ navigation, route }) => {
 
   const swipeHandler = () => {
     setIsFocussed("01");
+    setWeight("");
+    setReps("");
+  };
+
+  const editingHandler = () => {
+    const sets =
+      storedWorkoutData.storedWorkoutData.exerciselist[
+        storedWorkoutData.storedWorkoutData.exerciselist.length - 1
+      ].sets;
+    sets[sets.length - 1].weight = "";
+    sets[sets.length - 1].reps = "";
+    setShowWorkoutComplete(false);
+  };
+
+  const workoutDoneHandler = () => {
+    console.log(storedWorkoutData.storedWorkoutData);
   };
 
   // const workoutData = (credentials) => {
@@ -105,7 +137,11 @@ export default ExerciseScreen = ({ navigation, route }) => {
         backButton={true}
         backButtonText={true}
         onPressMenu={() => navigation.openDrawer()}
-        onPress={() => navigation.navigate("ExerciseList", workoutData)}
+        onPress={() => {
+          navigation.navigate("ExerciseList", workoutData);
+          setWeight("");
+          setReps("");
+        }}
       />
       <FlatList
         ref={scrollRef}
@@ -140,7 +176,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.inputHeading}>
-                TARGET: {item.targetReps} REPS
+                TARGET: {item.item.targetReps} REPS
               </Text>
               <View style={styles.quantityContainer}>
                 <TextInput
@@ -271,21 +307,40 @@ export default ExerciseScreen = ({ navigation, route }) => {
                 keyExtractor={(item) => item.set}
               />
             </View>
+            <View style={styles.footerContainer}>
+              <View style={styles.swipeContainer}>
+                <FontAwesome5
+                  name="long-arrow-alt-left"
+                  {...arrowIconStyling}
+                />
+                <Text style={styles.swipeText}>SWIPE FOR NEXT EXERCISE</Text>
+                <FontAwesome5
+                  name="long-arrow-alt-right"
+                  {...arrowIconStyling}
+                />
+              </View>
+              <View style={styles.footerButtonContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ExerciseGuide", { index: item.index })
+                  }
+                >
+                  <Text style={styles.footerButtonText}>EXERCISE GUIDE</Text>
+                </TouchableOpacity>
+
+                <View style={styles.hLine}></View>
+                <Text style={styles.footerButtonText}>PREVIOUS STATS</Text>
+              </View>
+            </View>
           </View>
         )}
       />
-      <View style={styles.footerContainer}>
-        <View style={styles.swipeContainer}>
-          <FontAwesome5 name="long-arrow-alt-left" {...arrowIconStyling} />
-          <Text style={styles.swipeText}>SWIPE FOR NEXT EXERCISE</Text>
-          <FontAwesome5 name="long-arrow-alt-right" {...arrowIconStyling} />
-        </View>
-        <View style={styles.footerButtonContainer}>
-          <Text style={styles.footerButtonText}>EXERCISE GUIDE</Text>
-          <View style={styles.hLine}></View>
-          <Text style={styles.footerButtonText}>PREVIOUS STATS</Text>
-        </View>
-      </View>
+
+      <WorkoutCompleteModal
+        visible={showWorkoutComplete}
+        continueEditing={() => editingHandler()}
+        workoutDone={workoutDoneHandler}
+      />
     </View>
   );
 };
