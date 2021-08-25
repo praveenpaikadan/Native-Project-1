@@ -103,26 +103,27 @@ const cardStyles = StyleSheet.create({
   },
 });
 
-export const ExerciseList = (props) => {
+export const ExerciseList = ({ data, key, activeOpacity, timer, onPress }) => {
   const navigation = useNavigation();
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
-      data={props.data}
+      data={data}
       renderItem={(item) => (
-        <View key={props.key}>
+        <View key={key}>
           <ExerciseCard
-            activeOpacity={props.activeOpacity}
-            onPress={() =>
-              navigation.navigate("Exercise", { index: item.index })
-            }
+            activeOpacity={activeOpacity}
+            // onPress={() =>
+            //   navigation.navigate("Exercise", { index: item.index })
+            // }
+            onPress={() => onPress(item.index)}
             id={item.index + 1}
             exerciseName={item.item.exerciseName}
             image1={require("../../assets/images/Dumbbell-Step-Ups-1.jpg")}
             image2={require("../../assets/images/Dumbbell-Step-Ups-2.jpg")}
           />
 
-          {props.timer ? (
+          {timer ? (
             <View style={styles.timerContainer}>
               <MaterialIcons name="timer" {...timerIconStyling} />
               <Text style={styles.timerHeadingText}>REST BETWEEN SETS: </Text>
@@ -130,9 +131,7 @@ export const ExerciseList = (props) => {
                 <Text style={styles.timerText}>{item.item.rest}</Text>
               </View>
             </View>
-          ) : (
-            <Text></Text>
-          )}
+          ) : null}
         </View>
       )}
       keyExtractor={(item) => item.exerciseId}

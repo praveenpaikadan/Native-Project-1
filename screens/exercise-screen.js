@@ -76,7 +76,6 @@ export default ExerciseScreen = ({ navigation, route }) => {
         storedWorkoutData.storedWorkoutData.exerciselist[
           storedWorkoutData.storedWorkoutData.exerciselist.length - 1
         ].sets;
-      console.log(sets);
     } else if (
       sets.length == isFocussed &&
       workoutData.exerciselist.length == item.index + 1
@@ -118,12 +117,13 @@ export default ExerciseScreen = ({ navigation, route }) => {
 
   const workoutDoneHandler = () => {
     console.log(storedWorkoutData.storedWorkoutData);
+    // Function to post the final data to the API
   };
 
-  // const workoutData = (credentials) => {
-  //   AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
+  // const workoutData = (workoutData) => {
+  //   AsyncStorage.setItem("WorkoutData", JSON.stringify(workoutData))
   //     .then(() => {
-  //       setStoredCredentials(credentials);
+  //       setStoredWorkoutData(workoutData);
   //     })
   //     .catch((error) => console.log(error));
   // };
@@ -340,6 +340,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
         visible={showWorkoutComplete}
         continueEditing={() => editingHandler()}
         workoutDone={workoutDoneHandler}
+        text={"WORKOUT DONE"}
       />
     </View>
   );

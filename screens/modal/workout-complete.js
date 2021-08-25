@@ -10,6 +10,7 @@ export const WorkoutCompleteModal = ({
   continueEditing,
   discardWorkout,
   workoutDone,
+  text,
 }) => {
   return (
     <Modal transparent={true} visible={visible}>
@@ -47,7 +48,7 @@ export const WorkoutCompleteModal = ({
 
             <ButtonType1
               styling={styles.button}
-              text={"WORKOUT DONE"}
+              text={text}
               arrow={false}
               textStyling={styles.buttonText}
               onClick={workoutDone}
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    marginHorizontal: 75 * sc,
+    marginHorizontal: 70 * sc,
     marginVertical: 10 * sc,
   },
 
