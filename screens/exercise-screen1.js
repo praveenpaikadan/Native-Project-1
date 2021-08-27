@@ -46,11 +46,9 @@ export default ExerciseScreen1 = ({ navigation, route }) => {
   const weightRef = useRef();
   const repsRef = useRef();
 
-  useEffect(
-    useCallback(() => {
-      scrollToIndex();
-    })
-  );
+  useEffect(() => {
+    scrollIndex();
+  });
 
   const onChangeWeight = () => {
     setWeight(value);
@@ -60,7 +58,7 @@ export default ExerciseScreen1 = ({ navigation, route }) => {
     setReps(value);
   };
 
-  const scrollToIndex = () => {
+  const scrollIndex = () => {
     scrollRef.current.scrollToIndex({ animated: false, index: index });
   };
 
