@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -13,65 +13,77 @@ import { Header } from "../components/header";
 import { ElevatedCardTypeOne } from "../components/cards";
 import { themeColors, sc, globalFonts } from "../styles/global-styles";
 import { StatusBar } from "expo-status-bar";
+import { WorkoutContext } from "../components/workout-context";
 
 const einstructions = data.exercise.eId1.instructions;
 
-export default ExerciseGuideScreen = () => (
-  <View style={styles.container}>
-    <StatusBar translucent={true} />
-    <Header />
-    <View style={styles.contentContainer}>
-      <View style={styles.headingContainer}>
-        <Text style={styles.mainHeading}>
-          {data.exercise.eId1.exersiceName}
-        </Text>
-        <View style={styles.cardContainer}>
-          <ElevatedCardTypeOne styling={styles.card}>
-            <Image
-              source={require("../assets/images/fat-loss.jpg")}
-              style={styles.image}
-            />
-          </ElevatedCardTypeOne>
-          <ElevatedCardTypeOne styling={styles.card}>
-            <Image
-              source={require("../assets/images/muscle-gain.jpg")}
-              style={styles.image}
-            />
-          </ElevatedCardTypeOne>
+export default ExerciseGuideScreen = ({ navigation, route }) => {
+  const index = { ...route.params };
+  const storedWorkoutData = useContext(WorkoutContext);
+  return (
+    <View style={styles.container}>
+      <StatusBar translucent={true} />
+      <Header
+        backButton={true}
+        onPress={() => navigation.pop()}
+        onPressMenu={() => navigation.openDrawer()}
+      />
+      <View style={styles.contentContainer}>
+        <View style={styles.headingContainer}>
+          <Text style={styles.mainHeading}>
+            {
+              storedWorkoutData.storedWorkoutData.exerciselist[index.index]
+                .exerciseName
+            }
+          </Text>
+          <View style={styles.cardContainer}>
+            <ElevatedCardTypeOne styling={styles.card}>
+              <Image
+                source={require("../assets/images/fat-loss.jpg")}
+                style={styles.image}
+              />
+            </ElevatedCardTypeOne>
+            <ElevatedCardTypeOne styling={styles.card}>
+              <Image
+                source={require("../assets/images/muscle-gain.jpg")}
+                style={styles.image}
+              />
+            </ElevatedCardTypeOne>
+          </View>
+        </View>
+
+        <View style={styles.line}></View>
+
+        <ButtonType1
+          play={32 * sc}
+          text={"Watch Now"}
+          arrow={false}
+          styling={styles.button}
+          textStyling={styles.buttonText}
+        />
+
+        <View style={styles.subHeadingContainer}>
+          <Text style={styles.subHeading}>Step by step instructions:</Text>
+        </View>
+
+        <View style={styles.instructionsContainer}>
+          <ScrollView>
+            <View style={styles.instructionsScrollContainer}>
+              {einstructions.map((item, index) => {
+                return (
+                  <View key={index} style={styles.instructions}>
+                    <Text style={styles.content}>{index + 1 + "." + " "}</Text>
+                    <Text style={styles.content}>{item}</Text>
+                  </View>
+                );
+              })}
+            </View>
+          </ScrollView>
         </View>
       </View>
-
-      <View style={styles.line}></View>
-
-      <ButtonType1
-        play={32 * sc}
-        text={"Watch Now"}
-        arrow={false}
-        styling={styles.button}
-        textStyling={styles.buttonText}
-      />
-
-      <View style={styles.subHeadingContainer}>
-        <Text style={styles.subHeading}>Step by step instructions:</Text>
-      </View>
-
-      <View style={styles.instructionsContainer}>
-        <ScrollView>
-          <View style={styles.instructionsScrollContainer}>
-            {einstructions.map((item, index) => {
-              return (
-                <View key={index} style={styles.instructions}>
-                  <Text style={styles.content}>{index + 1 + "." + " "}</Text>
-                  <Text style={styles.content}>{item}</Text>
-                </View>
-              );
-            })}
-          </View>
-        </ScrollView>
-      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

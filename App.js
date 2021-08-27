@@ -10,63 +10,54 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
   const [appReady, setAppReady] = useState(false);
-  const [storedCredentials, setStoredCredentials] = useState("");
-  const [storedWorkoutData, setStoredWorkoutData] = useState("");
-  useEffect(() => {
-    Font.loadAsync({
-      "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
-      "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
-      "ubuntu-medium": require("./assets/fonts/Ubuntu-Medium.ttf"),
-      "ubuntu-bold": require("./assets/fonts/Ubuntu-Bold.ttf"),
-    });
-    checkWorkoutData();
-    console.log(storedWorkoutData);
-  }, []);
+  const [storedCredentials, setStoredCredentials] = useState(null);
+  const [storedWorkoutData, setStoredWorkoutData] = useState(null);
 
-  const checkCredentials = () => {
-    AsyncStorage.getItem("Credentials")
-      .then((result) => {
-        if (result !== "") {
-          setStoredCredentials(JSON.parse(result));
-        } else {
-          setStoredCredentials("");
-        }
-      })
-      .catch((error) => console.log(error));
-  };
+  const loadResources = async () => {
+  console.log('Starting async call')
 
-  const checkWorkoutData = () => {
-    AsyncStorage.getItem("WorkoutData")
-      .then((result) => {
-        if (result !== "") {
-          setStoredWorkoutData(JSON.parse(result));
-        } else {
-          setStoredWorkoutData("");
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
+    try {
+      const [creds, workoutdata, font ] = await Promise.all([
+        AsyncStorage.getItem("Credentials"), 
+        AsyncStorage.getItem("WorkoutData"), 
+        Font.loadAsync({
+          "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
+          "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
+          "ubuntu-medium": require("./assets/fonts/Ubuntu-Medium.ttf"),
+          "ubuntu-bold": require("./assets/fonts/Ubuntu-Bold.ttf"),
+        })
+      ])
+      setStoredCredentials(JSON.parse(creds));
+      console.log(storedCredentials)
+      console.log(storedWorkoutData)
+      setStoredWorkoutData(JSON.parse(workoutdata));
+    }catch(e){
+      console.log(e)
+    }
+  }
+   
   if (appReady) {
     return (
-      <AuthContext.Provider value={{ storedCredentials, setStoredCredentials }}>
-        <WorkoutContext.Provider
-          value={{ storedWorkoutData, setStoredWorkoutData }}
-        >
-          <AuthStack />
-        </WorkoutContext.Provider>
-      </AuthContext.Provider>
+        <AuthContext.Provider value={{ storedCredentials, setStoredCredentials }}>
+          <WorkoutContext.Provider
+            value={{ storedWorkoutData, setStoredWorkoutData }}
+          >
+            <AuthStack />
+          </WorkoutContext.Provider>
+        </AuthContext.Provider>
     );
   } else {
     return (
       <AppLoading
-        startAsync={checkCredentials}
+        startAsync={loadResources}
         onFinish={() => setTimeout(() => setAppReady(true), 500)}
         onError={console.warn}
       />
     );
   }
 }
+
+export const BASE_URL = "http://localhost:3567"
 
 const styles = StyleSheet.create({
   appContainer: {

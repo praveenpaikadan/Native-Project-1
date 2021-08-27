@@ -14,13 +14,14 @@ import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "../screens/modal/my-workouts";
 import TrackingScreen from "../screens/tracking-screen";
 import workoutHistory from "../screens/workout-history";
-import ExerciseScreen1 from "../screens/exercise-screen1";
+import ExerciseScreen from "../screens/exercise-screen";
 import ShowExerciseList from "../screens/showexerciselist";
 import programDetails from "../screens/program-details";
 import BuyNow from "../screens/buy-now";
 import DrawerContent from "./drawer-content";
 import ProfileScreen from "../screens/profile-screen";
 import EditProfileScreen from "../screens/edit-profile-screen";
+import ExerciseGuideScreen from "../screens/exercise-guide";
 import Store from "../screens/store";
 
 const Stack = createStackNavigator();
@@ -34,13 +35,14 @@ const Root = () => {
       <Stack.Screen name="Workout" component={MyWorkouts} />
       <Stack.Screen name="TrackNow" component={TrackingScreen} />
       <Stack.Screen name="WorkoutHistory" component={workoutHistory} />
-      <Stack.Screen name="Exercise" component={ExerciseScreen1} />
+      <Stack.Screen name="Exercise" component={ExerciseScreen} />
       <Stack.Screen name="ExerciseList" component={ShowExerciseList} />
       <Stack.Screen name="ProgramDetails" component={programDetails} />
       <Stack.Screen name="BuyNow" component={BuyNow} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="Store" component={Store} />
+      <Stack.Screen name="ExerciseGuide" component={ExerciseGuideScreen} />
     </Stack.Navigator>
   );
 };
