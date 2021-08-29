@@ -10,7 +10,6 @@ import { AuthContext } from "../components/auth-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
-import { BASE_URL } from "../App";
 
 const data = {
   userId: 1,
@@ -34,6 +33,7 @@ export default HomePage = ({ navigation, route }) => {
   const storedWorkoutData = React.useContext(WorkoutContext);
   const workoutData = storedWorkoutData.storedWorkoutData;
 
+  return (<Text>Hai</Text>)
 
   return (
     <View style={styles.container}>

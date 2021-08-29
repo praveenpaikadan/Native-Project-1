@@ -7,30 +7,80 @@ import { AuthStack } from "./navigation/auth-stack";
 import { AuthContext } from "./components/auth-context";
 import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FlashMessage from "react-native-flash-message";
 
 export default function App() {
   const [appReady, setAppReady] = useState(false);
   const [storedCredentials, setStoredCredentials] = useState(null);
   const [storedWorkoutData, setStoredWorkoutData] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
+  const [firstUser, setFirstUser] = useState(true);
+
+  const resetAuthToken = async (newToken) => {
+    try{
+      await AsyncStorage.setItem('authToken', token)
+      setAuthToken(newToken)
+      return newToken
+    }catch(error){
+      console.log("Error happened whilw storing new token")
+      return false
+    }  
+  } 
+
+  const resetFirstUser = async (value) => {
+    try{
+      await AsyncStorage.setItem('firstUser', value)
+      setFirstUser(value)
+      return value
+    }catch(error){
+      console.log('Unable to set first user' , error)
+      return false
+    }
+  }
+
+  const resetStoredCredentials = async (data) => {
+    try{
+      await AsyncStorage.setItem('Credentials', data)
+      setStoredCredentials(data)
+      return data
+    }catch(error){
+      console.log('Unable to set Credentials' , error)
+      return false
+    }
+  }
+
+  const resetStoredWorkoutData = async (data) => {
+    try{
+      await AsyncStorage.setItem('WorkoutData', data)
+      setStoredWorkoutData(data)
+      return data
+    }catch(error){
+      console.log('Unable to set storedWorkoutData' , error)
+      return false
+    }
+  }
 
   const loadResources = async () => {
-  console.log('Starting async call')
 
     try {
-      const [creds, workoutdata, font ] = await Promise.all([
+      const [creds, workoutdata, authToken, firstUser, font ] = await Promise.all([
         AsyncStorage.getItem("Credentials"), 
         AsyncStorage.getItem("WorkoutData"), 
+        AsyncStorage.getItem("authToken"),
+        AsyncStorage.getItem("firstUser"),
         Font.loadAsync({
           "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
           "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
           "ubuntu-medium": require("./assets/fonts/Ubuntu-Medium.ttf"),
           "ubuntu-bold": require("./assets/fonts/Ubuntu-Bold.ttf"),
-        })
+        }),
       ])
+
       setStoredCredentials(JSON.parse(creds));
-      console.log(storedCredentials)
-      console.log(storedWorkoutData)
       setStoredWorkoutData(JSON.parse(workoutdata));
+      setAuthToken(authToken);
+      setFirstUser((JSON.parse(firstUser)===null?true:false))
+      console.log(authToken)
     }catch(e){
       console.log(e)
     }
@@ -38,11 +88,12 @@ export default function App() {
    
   if (appReady) {
     return (
-        <AuthContext.Provider value={{ storedCredentials, setStoredCredentials }}>
+        <AuthContext.Provider value={{ storedCredentials, resetStoredCredentials, authToken, resetAuthToken, firstUser, resetFirstUser }}>
           <WorkoutContext.Provider
-            value={{ storedWorkoutData, setStoredWorkoutData }}
+            value={{ storedWorkoutData, resetStoredWorkoutData }}
           >
             <AuthStack />
+            <FlashMessage position="top" />
           </WorkoutContext.Provider>
         </AuthContext.Provider>
     );

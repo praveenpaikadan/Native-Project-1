@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Text, Pressable } from "react-native";
+import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { themeColors } from "../styles/global-styles";
 import { FontAwesome } from "@expo/vector-icons";
 import { sc } from "../styles/global-styles";
@@ -12,6 +12,8 @@ export const ButtonType1 = ({
   styling,
   textStyling,
   arrow = true,
+  isLoading=false,
+  activityIndicatorSize='large',
   play = false,
   onClick,
   disabled,
@@ -55,10 +57,11 @@ export const ButtonType1 = ({
             ...textStyling,
           }}
         >
-          {text}
+          {isLoading ? <ActivityIndicator size={activityIndicatorSize} color={themeColors.secondary2} /> : text}
+          
         </Text>
 
-        {arrow ? (
+        {arrow && !isLoading? (
           arrow != true ? (
             <FontAwesome
               name="chevron-right"

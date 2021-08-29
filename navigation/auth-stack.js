@@ -27,6 +27,9 @@ import Store from "../screens/store";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+// authToken and storedCredentials => logged in and authenticated Show home Page
+// 
+
 const Root = () => {
   return (
     <Stack.Navigator headerMode="none">
@@ -48,38 +51,51 @@ const Root = () => {
 };
 
 export const AuthStack = () => {
+
   return (
     <AuthContext.Consumer>
-      {({ storedCredentials }) => (
+
+      {({ storedCredentials, firstUser, authToken }) => (
+
         <NavigationContainer>
-          {storedCredentials ? (
-            <WorkoutContext.Consumer>
-              {({ storedWorkoutData }) => (
-                <Drawer.Navigator
-                  drawerType="slide"
-                  drawerPosition="right"
-                  headerMode="none"
-                  drawerContent={(props) => <DrawerContent {...props} />}
-                  drawerStyle={{ width: "85%" }}
-                >
-                  <Drawer.Screen name="Root" component={Root} />
-                </Drawer.Navigator>
-              )}
-            </WorkoutContext.Consumer>
-          ) : (
-            <Stack.Navigator headerMode="none" initialRouteName="GetStarted">
+
+          {
+          /*
+          storedCredentials && authToken
+          
+          ? 
+          
+          (
+
+            <Drawer.Navigator
+              drawerType="slide"
+              drawerPosition="right"
+              headerMode="none"
+              drawerContent={(props) => <DrawerContent {...props} />}
+              drawerStyle={{ width: "85%" }}
+            >
+              <Drawer.Screen name="Root" component={Root} />
+            </Drawer.Navigator>
+              
+          ) 
+          
+          : 
+          */
+          (
+            <Stack.Navigator headerMode="none" initialRouteName={firstUser?"GetStarted":"SignIn"}>
               <Stack.Screen name="GetStarted" component={GetStartedScreen} />
               <Stack.Screen name="SignUp" component={CreateAccount} />
               <Stack.Screen name="SignIn" component={SignIn} />
               <Stack.Screen name="Gender" component={GenderScreen} />
-              <Stack.Screen
-                name="HeightWeight"
-                component={HeightWeightScreen}
-              />
+              <Stack.Screen name="HeightWeight" component={HeightWeightScreen} />
             </Stack.Navigator>
-          )}
+          )
+          
+          }
+
         </NavigationContainer>
       )}
+
     </AuthContext.Consumer>
   );
 };

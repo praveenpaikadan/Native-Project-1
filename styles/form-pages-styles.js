@@ -62,6 +62,7 @@ export const formPageStyles = StyleSheet.create({
   },
   textInput: {
     backgroundColor: themeColors.tertiary2,
+    marginVertical:5,
     borderWidth: 2 * sc,
     borderColor: "rgba(255, 76, 0, 0.4)",
     paddingVertical: Platform.OS === "ios" ? 8 * sc : 3 * sc,
@@ -72,8 +73,11 @@ export const formPageStyles = StyleSheet.create({
   errorText: {
     fontFamily: globalFonts.primaryLight,
     textAlign: "center",
-    color: themeColors.secondary1,
+    fontSize: 12,
+    marginTop: 4,
+    color: 'red',
   },
+
   submitButton: {
     width: 200 * sc,
     marginTop: 10 * sc,
