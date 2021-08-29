@@ -16,13 +16,19 @@ const postNewUserData = async (data) => {
         const response = await API.post('signup', data)
         return response
     }catch(error){
-        return error.response
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
     }
 }
 
 const loginUser = async (data) => {
-    const res = await API.post(BASE_URL+'/login', data)
-    console.log(res.data)
+    try{
+        const response = await API.post('login', data)
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
 }
 
 export {checkEmail, postNewUserData, loginUser}

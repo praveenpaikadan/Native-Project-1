@@ -58,7 +58,7 @@ export const ButtonType1 = ({
           }}
         >
           {isLoading ? <ActivityIndicator size={activityIndicatorSize} color={themeColors.secondary2} /> : text}
-          
+      
         </Text>
 
         {arrow && !isLoading? (

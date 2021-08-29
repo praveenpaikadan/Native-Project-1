@@ -11,8 +11,12 @@ import Slider from "@react-native-community/slider";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
+import { postNewUserData } from "../utilities/data-center";
+import flash from '../utilities/flash-message';
 
 export default HeightWeightScreen = ({ navigation, route }) => {
+
+
   const [weight, setWeight] = useState(60);
   const [height, setHeight] = useState(160);
   const [displayStatus, setDisplayStatus] = useState("flex");
@@ -50,32 +54,35 @@ export default HeightWeightScreen = ({ navigation, route }) => {
   }, []);
 
   const buttonClickHandler = () => {
-    const url = "https://reqres.in/api/register";
-    setIsLoading(true);
-    axios
-      .post(url, {
-        email: "eve.holt@reqres.in",
-        password: "pistol",
-      })
-      .then(function (response) {
-        const result = {
-          status: response.status,
-          id: response.data.id,
-          token: response.data.token,
-        };
-        console.log(result.status);
-        if (result.status !== 200) {
-          setErrorMessage("Please check your network and try again");
-          setIsLoading(false);
-        } else {
-          setErrorMessage("");
-          persistLogin(result);
-          setIsLoading(false);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+    var userData = {...route.params.userData, height: height, weight: weight}
+    setIsLoading(true)
+    postNewUserData(userData)
+    .then((response) => {
+        console.log(response.status, response.data)
+        switch (response.status) {
+          case 200:
+            var user = response.data
+            console.log(user)
+            flash(`Hurray... ${user.name}, You have been registered, Start tracking your fitness`, 'success', time=4000)
+            // navigation.navigate("Gender", {userData});
+            break;
+          case 409:
+            flash(response.data.errorMessage, 'danger', time=10000)
+            navigation.navigate("SignUp");
+            break;
+          case 101:
+            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+            break;
+          default:
+            if(response.data.message){
+              flash(response.data.message, 'info')
+            }
+            break; 
+          }
+      setIsLoading(false)
+    })
+
   };
 
   const persistLogin = (credentials) => {

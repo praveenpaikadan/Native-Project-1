@@ -1,20 +1,20 @@
 import * as React from "react";
 import { View, TextInput, Text, ActivityIndicator } from "react-native";
 import { KeyboardHideOnTouchOutside } from "../components/keyboard-responsive";
-
 import { SignInGraphics } from "../assets/svgs/svg-graphics";
 import { ButtonType1 } from "../components/buttons";
 import { formPageStyles } from "../styles/form-pages-styles";
 import { sc, themeColors } from "../styles/global-styles";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
 import { WorkoutContext } from "../components/workout-context";
+import { loginUser } from "../utilities/data-center";
+import flash from '../utilities/flash-message'
 
 export default SignInScreen = () => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [userInfo, setUserInfo] = React.useState({
-    userName: "",
+    email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = React.useState(false);
@@ -25,27 +25,22 @@ export default SignInScreen = () => {
 
   const emailChangeHandler = (value) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    setUserInfo({ ...userInfo, userName: value });
-    if (reg.test(value) === true) {
-      null;
-      setErrorMessage(null);
-    } else {
-      setErrorMessage("Inavalid Email/Password");
-    }
+    setUserInfo({ ...userInfo, email: value });
   };
+
   const passwordChangeHandler = (value) => {
-    const reg =
-      /^(?=.*[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     setUserInfo({ ...userInfo, password: value });
-    if (reg.test(value) === true) {
-      null;
-      setErrorMessage(null);
-    } else {
-      setErrorMessage("Inavalid Email/Password");
-    }
   };
 
   const buttonPressHandler = () => {
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(userInfo.email) === true) {
+      setErrorMessage(null);
+    } else {
+      setErrorMessage("Inavalid Email/Password");
+      return
+    }
+
     const data = {
       userId: 1,
       programId: 1,
@@ -111,41 +106,32 @@ export default SignInScreen = () => {
       image1: require("../assets/images/Dumbbell-Step-Ups-1.jpg"),
       image2: require("../assets/images/Dumbbell-Step-Ups-2.jpg"),
     };
-    const url = "https://reqres.in/api/register";
-    setIsLoading(true);
-    if (
-      errorMessage === "Inavalid Email/Password" ||
-      userInfo.userName === "" ||
-      userInfo.password === ""
-    ) {
-      setErrorMessage("Please check credentials provided");
-      setIsLoading(false);
-    } else {
-      axios
-        .post(url, {
-          email: "eve.holt@reqres.in",
-          password: "pistol",
-        })
-        .then((response) => {
-          const result = {
-            status: response.status,
-            id: response.data.id,
-            token: response.data.token,
-          };
-          if (result.status !== 200) {
-            setErrorMessage("Please check your network and try again");
-            setIsLoading(false);
-          } else {
-            setErrorMessage("");
-            persistLogin(result);
-            setIsLoading(false);
-            persistWorkoutData(data);
+
+    setIsLoading(true)
+    loginUser(userInfo)
+    .then((response) => {
+        console.log(response.status, response.data)
+        switch (response.status) {
+          case 200:
+            var user = response.data
+            console.log(user)
+            flash(`Hurray... ${user.name}, You are Logged In`, 'success', time=4000)
+            break;
+          case 401:
+            flash('Authorization failed. Check your credentials', 'danger', time=10000)
+            break;
+          case 101:
+            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+            break;
+          default:
+            if(response.data.message){
+              flash(response.data.message, 'info')
+            }
+            break; 
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+      setIsLoading(false)
+    })
+    
   };
 
   const persistLogin = (credentials) => {
@@ -195,16 +181,8 @@ export default SignInScreen = () => {
               styling={{ ...styles.submitButton }}
               arrow={isLoading ? false : true}
               disabled={isLoading ? true : false}
-              text={
-                isLoading ? (
-                  <ActivityIndicator
-                    size="large"
-                    color={themeColors.secondary2}
-                  />
-                ) : (
-                  "SIGN IN"
-                )
-              }
+              text={"SIGN IN"}
+              isLoading={isLoading}
               onClick={buttonPressHandler}
             />
           </View>

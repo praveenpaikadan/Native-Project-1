@@ -10,11 +10,11 @@ import { ElevatedCardTypeOne } from "../components/cards";
 import { formPageStyles } from "../styles/form-pages-styles";
 
 export default GenderScreen = ({ navigation, route }) => {
+
   const [maleSelected, setMaleSelected] = React.useState(false);
   const [femaleSelected, setFemaleSelected] = React.useState(false);
   const [gender, setGender] = React.useState("");
   const [validationMessage, setValidationMessage] = React.useState("");
-  const data = { ...route.params };
 
   const selectionHandlerMale = () => {
     setMaleSelected(true);
@@ -33,7 +33,8 @@ export default GenderScreen = ({ navigation, route }) => {
     if (gender === "") {
       setValidationMessage("Please select gender");
     } else {
-      navigation.push("HeightWeight", { ...data, gender: gender });
+      var userData = {...route.params.userData, gender: gender}
+      navigation.push("HeightWeight", {userData});
     }
   };
 

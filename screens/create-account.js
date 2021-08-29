@@ -5,7 +5,7 @@ import { CreateAccountGraphics } from "../assets/svgs/svg-graphics";
 import { ButtonType1 } from "../components/buttons";
 import { formPageStyles } from "../styles/form-pages-styles";
 import { checkEmail, postNewUserData } from "../utilities/data-center";
-import flash from '../components/flash-message';
+import flash from '../utilities/flash-message';
 
 
 export default CreateAccountScreen = ({ navigation }) => {
@@ -94,6 +94,8 @@ export default CreateAccountScreen = ({ navigation }) => {
       setValidationMessage("Passwords do not Match")
       return 
     }
+
+    // once validation is over
     setValidationColor(false)
     setValidationMessage("")
     let userData = {name: name, email: email, password: password}
@@ -108,7 +110,7 @@ export default CreateAccountScreen = ({ navigation }) => {
         
       }else if(res.status == 200){
         flash(`Hi ${name}, please give us some more details to complete your Sign Up`, 'success', time=4000)
-        navigation.navigate("Gender");
+        navigation.navigate("Gender", {userData});
       
       }else{
         if(res.data.message){
@@ -125,7 +127,7 @@ export default CreateAccountScreen = ({ navigation }) => {
     })
   };
 
-//navigation.navigate("Gender", user);
+
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
 
   React.useEffect(() => {
