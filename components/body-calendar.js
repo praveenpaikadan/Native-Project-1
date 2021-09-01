@@ -13,6 +13,7 @@ import { sc } from "../styles/global-styles";
 import { BodyCalendarCurrent } from "../screens/modal/body-calender-current";
 import { BodyCalendarFuture } from "../screens/modal/body-calendar-future";
 import { BodyCalendarRest } from "../screens/modal/body-calendar-rest";
+import { Calendar } from "react-native-calendars";
 
 const currentDate = () => {
   const today = new Date();
@@ -102,12 +103,18 @@ const currentDate = () => {
 };
 currentDate();
 
-export default BodyCalendar = ({ visible, closeMenu }) => {
+export default BodyCalendar = ({
+  visible,
+  closeMenu,
+  calendar,
+  calendarHandler,
+  trackNowButton,
+}) => {
   const [showItem, setShowItem] = useState({
     future: false,
     rest: false,
   });
-  const pressHandler = () => {};
+  // const [showCalendar, setShowCalendar] = useState(false);
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
       <View style={{ ...styles.overlay }}>
@@ -122,26 +129,36 @@ export default BodyCalendar = ({ visible, closeMenu }) => {
               <AntDesign name="closecircle" {...closeIconStylingSmall} />
             </TouchableOpacity>
           </View>
+          {calendar ? (
+            <Calendar />
+          ) : (
+            <>
+              <View style={styles.dateContainer}>
+                <Text style={styles.date}>{dayDate}</Text>
+                <TouchableOpacity onPress={calendarHandler}>
+                  <View style={styles.viewButtonContainer}>
+                    <View style={styles.verticalLine}></View>
+                    <FontAwesome5
+                      name="calendar-alt"
+                      {...calendarIconStylingSmall}
+                    />
+                    <Text style={styles.buttonText}>VIEW</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
 
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>{dayDate}</Text>
-            <View style={styles.viewButtonContainer}>
-              <View style={styles.verticalLine}></View>
-              <FontAwesome5 name="calendar-alt" {...calendarIconStylingSmall} />
-              <TouchableWithoutFeedback onPress={pressHandler}>
-                <Text style={styles.buttonText}>VIEW</Text>
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
-          <View style={styles.childrenContainer}>
-            {showItem.future ? (
-              <BodyCalendarFuture />
-            ) : <BodyCalendarCurrent /> && showItem.rest ? (
-              <BodyCalendarRest />
-            ) : (
-              <BodyCalendarCurrent />
-            )}
-          </View>
+              <View style={styles.childrenContainer}>
+                {showItem.future ? (
+                  <BodyCalendarFuture />
+                ) : <BodyCalendarCurrent trackNow={trackNowButton} /> &&
+                  showItem.rest ? (
+                  <BodyCalendarRest />
+                ) : (
+                  <BodyCalendarCurrent trackNow={trackNowButton} />
+                )}
+              </View>
+            </>
+          )}
         </View>
       </View>
     </Modal>

@@ -9,8 +9,10 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import MyWorkouts from "../screens/modal/my-workouts";
 import BodyCalendar from "./body-calendar";
+import { useNavigation } from "@react-navigation/native";
 
 export const TabMenu = () => {
+  const [showBodyCalendar, setShowBodyCalendar] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showWorkout, setShowWorkout] = useState(false);
   const [active, setactive] = useState({
@@ -18,11 +20,14 @@ export const TabMenu = () => {
     calendar: false,
     workout: false,
   });
+
+  const navigation = useNavigation();
+
   const homePress = () => {
     setactive({ home: true, calendar: false, workout: false });
   };
   const calendarPress = () => {
-    setShowCalendar(true);
+    setShowBodyCalendar(true);
     setactive({ home: false, calendar: true, workout: false });
   };
   const workoutPress = () => {
@@ -38,10 +43,21 @@ export const TabMenu = () => {
     size: 25 * sc,
   };
 
-  const calendarCloseHandler = () => {
+  const bodyCalendarCloseHandler = () => {
+    setShowBodyCalendar(false);
     setShowCalendar(false);
     setactive({ home: true, calendar: false, store: false, workout: false });
   };
+
+  const calendarShowHandler = () => {
+    setShowCalendar(true);
+  };
+
+  const trackNowHandler = () => {
+    setShowBodyCalendar(false);
+    navigation.navigate("TrackNow");
+  };
+
   const workoutCloseHandler = () => {
     setShowWorkout(false);
     setactive({ home: true, calendar: false, store: false, workout: false });
@@ -65,7 +81,7 @@ export const TabMenu = () => {
           <View style={{ ...styles.menuContainer, paddingLeft: 30 * sc }}>
             <FontAwesome5
               name="calendar-alt"
-              {...(showCalendar
+              {...(showBodyCalendar
                 ? { ...activeMenuIconStyling }
                 : { ...menuIconStyling })}
             />
@@ -86,7 +102,13 @@ export const TabMenu = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <BodyCalendar visible={showCalendar} closeMenu={calendarCloseHandler} />
+      <BodyCalendar
+        visible={showBodyCalendar}
+        closeMenu={bodyCalendarCloseHandler}
+        calendar={showCalendar}
+        calendarHandler={calendarShowHandler}
+        trackNowButton={trackNowHandler}
+      />
       <MyWorkouts visible={showWorkout} closeMenu={workoutCloseHandler} />
     </View>
   );
