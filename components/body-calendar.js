@@ -13,7 +13,7 @@ import { sc } from "../styles/global-styles";
 import { BodyCalendarCurrent } from "../screens/modal/body-calender-current";
 import { BodyCalendarFuture } from "../screens/modal/body-calendar-future";
 import { BodyCalendarRest } from "../screens/modal/body-calendar-rest";
-import { Calendar } from "react-native-calendars";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 
 const currentDate = () => {
   const today = new Date();
@@ -109,12 +109,169 @@ export default BodyCalendar = ({
   calendar,
   calendarHandler,
   trackNowButton,
+  closeCalendar,
 }) => {
   const [showItem, setShowItem] = useState({
     future: false,
     rest: false,
   });
-  // const [showCalendar, setShowCalendar] = useState(false);
+
+  const [date, setDate] = useState(dayDate);
+
+  LocaleConfig.locales["en"] = {
+    monthNames: [
+      "JANUARY",
+      "FEBRUARY",
+      "MARCH",
+      "APRIL",
+      "MAY",
+      "JUNE",
+      "JULY",
+      "AUGUST",
+      "SEPTEMBER",
+      "OCTOBER",
+      "NOVEMBER",
+      "DECEMBER",
+    ],
+    monthNamesShort: [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC",
+    ],
+    dayNames: [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY",
+    ],
+    dayNamesShort: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+  };
+  LocaleConfig.defaultLocale = "en";
+
+  const dateHandler = (day) => {
+    const pressedDate = new Date(day.timestamp);
+    const pressedMonth = parseInt(pressedDate.getMonth() + 1);
+    const pressedDay = parseInt(pressedDate.getDay() + 1);
+
+    switch (pressedMonth) {
+      case 1:
+        let mm = "Jan";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 2:
+        mm = "Feb";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 3:
+        mm = "Mar";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 4:
+        mm = "Apr";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 5:
+        mm = "May";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 6:
+        mm = "Jun";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 7:
+        mm = "Jul";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 8:
+        mm = "Aug";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 9:
+        mm = "Sep";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 10:
+        mm = "Oct";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 11:
+        mm = "Nov";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+      case 12:
+        mm = "Dec";
+        selectedDate =
+          pressedDate.getDate() + "-" + mm + "-" + pressedDate.getFullYear();
+        break;
+    }
+
+    switch (pressedDay) {
+      case 1:
+        let dd = "Sunday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+      case 2:
+        dd = "Monday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+      case 3:
+        dd = "Tuesday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+      case 4:
+        dd = "Wednesday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+      case 5:
+        dd = "Thursday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+      case 6:
+        dd = "Friday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+      case 7:
+        dd = "Saturday";
+        pressedDayDate = dd + " " + selectedDate;
+        break;
+    }
+
+    if (pressedDayDate == dayDate) {
+      setShowItem({ future: false, rest: false });
+      closeCalendar();
+    } else {
+      setDate(pressedDayDate);
+      setShowItem({ ...showItem, future: true });
+      closeCalendar();
+    }
+  };
+  const dateSetter = () => {
+    setDate(dayDate);
+    setShowItem({ future: false, rest: false });
+  };
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
       <View style={{ ...styles.overlay }}>
@@ -125,16 +282,41 @@ export default BodyCalendar = ({
               <FontAwesome5 name="calendar-alt" {...calendarIconStyling} />
               <Text style={styles.heading}>BODY CALENDAR</Text>
             </View>
-            <TouchableOpacity onPress={closeMenu}>
+            <TouchableOpacity
+              onPress={() => {
+                closeMenu();
+                dateSetter();
+              }}
+            >
               <AntDesign name="closecircle" {...closeIconStylingSmall} />
             </TouchableOpacity>
           </View>
           {calendar ? (
-            <Calendar />
+            <View style={styles.calendarContainer}>
+              <Calendar
+                style={{
+                  borderRadius: 5 * sc,
+                  borderColor: themeColors.secondary2,
+                  margin: 10 * sc,
+                }}
+                theme={{
+                  calendarBackground: themeColors.tertiary2,
+                  textSectionTitleColor: themeColors.secondary1,
+                  todayTextColor: themeColors.primary1,
+                  textDisabledColor: themeColors.tertiary3,
+                  arrowColor: themeColors.primary1,
+                  monthTextColor: themeColors.secondary1,
+                  textDayFontFamily: globalFonts.primaryMedium,
+                  textMonthFontFamily: globalFonts.primaryBold,
+                  textDayHeaderFontFamily: globalFonts.primaryMedium,
+                }}
+                onDayPress={dateHandler}
+              />
+            </View>
           ) : (
             <>
               <View style={styles.dateContainer}>
-                <Text style={styles.date}>{dayDate}</Text>
+                <Text style={styles.date}>{date}</Text>
                 <TouchableOpacity onPress={calendarHandler}>
                   <View style={styles.viewButtonContainer}>
                     <View style={styles.verticalLine}></View>
@@ -214,6 +396,10 @@ const styles = StyleSheet.create({
     color: themeColors.secondary2,
     paddingLeft: 10 * sc,
     fontSize: 18 * sc,
+  },
+
+  calendarContainer: {
+    backgroundColor: themeColors.secondary2,
   },
 
   dateContainer: {

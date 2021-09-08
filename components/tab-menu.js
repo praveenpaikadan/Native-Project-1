@@ -108,6 +108,7 @@ export const TabMenu = () => {
         calendar={showCalendar}
         calendarHandler={calendarShowHandler}
         trackNowButton={trackNowHandler}
+        closeCalendar={() => setShowCalendar(false)}
       />
       <MyWorkouts visible={showWorkout} closeMenu={workoutCloseHandler} />
     </View>
