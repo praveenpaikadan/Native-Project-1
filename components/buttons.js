@@ -7,6 +7,8 @@ import { sc } from "../styles/global-styles";
 // pass extra styling as styling={{style1:value,....}}
 // pass arrow={false} to remove arrow
 
+global.authToken = null
+
 export const ButtonType1 = ({
   text,
   styling,

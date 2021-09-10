@@ -11,7 +11,9 @@ import { WorkoutContext } from "../components/workout-context";
 import { loginUser } from "../utilities/data-center";
 import flash from '../utilities/flash-message'
 
-export default SignInScreen = () => {
+export default SignInScreen = ({navigation}) => {
+
+  const {setLoggedIn} = React.useContext(AuthContext)
   const [errorMessage, setErrorMessage] = React.useState("");
   const [userInfo, setUserInfo] = React.useState({
     email: "",
@@ -41,72 +43,6 @@ export default SignInScreen = () => {
       return
     }
 
-    const data = {
-      userId: 1,
-      programId: 1,
-      programName: "Muscle gain program",
-      day: 16,
-      target: "Shoulders, Legs, Calves",
-      goal: "Muscle Building",
-      level: "Intermediate",
-      totalSets: 29,
-      totalWorkoutTime: "01:30",
-      exerciselist: [
-        {
-          exerciseId: "1",
-          exerciseName: "Dumbbell Step Ups",
-          targetSets: 3,
-          targetReps: "8 - 12",
-          sets: [
-            { set: "01", weight: "", reps: "" },
-            { set: "02", weight: "", reps: "" },
-            { set: "03", weight: "", reps: "" },
-          ],
-          rest: "00:45",
-        },
-        {
-          exerciseId: "2",
-          exerciseName: "Barbell Shrug",
-          targetSets: 4,
-          targetReps: "8 - 12",
-          sets: [
-            { set: "01", weight: "", reps: "" },
-            { set: "02", weight: "", reps: "" },
-            { set: "03", weight: "", reps: "" },
-            { set: "04", weight: "", reps: "" },
-          ],
-
-          rest: "00:30",
-        },
-        {
-          exerciseId: "3",
-          exerciseName: "Leg Extensions",
-          targetSets: 3,
-          targetReps: "8 - 12",
-          sets: [
-            { set: "01", weight: "", reps: "" },
-            { set: "02", weight: "", reps: "" },
-            { set: "03", weight: "", reps: "" },
-          ],
-          rest: "00:45",
-        },
-        {
-          exerciseId: "4",
-          exerciseName: "Standing Calf Raise",
-          targetSets: 3,
-          targetReps: "8 - 12",
-          sets: [
-            { set: "01", weight: "", reps: "" },
-            { set: "02", weight: "", reps: "" },
-            { set: "03", weight: "", reps: "" },
-          ],
-          rest: "01:00",
-        },
-      ],
-      image1: require("../assets/images/Dumbbell-Step-Ups-1.jpg"),
-      image2: require("../assets/images/Dumbbell-Step-Ups-2.jpg"),
-    };
-
     setIsLoading(true)
     loginUser(userInfo)
     .then((response) => {
@@ -116,6 +52,7 @@ export default SignInScreen = () => {
             var user = response.data
             console.log(user)
             flash(`Hurray... ${user.name}, You are Logged In`, 'success', time=4000)
+            setLoggedIn(true)
             break;
           case 401:
             flash('Authorization failed. Check your credentials', 'danger', time=10000)

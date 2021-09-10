@@ -8,40 +8,33 @@ import { AuthContext } from "./components/auth-context";
 import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FlashMessage from "react-native-flash-message";
+import API from './utilities/api'
+import { getAPIAllLocal } from "./utilities/data-center";
+import flash from './utilities/flash-message'
+
+global.authToken 
 
 export default function App() {
+
+  // for showing loading screen
   const [appReady, setAppReady] = useState(false);
-  const [storedCredentials, setStoredCredentials] = useState(null);
-  const [storedWorkoutData, setStoredWorkoutData] = useState(null);
-  const [authToken, setAuthToken] = useState(null);
-  const [firstUser, setFirstUser] = useState(true);
+  
+  // states that stores loacal data. The are put in the wrapping context. All are loaded when app starts. 
+  // The navigation flow happens according to the availablility of this data.
+  
+  // The app decides to show the signIn screen or signup screen when authtoken is 'null' based on this 
+  const [loggedIn, setLoggedIn] = useState(false) 
+  const [credentials, setCredentials] = useState(null)
+  const [workoutData, setWorkoutData] = useState(null)
+  const [dayWorkout, setDayWorkout] = useState(null)
+  const [programData, setProgramData] = useState(null)
 
-  const resetAuthToken = async (newToken) => {
-    try{
-      await AsyncStorage.setItem('authToken', token)
-      setAuthToken(newToken)
-      return newToken
-    }catch(error){
-      console.log("Error happened whilw storing new token")
-      return false
-    }  
-  } 
+  var loadingstarted = false
 
-  const resetFirstUser = async (value) => {
+  const resetCredentials = async (data) => {
     try{
-      await AsyncStorage.setItem('firstUser', value)
-      setFirstUser(value)
-      return value
-    }catch(error){
-      console.log('Unable to set first user' , error)
-      return false
-    }
-  }
-
-  const resetStoredCredentials = async (data) => {
-    try{
-      await AsyncStorage.setItem('Credentials', data)
-      setStoredCredentials(data)
+      await AsyncStorage.setItem('credentials', JSON.stringify(data))
+      setCredentials(data)
       return data
     }catch(error){
       console.log('Unable to set Credentials' , error)
@@ -49,25 +42,27 @@ export default function App() {
     }
   }
 
-  const resetStoredWorkoutData = async (data) => {
+  const resetWorkoutData = async (data) => {
     try{
-      await AsyncStorage.setItem('WorkoutData', data)
-      setStoredWorkoutData(data)
+      await AsyncStorage.setItem('workoutData', JSON.stringify(data))
+      setWorkoutData(data)
       return data
     }catch(error){
-      console.log('Unable to set storedWorkoutData' , error)
+      console.log('Unable to set workoutData' , error)
       return false
     }
   }
 
   const loadResources = async () => {
 
+    await AsyncStorage.removeItem('credentials')
+    await AsyncStorage.removeItem('workoutData')
+    await AsyncStorage.removeItem('authToken')
+
     try {
-      const [creds, workoutdata, authToken, firstUser, font ] = await Promise.all([
-        AsyncStorage.getItem("Credentials"), 
-        AsyncStorage.getItem("WorkoutData"), 
-        AsyncStorage.getItem("authToken"),
-        AsyncStorage.getItem("firstUser"),
+      const [creds, workoutdata, font ] = await Promise.all([
+        AsyncStorage.getItem("credentials"), 
+        AsyncStorage.getItem("workoutData"), 
         Font.loadAsync({
           "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
           "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
@@ -76,21 +71,75 @@ export default function App() {
         }),
       ])
 
-      setStoredCredentials(JSON.parse(creds));
-      setStoredWorkoutData(JSON.parse(workoutdata));
-      setAuthToken(authToken);
-      setFirstUser((JSON.parse(firstUser)===null?true:false))
-      console.log(authToken)
+      console.log('before updation creds : ', JSON.parse(creds))
+      console.log('before updation workout data : ', JSON.parse(workoutdata))
+
+      if(!creds){
+        loadingstarted = true
+        var response = await getAPIAllLocal()
+        switch (response.status) {
+          case 200:
+            console.log(response.data)
+            resetCredentials(response.data.credentials)
+            resetWorkoutData(response.data.workoutData)
+            setLoggedIn(true)
+            break;
+          case 401:
+            flash('Authorization failed. Please sign in again', 'danger', time=10000)
+            break;
+          case 101:
+            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+            break;
+          default:
+            if(response.data.message){
+              flash(response.data.message, 'info')
+            }
+            break; 
+          }
+      }else{
+        setCredentials(JSON.parse(creds))
+        setWorkoutData(JSON.parse(workoutData))
+        setLoggedIn(true)
+      }
+
+    
+      if(loadingstarted === false){
+        console.log("Running usual update")
+        getAPIAllLocal()
+        .then((response) => {
+          switch (response.status) {
+            case 200:
+              resetCredentials(response.data.credentials)
+              resetWorkoutData(response.data.workoutData)
+              setLoggedIn(true)
+              console.log("Usual update over and success")
+              break;
+            case 401:
+              flash('Authorization failed. Please sign in again', 'danger', time=10000)
+              break;
+            case 101:
+              flash('Failed to communicate with server...', 'danger', time=10000)
+              break;
+            default:
+              if(response.data.message){
+                flash(response.data.message, 'info')
+              }
+              break; 
+            }
+        })
+      }
+
     }catch(e){
+      // TBD => Handle failures
       console.log(e)
     }
   }
    
   if (appReady) {
     return (
-        <AuthContext.Provider value={{ storedCredentials, resetStoredCredentials, authToken, resetAuthToken, firstUser, resetFirstUser }}>
+        <AuthContext.Provider value={{  credentials, resetCredentials, loggedIn, setLoggedIn}}>
           <WorkoutContext.Provider
-            value={{ storedWorkoutData, resetStoredWorkoutData }}
+            value={{ workoutData, resetWorkoutData }}
           >
             <AuthStack />
             <FlashMessage position="top" />

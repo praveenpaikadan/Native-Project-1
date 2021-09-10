@@ -6,6 +6,7 @@ import {
   ImageBackground,
   FlatList,
   TouchableOpacity,
+  RefreshControl
 } from "react-native";
 import {
   globalFonts,
@@ -15,6 +16,12 @@ import {
 } from "../../styles/global-styles";
 import { ElevatedCardTypeOne } from "../../components/cards";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { ActivityIndicator } from "react-native";
+import { getAPIAvailablePrograms } from '../../utilities/data-center';
+import { MessageBox1 } from "../../components/message-box";
+import { EmptyPaper } from "../../assets/svgs/svg-graphics";
+
+
 
 const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
   return (
@@ -41,6 +48,125 @@ const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
     </ElevatedCardTypeOne>
   );
 };
+
+
+const List = ({data, setReload}) => {
+  
+  if(data.length === 0){
+    return(
+      <MessageBox1 
+        setReload={setReload} 
+        reloadbutton={true}
+        message = 'You have no valid Programs at the time. Please contact trainer to get new programs assigned to you...'
+      >
+        <EmptyPaper />
+
+      </MessageBox1>)
+  }
+  return(
+    
+    <View style={styles.container}>
+      <View style={styles.topBox}>
+        <Text style={styles.pickText}>PICK YOUR PROGRAM</Text>
+        <View style={styles.triangle}></View>
+      </View>
+
+      <View style={styles.bottomBox}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={data}
+          keyExtractor={(item, index) => index.toString()}
+          refreshControl={<RefreshControl onRefresh={() => setReload()} />}
+          renderItem={({item}) => (
+            <TouchableOpacity onPress={() => {console.log(item.programName)}}>
+              <ProgramCard
+                styles={styles.cardsContainer}
+                bgImage={require("../../assets/images/muscle-gain.jpg")}
+                heading={item.programName}
+                shortInfo={item.programName}
+                level={item.level}
+                period={"5/Weeks"}
+              />
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </View>
+
+  )
+} 
+
+
+
+
+export default ProgramList = ({ onPress }) => {
+
+  const [loading, setLoading] = React.useState(true)
+  const [display, setDisplay] = React.useState(<></>) 
+  const [fetchSwitch, setFetchSwitch] = React.useState(true)
+  const [data, setData] = React.useState([])
+
+  const setReload = () => {
+    setLoading(true)
+    setFetchSwitch(!fetchSwitch)
+  }
+
+  React.useEffect(() => {
+    getAPIAvailablePrograms()
+    .then(response => {
+      switch (response.status) {
+        
+        case 200:
+          setLoading(false)
+          setData(data)
+          setDisplay(
+            <List 
+              data={response.data}
+              setReload={setReload}
+            />)
+          break;
+
+        case 502:
+        setLoading(false)
+        setDisplay(
+          <MessageBox1 
+            setReload={setReload} 
+            message = 'Something Happened on our side. Please try again or contact your trainer to resolve the issue. ERR_CODE: DBFETCHERR'
+          />)
+          
+        case 101:
+          setLoading(false)
+          setDisplay(
+            <MessageBox1 
+              setReload={setReload} 
+              message = 'Something Happened. Plese check your network and tap to try Again..'
+            />)
+          break;
+        
+        default:
+          if(response.data.message){
+            setLoading(false)
+            setDisplay(
+              <MessageBox1 
+                setReload={setReload} 
+                message = 'Something Happened. Please tap to try Again..'
+              />)
+            }
+            break; 
+        }
+    })
+
+  }, [fetchSwitch])
+
+
+
+  if(loading) {
+    return <View style={styles.bottomBox}><ActivityIndicator size={sc*76} color={themeColors.secondary2} /></View>
+  }else{
+    return display
+  }
+}
+
 
 const cardIconStyling = {
   size: 15 * sc,
@@ -98,41 +224,20 @@ const cardStyles = StyleSheet.create({
   },
 });
 
-export default ProgramList = ({ onPress }) => {
-  DATA = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.topBox}>
-        <Text style={styles.pickText}>PICK YOUR PROGRAM</Text>
-        <View style={styles.triangle}></View>
-      </View>
-
-      <View style={styles.bottomBox}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={DATA}
-          renderItem={() => (
-            <TouchableOpacity onPress={onPress}>
-              <ProgramCard
-                styles={styles.cardsContainer}
-                bgImage={require("../../assets/images/muscle-gain.jpg")}
-                heading={"Muscle Gain"}
-                shortInfo={"Muscle Gain"}
-                level={"Intermediate"}
-                period={"5/Weeks"}
-              />
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </View>
-  );
-};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+  },
+
+  messageBox: {
+    fontFamily: globalFonts.primaryMedium,
+    opacity: 0.7,
+    fontSize: 12 * sc,
+    color: themeColors.secondary2,
+    paddingVertical: 3 * sc,
+    paddingHorizontal: 10 * sc,
+    borderRadius: 10 * sc,
   },
 
   topBox: {

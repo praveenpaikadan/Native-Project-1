@@ -207,7 +207,6 @@ export default CreateAccountScreen = ({ navigation }) => {
               styling={styles.submitButton}
               text={"SIGN UP"}
               disabled={isLoading ? true : false}
-              text={"SIGN IN"}
               isLoading={isLoading}
               onClick={buttonClickHandler}
             />

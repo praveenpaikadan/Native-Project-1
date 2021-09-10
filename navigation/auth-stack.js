@@ -55,17 +55,18 @@ export const AuthStack = () => {
   return (
     <AuthContext.Consumer>
 
-      {({ storedCredentials, firstUser, authToken }) => (
+      {({ loggedIn}) => (
 
         <NavigationContainer>
 
           {
-          /*
-          storedCredentials && authToken
+          
+          loggedIn
           
           ? 
-          
+           
           (
+
 
             <Drawer.Navigator
               drawerType="slide"
@@ -80,9 +81,9 @@ export const AuthStack = () => {
           ) 
           
           : 
-          */
+          
           (
-            <Stack.Navigator headerMode="none" initialRouteName={firstUser?"GetStarted":"SignIn"}>
+            <Stack.Navigator headerMode="none" initialRouteName={"GetStarted"}>
               <Stack.Screen name="GetStarted" component={GetStartedScreen} />
               <Stack.Screen name="SignUp" component={CreateAccount} />
               <Stack.Screen name="SignIn" component={SignIn} />
@@ -91,7 +92,7 @@ export const AuthStack = () => {
             </Stack.Navigator>
           )
           
-          }
+          } 
 
         </NavigationContainer>
       )}

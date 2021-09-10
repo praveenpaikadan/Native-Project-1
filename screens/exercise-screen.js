@@ -31,6 +31,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { WorkoutCompleteModal } from "./modal/workout-complete";
+import { KgRepsInput } from "../components/set-reps-time";
 
 export default ExerciseScreen = ({ navigation, route }) => {
   const data = { ...route.params };
@@ -174,38 +175,9 @@ export default ExerciseScreen = ({ navigation, route }) => {
                 {"Exercise " + (item.index + 1) + " - Set " + isFocussed}
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputHeading}>
-                TARGET: {item.item.targetReps} REPS
-              </Text>
-              <View style={styles.quantityContainer}>
-                <TextInput
-                  placeholder="--"
-                  placeholderTextColor={themeColors.primary1}
-                  style={styles.input}
-                  onChangeText={onChangeWeight}
-                  value={weight}
-                  keyboardType="numeric"
-                  maxLength={4}
-                />
-                <Text style={styles.unit}>KG</Text>
-              </View>
-              <View style={styles.inputCloseIconContainer}>
-                <Fontisto name="close-a" {...closeIconStyling} />
-              </View>
 
-              <View style={styles.quantityContainer}>
-                <TextInput
-                  placeholder="--"
-                  placeholderTextColor={themeColors.primary1}
-                  style={styles.input}
-                  onChangeText={onChangeReps}
-                  value={reps}
-                  keyboardType="numeric"
-                />
-                <Text style={styles.unit}>REPS</Text>
-              </View>
-            </View>
+            <KgRepsInput dataChangeHandler={() => {return}}/>
+            
             <View style={styles.buttonContainer}>
               <ButtonType1
                 arrow={false}
@@ -346,10 +318,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
   );
 };
 
-const closeIconStyling = {
-  color: themeColors.tertiary1,
-  size: 25 * sc,
-};
+
 const postCloseIconStyling = {
   color: themeColors.tertiary1,
   size: 15 * sc,

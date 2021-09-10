@@ -10,9 +10,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 
 export default HomePage = ({ navigation }) => {
-  const { storedCredentials, setStoredCredentials } =
-    React.useContext(AuthContext);
-  const { status, id, token } = storedCredentials;
+  const { storedCredentials, setStoredCredentials } = React.useContext(AuthContext);
+  // const { status, id, token } = storedCredentials;
 
   return (
     <View style={styles.container}>
@@ -55,7 +54,8 @@ export default HomePage = ({ navigation }) => {
         </ImageBackground>
 
         <View style={styles.dataContainer}>
-          {status !== 200 ? (
+          {/* {status !== 200 ? ( */}
+            {false? ( 
             <TrackNowSubScreen
               onClick={navigation.navigate("Root", { screen: "TrackNow" })}
             />
