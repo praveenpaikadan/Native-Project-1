@@ -6,7 +6,8 @@ import {
   ImageBackground,
   FlatList,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
+  Image
 } from "react-native";
 import {
   globalFonts,
@@ -20,13 +21,14 @@ import { ActivityIndicator } from "react-native";
 import { getAPIAvailablePrograms } from '../../utilities/data-center';
 import { MessageBox1 } from "../../components/message-box";
 import { EmptyPaper } from "../../assets/svgs/svg-graphics";
-
-
+import { BASE_URL } from "../../utilities/api"
 
 const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
+  var source = bgImage?{uri: bgImage, headers: {'X-Access-Token' : "authToken"}}:require('../../assets/images/dead-lift.jpg')
   return (
     <ElevatedCardTypeOne styling={cardStyles.card}>
-      <ImageBackground style={cardStyles.cardImage} source={bgImage}>
+      <ImageBackground style={cardStyles.cardImage} source={source}>
+        
         <View style={cardStyles.cardOverlay}>
           <Text style={cardStyles.mainText}>{heading}</Text>
           <View style={cardStyles.detailsContainer}>
@@ -50,7 +52,7 @@ const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
 };
 
 
-const List = ({data, setReload}) => {
+const List = ({data, setReload, navigation}) => {
   
   if(data.length === 0){
     return(
@@ -78,14 +80,14 @@ const List = ({data, setReload}) => {
           keyExtractor={(item, index) => index.toString()}
           refreshControl={<RefreshControl onRefresh={() => setReload()} />}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => {console.log(item.programName)}}>
+            <TouchableOpacity onPress={() => {item.bgImage = item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null; navigation.navigate('ProgramDetails', {data: item})}}>
               <ProgramCard
                 styles={styles.cardsContainer}
-                bgImage={require("../../assets/images/muscle-gain.jpg")}
+                bgImage={item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null}
                 heading={item.programName}
                 shortInfo={item.programName}
                 level={item.level}
-                period={"5/Weeks"}
+                period={`${item.daysPerWeek} days X ${item.durationWeeks} weeks`}
               />
             </TouchableOpacity>
           )}
@@ -99,7 +101,7 @@ const List = ({data, setReload}) => {
 
 
 
-export default ProgramList = ({ onPress }) => {
+export default ProgramList = ({ navigation }) => {
 
   const [loading, setLoading] = React.useState(true)
   const [display, setDisplay] = React.useState(<></>) 
@@ -123,6 +125,7 @@ export default ProgramList = ({ onPress }) => {
             <List 
               data={response.data}
               setReload={setReload}
+              navigation={navigation}
             />)
           break;
 
@@ -156,7 +159,7 @@ export default ProgramList = ({ onPress }) => {
         }
     })
 
-  }, [fetchSwitch])
+  }, [fetchSwitch, authToken])
 
 
 
@@ -187,7 +190,7 @@ const cardStyles = StyleSheet.create({
   },
 
   cardOverlay: {
-    backgroundColor: "rgba(0,0,0, 0.3)",
+    // backgroundColor: "rgba(0,0,0, 0.3)",
     width: "100%",
     height: "100%",
     alignItems: "flex-start",
@@ -218,6 +221,7 @@ const cardStyles = StyleSheet.create({
   },
 
   subText: {
+    fontSize: 12*sc,
     fontFamily: globalFonts.primaryRegular,
     color: themeColors.secondary2,
     ...globalShadows.orangeTextShadow1,

@@ -10,9 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 
 export default TrackingScreen = ({ navigation }) => {
-  storedWorkoutData = React.useContext(WorkoutContext);
-  workoutData = storedWorkoutData.storedWorkoutData;
-
+  var {workoutData} = React.useContext(WorkoutContext);
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} style="light" />

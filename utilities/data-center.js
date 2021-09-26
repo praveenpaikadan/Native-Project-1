@@ -61,6 +61,27 @@ const getAPIAvailablePrograms = async () => {
     }
 }
 
+const getAPIMedia = async (filename) => {
+    try{
+        const response = await API.get(`media/${filename}`)
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
+
+const testSubscribe = async (subscriptionDatails) => {
+    
+    try{
+        const response = await API.post('subscription/new', subscriptionDatails )
+        return response
+    }catch(error){
+        console.log(error)
+        return error.response?error.response:{status: 101}
+    }
+}
 
 
-export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms}
+
+export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe }

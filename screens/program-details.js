@@ -8,55 +8,81 @@ import {
 } from "react-native";
 import { sc, themeColors, globalFonts } from "../styles/global-styles";
 import { ButtonType1 } from "../components/buttons";
-import data from "../assets/data/data.json";
 import { SubHeader } from "../components/subheader";
 import { StatusBar } from "expo-status-bar";
+import { BASE_URL } from "../utilities/api";
 
-const duration = data.programs.pId1.duration.slice(0, 1);
 
-export default ProgramDetails = ({ navigation }) => {
+export default ProgramDetails = ({ navigation, route }) => {
+
+  const {data} = route.params
+
+  if(data.videos[0]){
+    var video_link = `${BASE_URL}/media/${data.videos[0].filename}`
+  }
+  
+  console.log(data)
+  var imgSource = data.bgImage
+          ?{uri: data.bgImage, headers: {'X-Access-Token': authToken}}
+          :require('../assets/images/dead-lift.jpg')
+
   const backHandler = () => {
     navigation.goBack();
   };
+
   return (
     <View style={styles.programDetailsContainer}>
       <StatusBar translucent={true} />
       <View style={styles.backgroudImageContainer}>
         <ImageBackground
-          source={require("../assets/images/muscle-gain.jpg")}
+          source={imgSource}
           style={styles.image}
         >
           <View style={styles.overlay}>
             <SubHeader
-              text={data.programs.pId1.programName.split("Aboo Thahir")}
+              text={data.programName.split("Aboo Thahir")}
               onPress={backHandler}
             />
+
             <View style={styles.contentContainer}>
               <Text style={styles.smallHeading}>
-                {data.programs.pId1.level}, {duration} Week Program
+                {data.durationWeeks} week program for {data.level} level.
               </Text>
+              
+             {data.videos[0]? <ButtonType1
+                text={"Watch Video"}
+                play={30}
+                arrow={false}
+                styling={styles.vbutton}
+                textStyling={styles.vbuttonText}
+                onClick={() => {navigation.navigate('VideoPlayer', {link: video_link})}}
+              />
+              :<></>
+            }
+              
+              <Text style={styles.smallHeading}>
+                Category: {'custom category'}
+              </Text>
+              <Text style={styles.smallHeading}>
+                Days Per Week: {data.daysPerWeek}
+              </Text>
+              <Text style={styles.smallHeading}>
+                Equipment: {data.equipments.join(', ')}
+              </Text>
+              
               <ButtonType1
                 text={"Join Now"}
                 arrow={false}
                 styling={styles.button}
                 textStyling={styles.buttonText}
-                onClick={() => navigation.navigate("BuyNow")}
+                onClick={() => navigation.navigate("BuyNow", {data: data, bgImage :imgSource})}
               />
-              <Text style={styles.smallHeading}>
-                Category: {data.programs.pId1.goal}
-              </Text>
-              <Text style={styles.smallHeading}>
-                Days Per Week: {data.programs.pId1.days}
-              </Text>
-              <Text style={styles.smallHeading}>
-                Equipment: {data.programs.pId1.equipment}
-              </Text>
             </View>
           </View>
         </ImageBackground>
       </View>
       <ScrollView style={styles.descriptionContainer}>
-        <Text style={styles.content}>{data.programs.pId1.description}</Text>
+        <Text style={styles.content}>{data.goal}</Text>
       </ScrollView>
     </View>
   );
@@ -87,21 +113,31 @@ const styles = StyleSheet.create({
   contentContainer: {
     alignItems: "center",
     paddingVertical: 10 * sc,
+    paddingHorizontal: 6*sc
   },
 
   smallHeading: {
     color: themeColors.secondary2,
     fontSize: 14 * sc,
     fontFamily: globalFonts.primaryMedium,
-    marginVertical: 13 * sc,
+    marginVertical: 8 * sc,
   },
 
   button: {
     minWidth: 200 * sc,
   },
 
+  vbutton: {
+    width: 160 * sc,
+    height: 40*sc
+  },
+
   buttonText: {
     fontSize: 20 * sc,
+  },
+
+  vbuttonText: {
+    fontSize: 17 * sc,
   },
 
   descriptionContainer: {

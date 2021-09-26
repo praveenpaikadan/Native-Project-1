@@ -23,6 +23,7 @@ import ProfileScreen from "../screens/profile-screen";
 import EditProfileScreen from "../screens/edit-profile-screen";
 import ExerciseGuideScreen from "../screens/exercise-guide";
 import Store from "../screens/store";
+import VPlayer from "../components/video-player";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -46,6 +47,7 @@ const Root = () => {
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="Store" component={Store} />
       <Stack.Screen name="ExerciseGuide" component={ExerciseGuideScreen} />
+      <Stack.Screen name="VideoPlayer" component={VPlayer} />
     </Stack.Navigator>
   );
 };
@@ -55,7 +57,7 @@ export const AuthStack = () => {
   return (
     <AuthContext.Consumer>
 
-      {({ loggedIn}) => (
+      {({ loggedIn }) => (
 
         <NavigationContainer>
 

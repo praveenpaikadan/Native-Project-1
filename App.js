@@ -27,7 +27,8 @@ export default function App() {
   const [credentials, setCredentials] = useState(null)
   const [workoutData, setWorkoutData] = useState(null)
   const [dayWorkout, setDayWorkout] = useState(null)
-  const [programData, setProgramData] = useState(null)
+
+
 
   var loadingstarted = false
 
@@ -55,14 +56,15 @@ export default function App() {
 
   const loadResources = async () => {
 
-    await AsyncStorage.removeItem('credentials')
-    await AsyncStorage.removeItem('workoutData')
-    await AsyncStorage.removeItem('authToken')
+    // await AsyncStorage.removeItem('credentials')
+    // await AsyncStorage.removeItem('workoutData')
+    // await AsyncStorage.removeItem('authToken')
 
     try {
-      const [creds, workoutdata, font ] = await Promise.all([
+      const [creds, workoutdata, font, token ] = await Promise.all([
         AsyncStorage.getItem("credentials"), 
-        AsyncStorage.getItem("workoutData"), 
+        AsyncStorage.getItem("workoutData"),
+        AsyncStorage.getItem("authToken"), 
         Font.loadAsync({
           "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
           "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
@@ -73,6 +75,11 @@ export default function App() {
 
       console.log('before updation creds : ', JSON.parse(creds))
       console.log('before updation workout data : ', JSON.parse(workoutdata))
+
+      if(!authToken){
+        setLoggedIn(false)
+        return
+      }
 
       if(!creds){
         loadingstarted = true
@@ -156,8 +163,6 @@ export default function App() {
     );
   }
 }
-
-export const BASE_URL = "http://localhost:3567"
 
 const styles = StyleSheet.create({
   appContainer: {

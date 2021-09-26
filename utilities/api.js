@@ -9,7 +9,7 @@ const ap = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.
   ? manifest.debuggerHost.split(`:`).shift().concat(`:3567`)
   : `api.example.com`;
 
-const BASE_URL = `http://${ap}/api/v1`
+export const BASE_URL = `http://${ap}/api/v1`
 
 const getAuthTokenFromLocal =  async() => {
   authToken = await AsyncStorage.getItem('authToken')

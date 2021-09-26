@@ -26,6 +26,7 @@ export const ButtonType1 = ({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: themeColors.primary1,
+        opacity: disabled?0.5:1,
         borderRadius: 10 * sc,
         minWidth: 150 * sc,
         ...styling,

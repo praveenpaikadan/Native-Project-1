@@ -28,6 +28,9 @@ const data = {
 export default HomePage = ({ navigation, route }) => {
 
   const {workoutData} = React.useContext(WorkoutContext);
+  const programData = workoutData? workoutData.program: null
+
+  
   
   // const workoutData = {
   //     userId: 1,
@@ -137,28 +140,29 @@ export default HomePage = ({ navigation, route }) => {
 
         <View style={styles.dataContainer}>
         
-            {workoutData ? (
+            {programData
+            ? 
+            (
             <TrackNowSubScreen
               program={
-                workoutData.programName +
-                ": Day " +
-                workoutData.day +
-                " " +
-                workoutData.target
+                programData.programName
+                + ": Day " +
+                workoutData.currentDay 
+              
+                //  + programData.target? programData.target: " "                        // TBD => add dayTarget to the program form
               }
               onClick={() =>
                 navigation.navigate("Root", { screen: "TrackNow" }, data.userId)
               }
             />
-          ) : (
+          ) 
+          : 
+          (
             <ProgramList
-              onPress={() =>
-                navigation.navigate("Root", {
-                  screen: "ProgramDetails",
-                })
-              }
+              navigation={navigation}
             />
-          )}
+          )
+          }
         </View>
       </View>
 

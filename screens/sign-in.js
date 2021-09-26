@@ -51,7 +51,7 @@ export default SignInScreen = ({navigation}) => {
           case 200:
             var user = response.data
             console.log(user)
-            flash(`Hurray... ${user.name}, You are Logged In`, 'success', time=4000)
+            flash(`Welcome ${user.name}`, 'success', time=4000)
             setLoggedIn(true)
             break;
           case 401:

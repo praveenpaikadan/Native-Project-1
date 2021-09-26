@@ -6,205 +6,168 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableWithoutFeedback,
+
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { sc, themeColors, globalFonts } from "../styles/global-styles";
 import { ButtonType1 } from "../components/buttons";
-import data from "../assets/data/data.json";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SubHeader } from "../components/subheader";
 import { formPageStyles } from "../styles/form-pages-styles";
-import { useIsFocused } from "@react-navigation/native";
+import { testSubscribe } from "../utilities/data-center";
+import { WorkoutContext } from "../components/workout-context";
 
-export default BuyNow = ({ navigation }) => {
-  const [complete, isComplete] = React.useState(false);
-  const [monthly, isMonthly] = React.useState(false);
-  isFocused = useIsFocused();
+export default BuyNow = ({ navigation, route }) => {
 
-  const completeHandler = () => {
-    isComplete(true), isMonthly(false);
-  };
-  const monthlyHandler = () => {
-    isComplete(false), isMonthly(true);
-  };
+  const { resetWorkoutData } = React.useContext(WorkoutContext)
+  const {data, bgImage} = route.params
+
+  const [selected, setSelected] = React.useState(-1) 
+  
+  const buyNowPressHandler = async () => {
+
+    // Payment Handling here
+    var selectedSubscription = data.subscriptionOptions[selected]
+    selectedSubscription.programName = data.programName
+    selectedSubscription.programID = data._id
+    selectedSubscription.planID = selectedSubscription._id  
+    console.log(selectedSubscription)
+    
+    // TBD => Payment handling goes here
+
+    var response = await testSubscribe(selectedSubscription)
+    switch (response.status) {
+      case 200:
+        console.log(response.data)
+
+        // TBD => payment confirmation here
+        resetWorkoutData(response.data)
+        navigation.navigate("Home")
+        break;
+      case 401:
+        flash('Authorization failed. Please sign in again', 'danger', time=10000)
+        // TBD => Login redirect here
+        break;
+      case 101:
+        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+        break;
+      default:
+        if(response.data.message){
+          flash(response.data.message, 'info')
+        }
+        break; 
+      }
+  }
+
   const backHandler = () => {
+    setSelected(-1)
     navigation.goBack();
   };
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
       <ImageBackground
-        source={require("../assets/images/gym.jpg")}
+        source={bgImage}
         style={styles.container}
       >
         <View style={styles.overlay}>
           <SubHeader
-            text={data.programs.pId1.programName.split("Aboo Thahir")}
+            text={data.programName}
             styling={styles.header}
             onPress={backHandler}
           />
+
           <View style={styles.contentContainer}>
             <Text style={heading}>Personal Trainer</Text>
             <Text style={styles.about}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius
-              cursus nibh mauris lorem duis magna dolor viverra gravida.
+              Choose the type of plan you want to proceed with. If you need a different plan contact your trainer
             </Text>
             <View style={styles.cardContainer}>
-              <TouchableWithoutFeedback onPress={completeHandler}>
-                <View
-                  style={[
-                    styles.card,
-                    {
-                      backgroundColor: complete
-                        ? themeColors.tertiary1
-                        : themeColors.tertiary2,
-                    },
-                  ]}
-                >
-                  <View style={styles.planContainer}>
+              {data.subscriptionOptions? data.subscriptionOptions.map((item, index) => 
+              <TouchableWithoutFeedback key={index} onPress={() => setSelected(index)}>
+              <View
+                style={[
+                  styles.card,
+                  {
+                    backgroundColor: selected !== index
+                      ? themeColors.tertiary1
+                      : themeColors.tertiary2,
+                  },
+                ]}
+              >
+                <View style={styles.planContainer}>
+                  <Text
+                    style={[
+                      styles.planHeading,
+                      {
+                        color: selected !== index
+                          ? themeColors.secondary2
+                          : themeColors.tertiary1,
+                      },
+                    ]}
+                  >
+                    {item.planType}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.planContent,
+                      {
+                        color: selected !== index
+                          ? themeColors.secondary2
+                          : themeColors.tertiary1,
+                      },
+                    ]}
+                  >
+                    {item.description}
+                  </Text>
+                </View>
+                <View style={styles.priceContainer}>
+                  <View style={styles.row}>
+                    <FontAwesome5 name="rupee-sign" {...rupeeIconStyling} />
                     <Text
                       style={[
-                        styles.planHeading,
+                        priceContent,
                         {
-                          color: complete
+                          color: selected !== index
                             ? themeColors.secondary2
                             : themeColors.tertiary1,
                         },
                       ]}
                     >
-                      Complete Plan
-                    </Text>
-                    <Text
-                      style={[
-                        styles.planContent,
-                        {
-                          color: complete
-                            ? themeColors.secondary2
-                            : themeColors.tertiary1,
-                        },
-                      ]}
-                    >
-                      Includes: Complete workout plan and Diet plan and
-                      nutriton.
+                      {item.priceInRs}
                     </Text>
                   </View>
-                  <View style={styles.priceContainer}>
-                    <View style={styles.row}>
-                      <FontAwesome5 name="rupee-sign" {...rupeeIconStyling} />
-                      <Text
-                        style={[
-                          priceContent,
-                          {
-                            color: complete
-                              ? themeColors.secondary2
-                              : themeColors.tertiary1,
-                          },
-                        ]}
-                      >
-                        2000.00
-                      </Text>
-                    </View>
-                    <View style={styles.row}>
-                      <FontAwesome5
-                        name="rupee-sign"
-                        {...smallrupeeIconStyling}
-                      />
-                      <Text
-                        style={[
-                          styles.priceContent1,
-                          {
-                            color: complete
-                              ? themeColors.secondary2
-                              : themeColors.tertiary1,
-                          },
-                        ]}
-                      >
-                        167.67/week
-                      </Text>
-                    </View>
+                  <View style={styles.row}>
+                    <FontAwesome5
+                      name="rupee-sign"
+                      {...smallrupeeIconStyling}
+                    />
+                    <Text
+                      style={[
+                        styles.priceContent1,
+                        {
+                          color: selected !== index
+                            ? themeColors.secondary2
+                            : themeColors.tertiary1,
+                        },
+                      ]}
+                    >
+                      {'TBD'}/week
+                    </Text>
                   </View>
                 </View>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={monthlyHandler}>
-                <View
-                  style={[
-                    styles.card,
-                    {
-                      backgroundColor: monthly
-                        ? themeColors.tertiary1
-                        : themeColors.tertiary2,
-                    },
-                  ]}
-                >
-                  <View style={styles.planContainer}>
-                    <Text
-                      style={[
-                        styles.planHeading,
-                        {
-                          color: monthly
-                            ? themeColors.secondary2
-                            : themeColors.tertiary1,
-                        },
-                      ]}
-                    >
-                      Monthly
-                    </Text>
-                    <Text
-                      style={[
-                        styles.planContent,
-                        {
-                          color: monthly
-                            ? themeColors.secondary2
-                            : themeColors.tertiary1,
-                        },
-                      ]}
-                    >
-                      Includes: Workout plan for one month.
-                    </Text>
-                  </View>
-                  <View style={styles.priceContainer}>
-                    <View style={styles.row}>
-                      <FontAwesome5 name="rupee-sign" {...rupeeIconStyling} />
-                      <Text
-                        style={[
-                          priceContent,
-                          {
-                            color: monthly
-                              ? themeColors.secondary2
-                              : themeColors.tertiary1,
-                          },
-                        ]}
-                      >
-                        750.00
-                      </Text>
-                    </View>
-                    <View style={styles.row}>
-                      <FontAwesome5
-                        name="rupee-sign"
-                        {...smallrupeeIconStyling}
-                      />
-                      <Text
-                        style={[
-                          styles.priceContent1,
-                          {
-                            color: monthly
-                              ? themeColors.secondary2
-                              : themeColors.tertiary1,
-                          },
-                        ]}
-                      >
-                        187.50/week
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>) : null}
+                
+              
             </View>
             <ButtonType1
               arrow={false}
+              disabled={selected === -1?true:false}
               text={"Buy Now"}
               styling={{ width: 320 * sc }}
-            />
+              onClick = {() => buyNowPressHandler()}
+              />
             <Text style={styles.footText}>Subscription Terms & Details</Text>
           </View>
         </View>
@@ -217,6 +180,7 @@ const rupeeIconStyling = {
   size: 22 * sc,
   color: themeColors.secondary2,
 };
+
 const smallrupeeIconStyling = {
   size: 12 * sc,
   color: themeColors.secondary2,
