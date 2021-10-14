@@ -11,6 +11,7 @@ import FlashMessage from "react-native-flash-message";
 import API from './utilities/api'
 import { getAPIAllLocal } from "./utilities/data-center";
 import flash from './utilities/flash-message'
+import { today } from "./utilities/helpers";
 
 global.authToken 
 
@@ -27,7 +28,6 @@ export default function App() {
   const [credentials, setCredentials] = useState(null)
   const [workoutData, setWorkoutData] = useState(null)
   const [dayWorkout, setDayWorkout] = useState(null)
-
 
 
   var loadingstarted = false
@@ -54,17 +54,30 @@ export default function App() {
     }
   }
 
+  const resetDayWorkout = async (data) => {
+    try{
+      await AsyncStorage.setItem('dayWorkout', JSON.stringify(data))
+      setDayWorkout(data)
+      return data
+    }catch(error){
+      console.log('Unable to set dayWorkoutData' , error)
+      return false
+    }
+  }
+
   const loadResources = async () => {
 
     // await AsyncStorage.removeItem('credentials')
     // await AsyncStorage.removeItem('workoutData')
     // await AsyncStorage.removeItem('authToken')
+    await AsyncStorage.removeItem('dayWorkout')
 
     try {
-      const [creds, workoutdata, font, token ] = await Promise.all([
+      const [creds, workoutdata, token,  dayWorkout, font, ] = await Promise.all([
         AsyncStorage.getItem("credentials"), 
         AsyncStorage.getItem("workoutData"),
         AsyncStorage.getItem("authToken"), 
+        AsyncStorage.getItem("dayWorkout"), 
         Font.loadAsync({
           "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
           "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
@@ -73,8 +86,8 @@ export default function App() {
         }),
       ])
 
-      console.log('before updation creds : ', JSON.parse(creds))
-      console.log('before updation workout data : ', JSON.parse(workoutdata))
+      // console.log('before updation creds : ', JSON.parse(creds))
+      // console.log('before updation workout data : ', JSON.parse(workoutdata))
 
       if(!authToken){
         setLoggedIn(false)
@@ -86,9 +99,10 @@ export default function App() {
         var response = await getAPIAllLocal()
         switch (response.status) {
           case 200:
-            console.log(response.data)
+            // console.log(response.data)
             resetCredentials(response.data.credentials)
             resetWorkoutData(response.data.workoutData)
+
             setLoggedIn(true)
             break;
           case 401:
@@ -109,7 +123,6 @@ export default function App() {
         setLoggedIn(true)
       }
 
-    
       if(loadingstarted === false){
         console.log("Running usual update")
         getAPIAllLocal()
@@ -146,7 +159,7 @@ export default function App() {
     return (
         <AuthContext.Provider value={{  credentials, resetCredentials, loggedIn, setLoggedIn}}>
           <WorkoutContext.Provider
-            value={{ workoutData, resetWorkoutData }}
+            value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout }}
           >
             <AuthStack />
             <FlashMessage position="top" />

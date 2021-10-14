@@ -103,38 +103,37 @@ const cardStyles = StyleSheet.create({
   },
 });
 
-export const ExerciseList = ({ data, key, activeOpacity, timer, onPress }) => {
+export const ExerciseList = ({ data, activeOpacity, onPress }) => {
   const navigation = useNavigation();
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
       data={data}
-      renderItem={(item) => (
-        <View key={key}>
+      renderItem={({item, index}) => (
+        <View key={index}>
           <ExerciseCard
             activeOpacity={activeOpacity}
-            // onPress={() =>
-            //   navigation.navigate("Exercise", { index: item.index })
-            // }
-            onPress={() => onPress(item.index)}
-            id={item.index + 1}
-            exerciseName={item.item.exerciseName}
+            onPress={() =>
+              navigation.navigate("Exercise", { exerciseIndex: index })
+            }
+            // onPress={() => onPress(index)}
+            id={index+1}
+            exerciseName={item.exerciseName}
             image1={require("../../assets/images/Dumbbell-Step-Ups-1.jpg")}
             image2={require("../../assets/images/Dumbbell-Step-Ups-2.jpg")}
           />
 
-          {timer ? (
+          {item.restInSec?
             <View style={styles.timerContainer}>
               <MaterialIcons name="timer" {...timerIconStyling} />
               <Text style={styles.timerHeadingText}>REST BETWEEN SETS: </Text>
               <View style={styles.timeContainer}>
-                <Text style={styles.timerText}>{item.item.rest}</Text>
+                <Text style={styles.timerText}>{item.restInSec<=120?item.restInSec+' secs':Math.round(item.restInSec/60)+' mins'}</Text>
               </View>
-            </View>
-          ) : null}
+            </View>:null}
         </View>
       )}
-      keyExtractor={(item) => item.exerciseId}
+      keyExtractor={(item, index) => item._id}
     />
   );
 };

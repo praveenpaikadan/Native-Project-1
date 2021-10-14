@@ -31,85 +31,209 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { WorkoutCompleteModal } from "./modal/workout-complete";
-import { KgRepsInput } from "../components/set-reps-time";
+import { RepInput } from "../components/set-reps-time";
+import { format_target } from "../utilities/helpers";
+import { set } from "react-native-reanimated";
+
+
+// We got a single source of truth to set 'sets', ie. dayworkout. proceed from that.
+
+const ExerciseComponent = ({item, index}) => {
+
+  const [renderSwitch, setRenderSwitch] = useState(true)   // to force rerender input field on change of sets 
+  const {dayWorkout, resetDayWorkout} = useContext(WorkoutContext)
+  const [isFocussed, setIsFocussed] = useState(0);
+  const Line = () => <View style={styles.line}></View>;
+
+  const handleSetChange = (val) => {
+    var sets = dayWorkout.workout[index].reps
+    console.log(sets)
+    for (let i = 0; i < val; i++) {
+      if(sets[i] == 0){
+        return
+      }
+    }
+    if (val < sets.length){
+      setIsFocussed(val)
+      setRenderSwitch(!renderSwitch)
+    }
+  }
+
+  const setSaveHandler = (val) => {
+    var prevDayWorkout = {...dayWorkout}
+    prevDayWorkout.workout[index].reps[isFocussed] = val
+    resetDayWorkout(prevDayWorkout)
+    handleSetChange(isFocussed+1)
+  }
+
+  const repetitionType = item.repetitionType 
+  const exerciseIndex = index
+  const type = item.repetitionType? (item.repetitionType === 'reps'? 0: (item.repetitionType==='seconds'?1:2)): null
+
+  return(
+  <View style={styles.scrollView}>
+    <View style={styles.excersiceCardContainer}>
+      <ExerciseCard
+        activeOpacity={1}
+        id={index + 1}
+        exerciseName={item.exerciseName}
+        image1={require("../assets/images/Dumbbell-Step-Ups-1.jpg")}
+        image2={require("../assets/images/Dumbbell-Step-Ups-2.jpg")}
+        exerciseNameStyling={styles.exerciseName}
+        targetSets={`TARGET SETS: ${item.target.length}`}
+      />
+    </View>
+
+    <View style={styles.subHeadingContainer}>
+      <Text style={styles.subHeading}>
+        {"Exercise " + (index + 1) + " - Set " + (Number(isFocussed)+1)}
+      </Text>
+    </View>
+
+    <RepInput reRender={renderSwitch} dv={dayWorkout.workout[index].reps[isFocussed]} type={type} dataChangeHandler={setSaveHandler}/>
+    
+    <View style={{ alignItems: "center" }}>
+      <View style={styles.timerContainer}>
+        <MaterialIcons name="timer" {...timerIconStyling} />
+        <Text style={styles.timerHeader}>REST BETWEEN SETS: </Text>
+        <View style={styles.timeContainer}>
+          <Text style={styles.timerText}> {item.restInSec}</Text>
+        </View>
+      </View>
+    </View>
+    <Line />
+    
+    <View>
+      <FlatList
+        data={item.target}
+        keyExtractor={(item, index) => String(index)}
+        renderItem={                  
+          ({item, index}) => {
+              var setComplete = [0, '0', '--'].includes(dayWorkout.workout[exerciseIndex].reps[index])?false:true
+              return <>
+              <TouchableWithoutFeedback
+                onPress={() => {handleSetChange(index)}}
+              >
+                <View
+                  style={
+                    isFocussed === index
+                      ? styles.focussedSetContainer
+                      : styles.setContainer
+                  }
+                >
+                  <View style={styles.iconContainer}>
+                    <FontAwesome5
+                      name={setComplete? "check-circle": 'dot-circle'}
+                      {...cirlceIconStyling} color={[0, '0', '--'].includes(dayWorkout.workout[exerciseIndex].reps[index])?themeColors.secondary1:'green'}
+                    />
+                    <Text style={styles.setText}>
+                      SET {index+1}
+                    </Text>
+                  </View>
+                  <Text style={styles.setText1}>
+                    {[0, '0', '--'].includes(dayWorkout.workout[exerciseIndex].reps[index])?'TARGET: ' + format_target(item, repetitionType):format_target(dayWorkout.workout[exerciseIndex].reps[index], repetitionType)}
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <Line />
+              </>}
+        }
+      />
+    </View>
+
+    
+    <View style={styles.footerContainer}>
+      <View style={styles.swipeContainer}>
+        <FontAwesome5
+          name="long-arrow-alt-left"
+          {...arrowIconStyling}
+        />
+        <Text style={styles.swipeText}>SWIPE FOR NEXT EXERCISE</Text>
+        <FontAwesome5
+          name="long-arrow-alt-right"
+          {...arrowIconStyling}
+        />
+      </View>
+      <View style={styles.footerButtonContainer}>
+        <TouchableOpacity
+          // onPress={() =>
+          //   navigation.navigate("ExerciseGuide", { index: item.index })
+          // }
+        >
+          <Text style={styles.footerButtonText}>EXERCISE GUIDE</Text>
+        </TouchableOpacity>
+
+        <View style={styles.hLine}></View>
+        <Text style={styles.footerButtonText}>PREVIOUS STATS</Text>
+      </View>
+    </View>
+  </View>
+)
+}
+
 
 export default ExerciseScreen = ({ navigation, route }) => {
-  const data = { ...route.params };
-  const index = data.index === undefined ? 0 : data.index;
-  const storedWorkoutData = useContext(WorkoutContext);
-  // const workoutData = storedWorkoutData.storedWorkoutData;
+  const {exerciseIndex} =  route.params;
+  const {workoutData, dayWorkout, resetDayWorkout } = useContext(WorkoutContext)
+  var currentDay = workoutData.currentDay
+  var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+  var exerciseList = dayWorkoutPlan.exercises
 
-  const [weight, setWeight] = useState("");
-  const [reps, setReps] = useState("");
-  const [isFocussed, setIsFocussed] = useState("01");
   const [showWorkoutComplete, setShowWorkoutComplete] = useState(false);
-  const [workoutData, setWorkoutdata] = useState(
-    storedWorkoutData.storedWorkoutData
-  );
 
   const scrollRef = useRef();
 
   useEffect(() => {
     scrollIndex();
-  }, [data.index]);
-
-  const onChangeWeight = (value) => {
-    setWeight(value);
-  };
-
-  const onChangeReps = (value) => {
-    setReps(value);
-  };
+  }, [exerciseIndex]);
 
   const scrollIndex = () => {
     scrollRef.current.scrollToIndex({
       animated: false,
-      index: index,
+      index: exerciseIndex,
     });
   };
 
-  const setHandler = (sets, item) => {
-    const setIndex = parseInt(isFocussed) - 1;
-    const nextSetNumber = "0" + (parseInt(isFocussed) + 1);
-    if (weight === "" || reps === "") {
-      null;
-      const sets =
-        storedWorkoutData.storedWorkoutData.exerciselist[
-          storedWorkoutData.storedWorkoutData.exerciselist.length - 1
-        ].sets;
-    } else if (
-      sets.length == isFocussed &&
-      workoutData.exerciselist.length == item.index + 1
-    ) {
-      sets[setIndex].weight = weight;
-      sets[setIndex].reps = reps;
-      setShowWorkoutComplete(true);
-    } else if (sets.length == isFocussed) {
-      sets[setIndex].weight = weight;
-      sets[setIndex].reps = reps;
-      setWeight("");
-      setReps("");
-      scrollRef.current.scrollToIndex({
-        animated: true,
-        index: item.index + 1,
-      });
-    } else if (sets.length !== isFocussed) {
-      sets[setIndex].weight = weight;
-      sets[setIndex].reps = reps;
-      setIsFocussed(nextSetNumber);
-    }
-  };
+  // const setHandler = (sets, item) => {
+  //   const setIndex = parseInt(isFocussed) - 1;
+  //   const nextSetNumber = "0" + (parseInt(isFocussed) + 1);
+  //   if (weight === "" || reps === "") {
+  //     null;
+  //     const sets =
+  //       exerciseList[
+  //         exerciseList.length - 1
+  //       ].sets;
+  //   } else if (
+  //     sets.length == isFocussed &&
+  //     exerciseList.length == item.index + 1
+  //   ) {
+  //     sets[setIndex].weight = weight;
+  //     sets[setIndex].reps = reps;
+  //     setShowWorkoutComplete(true);
+  //   } else if (sets.length == isFocussed) {
+  //     sets[setIndex].weight = weight;
+  //     sets[setIndex].reps = reps;
+  //     setWeight("");
+  //     setReps("");
+  //     scrollRef.current.scrollToIndex({
+  //       animated: true,
+  //       index: item.index + 1,
+  //     });
+  //   } else if (sets.length !== isFocussed) {
+  //     sets[setIndex].weight = weight;
+  //     sets[setIndex].reps = reps;
+  //     setIsFocussed(nextSetNumber);
+  //   }
+  // };
 
   const swipeHandler = () => {
-    setIsFocussed("01");
-    setWeight("");
-    setReps("");
+    setIsFocussed(0);
   };
 
   const editingHandler = () => {
     const sets =
-      storedWorkoutData.storedWorkoutData.exerciselist[
-        storedWorkoutData.storedWorkoutData.exerciselist.length - 1
+      exerciseList[
+        exerciseList.length - 1
       ].sets;
     sets[sets.length - 1].weight = "";
     sets[sets.length - 1].reps = "";
@@ -117,7 +241,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
   };
 
   const workoutDoneHandler = () => {
-    console.log(storedWorkoutData.storedWorkoutData);
+    console.log();
     // Function to post the final data to the API
   };
 
@@ -129,7 +253,8 @@ export default ExerciseScreen = ({ navigation, route }) => {
   //     .catch((error) => console.log(error));
   // };
 
-  const Line = () => <View style={styles.line}></View>;
+
+
 
   return (
     <View style={styles.container}>
@@ -138,174 +263,26 @@ export default ExerciseScreen = ({ navigation, route }) => {
         backButton={true}
         backButtonText={true}
         onPressMenu={() => navigation.openDrawer()}
-        onPress={() => {
-          navigation.navigate("ExerciseList", workoutData);
-          setWeight("");
-          setReps("");
-        }}
+        // onPress={() => {
+        //   navigation.navigate("ExerciseList", workoutData);
+        //   setWeight("");
+        //   setReps("");
+        // }}
       />
       <FlatList
         ref={scrollRef}
-        onScroll={swipeHandler}
+        // onScroll={swipeHandler}
         showsHorizontalScrollIndicator={false}
         horizontal
         pagingEnabled
-        data={workoutData.exerciselist}
-        keyExtractor={(item, index) => item.exerciseId}
+        data={exerciseList}
+        keyExtractor={item => item._id}
         getItemLayout={(data, index) => ({
           length: windowWidth,
           offset: windowWidth * index,
           index,
         })}
-        renderItem={(item) => (
-          <View style={styles.scrollView}>
-            <View style={styles.excersiceCardContainer}>
-              <ExerciseCard
-                activeOpacity={1}
-                id={item.index + 1}
-                exerciseName={item.item.exerciseName}
-                image1={require("../assets/images/Dumbbell-Step-Ups-1.jpg")}
-                image2={require("../assets/images/Dumbbell-Step-Ups-2.jpg")}
-                exerciseNameStyling={styles.exerciseName}
-                targetSets={`TARGET SETS: ${item.item.targetSets}`}
-              />
-            </View>
-            <View style={styles.subHeadingContainer}>
-              <Text style={styles.subHeading}>
-                {"Exercise " + (item.index + 1) + " - Set " + isFocussed}
-              </Text>
-            </View>
-
-            <KgRepsInput dataChangeHandler={() => {return}}/>
-            
-            <View style={styles.buttonContainer}>
-              <ButtonType1
-                arrow={false}
-                text={"SAVE SET"}
-                styling={styles.button}
-                textStyling={styles.buttonText}
-                onClick={() => setHandler(item.item.sets, item)}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <View style={styles.timerContainer}>
-                <MaterialIcons name="timer" {...timerIconStyling} />
-                <Text style={styles.timerHeader}>REST BETWEEN SETS: </Text>
-                <View style={styles.timeContainer}>
-                  <Text style={styles.timerText}> {item.item.rest}</Text>
-                </View>
-              </View>
-            </View>
-            <Line />
-            <View>
-              <FlatList
-                data={item.item.sets}
-                keyExtractor={(item, index) => item.set}
-                renderItem={(itemData) =>
-                  itemData.item.weight === "" || itemData.item.reps === "" ? (
-                    <>
-                      <TouchableWithoutFeedback
-                        onPress={() => setIsFocussed(itemData.item.set)}
-                      >
-                        <View
-                          style={
-                            isFocussed === itemData.item.set
-                              ? styles.focussedSetContainer
-                              : styles.setContainer
-                          }
-                        >
-                          <View style={styles.iconContainer}>
-                            <FontAwesome5
-                              name="dot-circle"
-                              {...cirlceIconStyling}
-                            />
-                            <Text style={styles.setText}>
-                              SET {itemData.item.set}
-                            </Text>
-                          </View>
-                          <Text style={styles.setText1}>
-                            TARGET REPS: {item.item.targetReps}
-                          </Text>
-                        </View>
-                      </TouchableWithoutFeedback>
-                      <Line />
-                    </>
-                  ) : (
-                    <>
-                      <TouchableWithoutFeedback
-                        onPress={() => setIsFocussed(itemData.item.set)}
-                      >
-                        <View
-                          style={
-                            isFocussed === itemData.item.set
-                              ? styles.focussedSetContainer
-                              : styles.setContainer
-                          }
-                        >
-                          <View style={styles.iconContainer}>
-                            <FontAwesome
-                              name="check-circle"
-                              {...checkIconStyling}
-                            />
-                            <Text style={styles.setText}>
-                              SET {itemData.item.set}
-                            </Text>
-                          </View>
-                          <View style={styles.quantityContainer}>
-                            <Text style={styles.quantity}>
-                              {itemData.item.weight}
-                            </Text>
-                            <Text style={styles.unit}>KILOGRAMS</Text>
-                          </View>
-                          <View style={styles.postCloseIconContainer}>
-                            <Fontisto
-                              name="close-a"
-                              {...postCloseIconStyling}
-                            />
-                          </View>
-
-                          <View style={styles.quantityContainer}>
-                            <Text style={styles.quantity}>
-                              {itemData.item.reps}
-                            </Text>
-                            <Text style={styles.unit}>REPS</Text>
-                          </View>
-                        </View>
-                      </TouchableWithoutFeedback>
-                      <Line />
-                    </>
-                  )
-                }
-                keyExtractor={(item) => item.set}
-              />
-            </View>
-            <View style={styles.footerContainer}>
-              <View style={styles.swipeContainer}>
-                <FontAwesome5
-                  name="long-arrow-alt-left"
-                  {...arrowIconStyling}
-                />
-                <Text style={styles.swipeText}>SWIPE FOR NEXT EXERCISE</Text>
-                <FontAwesome5
-                  name="long-arrow-alt-right"
-                  {...arrowIconStyling}
-                />
-              </View>
-              <View style={styles.footerButtonContainer}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("ExerciseGuide", { index: item.index })
-                  }
-                >
-                  <Text style={styles.footerButtonText}>EXERCISE GUIDE</Text>
-                </TouchableOpacity>
-
-                <View style={styles.hLine}></View>
-                <Text style={styles.footerButtonText}>PREVIOUS STATS</Text>
-              </View>
-            </View>
-          </View>
-        )}
+        renderItem={({item, index}) => <ExerciseComponent item={item} index={index}/>}
       />
 
       <WorkoutCompleteModal
@@ -421,19 +398,6 @@ const styles = StyleSheet.create({
     marginVertical: 1 * sc,
   },
 
-  buttonContainer: {
-    alignItems: "center",
-  },
-
-  button: {
-    paddingHorizontal: 50 * sc,
-    marginVertical: 5 * sc,
-  },
-
-  buttonText: {
-    fontSize: 20 * sc,
-  },
-
   timerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -467,17 +431,21 @@ const styles = StyleSheet.create({
   },
 
   setContainer: {
+    paddingHorizontal: 24*sc,
     flexDirection: "row",
     height: 45 * sc,
     alignItems: "center",
-    justifyContent: "space-evenly",
     backgroundColor: themeColors.primary2,
+    justifyContent: "space-between",
+    opacity: 0.7
   },
+
   focussedSetContainer: {
     flexDirection: "row",
+    paddingHorizontal: 24*sc,
     height: 45 * sc,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     backgroundColor: themeColors.secondary2,
   },
 

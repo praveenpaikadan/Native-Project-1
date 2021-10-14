@@ -8,9 +8,41 @@ import { ExerciseList } from "./subscreens/exerciselist";
 import { Feather } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
+import { today } from "../utilities/helpers";
 
 export default TrackingScreen = ({ navigation }) => {
-  var {workoutData} = React.useContext(WorkoutContext);
+
+
+  var {workoutData, dayWorkout, resetDayWorkout} = React.useContext(WorkoutContext);
+  var programName = workoutData.program.programName
+  var level = workoutData.program.level
+  var currentDay = workoutData.currentDay
+  var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+  var exerciseList = dayWorkoutPlan.exercises
+  var totalExercises = dayWorkoutPlan.exercises.length
+  var totalSets = dayWorkoutPlan.exercises.reduce((a, c) => a + c.target.length, 0)
+  var totalTime = "TBD"
+
+  
+  if (dayWorkout === null){
+    var exerciseList = dayWorkoutPlan.exercises
+    var currentDay = workoutData.currentDay
+    resetDayWorkout({
+      day : currentDay,
+      date : today(),
+      workout: exerciseList.map((exercise, index) => {
+        return {
+            exerciseNumber: index,
+            exerciseName: exercise.exerciseName,
+            exerciseID: exercise.exerciseID,
+            reps: exercise.target.map(item => 0),
+            repetitionType: exercise.repetitionType, 
+        }
+      }) 
+    })
+  }
+
+  console.log(dayWorkout)
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} style="light" />
@@ -23,24 +55,26 @@ export default TrackingScreen = ({ navigation }) => {
         <View style={styles.headingContainer}>
           <FontAwesome5 name="dumbbell" {...dumbbellIconStyling} />
           <Text style={styles.heading}>
-            {workoutData.programName +
+            {programName +
               ": " +
               "Day " +
-              workoutData.day +
+             currentDay +
               " -" +
-              workoutData.target}
+              "Target-TBD"}
           </Text>
         </View>
+
         <View style={styles.subHeadingContainer}>
-          <Text style={styles.subHeading}>{"Goal: " + workoutData.goal}</Text>
-          <Text style={styles.subHeading}>{"Level: " + workoutData.level}</Text>
+          <Text style={styles.subHeading}>{"Goal: " + "TBD"}</Text>
+          <Text style={styles.subHeading}>{"Level: " + level}</Text>
         </View>
+
         <View style={styles.detailsContainer}>
           <View style={styles.detailsHeadingContainer}>
             <Text style={styles.detailsHeading}>TOTAL{"\n"}EXERCISES</Text>
             <View style={styles.numberContainer}>
               <Text style={styles.details}>
-                {workoutData.exerciselist.length}
+                {totalExercises}
               </Text>
             </View>
           </View>
@@ -48,9 +82,7 @@ export default TrackingScreen = ({ navigation }) => {
             <Text style={styles.detailsHeading}>TOTAL{"\n"}SETS</Text>
             <View style={styles.numberContainer}>
               <Text style={styles.details}>
-                {workoutData.exerciselist.reduce((a, c) => {
-                  return a + c.targetSets;
-                }, 0)}
+                {totalSets}
               </Text>
             </View>
           </View>
@@ -58,7 +90,7 @@ export default TrackingScreen = ({ navigation }) => {
             <Text style={styles.detailsHeading}>TOTAL{"\n"}WORKOUT TIME</Text>
             <View style={styles.durationContainer}>
               <Text style={styles.duration}>
-                {workoutData.totalWorkoutTime}
+                {totalTime}
               </Text>
               <Text style={styles.durationUnit}>HR MIN</Text>
             </View>
@@ -66,17 +98,18 @@ export default TrackingScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.line}></View>
+
       <ButtonType1
         styling={styles.button}
         arrow={false}
         text={"TRACK NOW"}
         textStyling={styles.buttonText}
         onClick={() => {
-          navigation.navigate("Exercise");
+          navigation.navigate("Exercise", {exerciseIndex : 0});
         }}
       />
       <View style={styles.listContainer}>
-        <ExerciseList data={workoutData.exerciselist} />
+        <ExerciseList data={exerciseList} />
         <Feather name="chevrons-down" {...chevronIconStyling} />
       </View>
     </View>

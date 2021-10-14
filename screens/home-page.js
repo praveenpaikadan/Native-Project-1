@@ -152,7 +152,7 @@ export default HomePage = ({ navigation, route }) => {
                 //  + programData.target? programData.target: " "                        // TBD => add dayTarget to the program form
               }
               onClick={() =>
-                navigation.navigate("Root", { screen: "TrackNow" }, data.userId)
+                navigation.navigate("Root", { screen: "TrackNow" })
               }
             />
           ) 
