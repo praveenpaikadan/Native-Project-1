@@ -1,3 +1,5 @@
+import { BASE_URL } from "./api"
+
 export const format_target = (value, type) => {
     try{
         if (type === 'seconds') {
@@ -20,4 +22,8 @@ export const format_target = (value, type) => {
 export const today = () => {
     a = new Date
     return String(a.getDate()) + '-' + String(a.getMonth()) + '-' + String(a.getFullYear())
+}
+
+export const makeMediaUrl = (filename, secured=false) => {
+    return `${BASE_URL}/${secured?'protected-media':'media'}/${filename}`
 }

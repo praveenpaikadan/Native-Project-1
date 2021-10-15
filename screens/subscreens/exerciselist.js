@@ -52,6 +52,7 @@ const cardStyles = StyleSheet.create({
   cardConatiner: {
     flexDirection: "row",
     zIndex: 1,
+    alignSelf:'center'
   },
   card: {
     width: 340 * sc,
@@ -107,10 +108,12 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
   const navigation = useNavigation();
   return (
     <FlatList
+
       showsVerticalScrollIndicator={false}
       data={data}
+      keyExtractor={(item, index) => item._id}
       renderItem={({item, index}) => (
-        <View key={index}>
+        <View style={{alignSelf: 'center'}} key={index}>
           <ExerciseCard
             activeOpacity={activeOpacity}
             onPress={() =>
@@ -133,7 +136,7 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
             </View>:null}
         </View>
       )}
-      keyExtractor={(item, index) => item._id}
+
     />
   );
 };

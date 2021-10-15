@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { ButtonType1 } from "../components/buttons";
 import data from "../assets/data/data.json";
@@ -14,12 +15,45 @@ import { ElevatedCardTypeOne } from "../components/cards";
 import { themeColors, sc, globalFonts } from "../styles/global-styles";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
+import { AuthContext } from "../components/auth-context";
+import { getExercise } from "../utilities/data-center";
+import { makeMediaUrl } from "../utilities/helpers";
 
 const einstructions = data.exercise.eId1.instructions;
 
 export default ExerciseGuideScreen = ({ navigation, route }) => {
-  const index = { ...route.params };
-  const storedWorkoutData = useContext(WorkoutContext);
+  const {exercise} = route.params 
+  const [loading, setLoading] = useState(true)
+  const [fetched, setFetched] = useState({})
+  const { setLoggedIn } = useContext(AuthContext)
+
+  const getExerciseDatafromServer = async () => {
+    var response = await getExercise(exercise.exerciseID)
+    switch (response.status) {
+      case 200:
+        setFetched(response.data)
+        setLoading(false)
+        break;
+      case 401:
+        flash('Authorization failed. Please sign in again', 'danger', time=10000)
+        break;
+      case 101:
+        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+        break;
+      default:
+        if(response.data.message){
+          flash(response.data.message, 'info')
+        }
+        break; 
+      }
+  }
+  useEffect( () => {
+    getExerciseDatafromServer()
+    .then()
+  }, [])
+
+
+
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} />
@@ -32,8 +66,7 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
         <View style={styles.headingContainer}>
           <Text style={styles.mainHeading}>
             {
-              storedWorkoutData.storedWorkoutData.exerciselist[index.index]
-                .exerciseName
+              exercise.exerciseName
             }
           </Text>
           <View style={styles.cardContainer}>
@@ -54,31 +87,44 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
 
         <View style={styles.line}></View>
 
-        <ButtonType1
+
+        {!loading?fetched.video[0]?<ButtonType1
           play={32 * sc}
           text={"Watch Now"}
           arrow={false}
           styling={styles.button}
           textStyling={styles.buttonText}
-        />
+          onClick={() => {navigation.navigate('VideoPlayer', {link: makeMediaUrl(fetched.video[0].filename, secured=true)})}}
+        />:null:null}
 
         <View style={styles.subHeadingContainer}>
           <Text style={styles.subHeading}>Step by step instructions:</Text>
         </View>
 
         <View style={styles.instructionsContainer}>
+
+          {!loading?
           <ScrollView>
             <View style={styles.instructionsScrollContainer}>
-              {einstructions.map((item, index) => {
+              {console.log(fetched.equipments[0])}
+
+              <Text style={{...styles.content,fontFamily: globalFonts.primaryBold}}>{!fetched.equipments[0]?'No Equipments Needed':'Equipments Needed:'}</Text>
+              <View style={styles.equipmentContainer}>  
+                <View style={{flexDirection: 'column'}}>
+                  {fetched.equipments.map((equipment, index) => <Text style={styles.content} key={index}>{`     ${equipment}`}</Text>)}
+                </View>
+              </View>
+
+              <Text style={{...styles.content, marginBottom: 10*sc, fontFamily: globalFonts.primaryBold}}>{'Detailed Instructions:'}</Text>
+              {fetched.instructions.map((item, index) => {
                 return (
                   <View key={index} style={styles.instructions}>
-                    <Text style={styles.content}>{index + 1 + "." + " "}</Text>
-                    <Text style={styles.content}>{item}</Text>
+                    <Text style={styles.content}>{"  "+ item.step+ ". "+item.description}</Text>
                   </View>
                 );
               })}
             </View>
-          </ScrollView>
+          </ScrollView>:<ActivityIndicator size={sc*76} color={themeColors.primary2} />}
         </View>
       </View>
     </View>
@@ -174,6 +220,13 @@ const styles = StyleSheet.create({
     color: themeColors.tertiary1,
   },
 
+  equipmentContainer:{
+    flex: 1,
+    marginHorizontal: 2 * sc,
+    marginTop: 5 * sc,
+    marginBottom: 10 * sc,
+  },
+
   instructionsContainer: {
     flex: 1,
     marginHorizontal: 2 * sc,
@@ -195,6 +248,7 @@ const styles = StyleSheet.create({
 
   content: {
     fontFamily: globalFonts.primaryRegular,
+    fontSize:13*sc,
     textAlign: "justify",
   },
 });

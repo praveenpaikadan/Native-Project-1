@@ -38,7 +38,9 @@ import { set } from "react-native-reanimated";
 
 // We got a single source of truth to set 'sets', ie. dayworkout. proceed from that.
 
-const ExerciseComponent = ({item, index}) => {
+const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExercises}) => {
+  console.log(item)
+  const [firstFinish, setFirstFinish] = useState(true)
 
   const [renderSwitch, setRenderSwitch] = useState(true)   // to force rerender input field on change of sets 
   const {dayWorkout, resetDayWorkout} = useContext(WorkoutContext)
@@ -46,8 +48,8 @@ const ExerciseComponent = ({item, index}) => {
   const Line = () => <View style={styles.line}></View>;
 
   const handleSetChange = (val) => {
+    setExerciseIndex(index)
     var sets = dayWorkout.workout[index].reps
-    console.log(sets)
     for (let i = 0; i < val; i++) {
       if(sets[i] == 0){
         return
@@ -56,14 +58,35 @@ const ExerciseComponent = ({item, index}) => {
     if (val < sets.length){
       setIsFocussed(val)
       setRenderSwitch(!renderSwitch)
+    }else if(val === sets.length && index < totalExercises-1){
+      if(firstFinish){
+        setExerciseIndex(index+1)
+        setFirstFinish(false)
+      }
     }
   }
 
   const setSaveHandler = (val) => {
-    var prevDayWorkout = {...dayWorkout}
+    console.log(index, isFocussed)
+    var prevDayWorkout = {...dayWorkout}   
     prevDayWorkout.workout[index].reps[isFocussed] = val
     resetDayWorkout(prevDayWorkout)
     handleSetChange(isFocussed+1)
+  }
+
+  const handleDeleteSet = (setIndexToDelete) => {
+    var prevDayWorkout = {...dayWorkout}
+    var set = dayWorkout.workout[index].reps.filter((item, setIndex) => setIndex !== setIndexToDelete)
+    var newSet = []
+    for (let i = 0; i < dayWorkout.workout[index].reps.length; i++) {
+      if(set[i]){
+        newSet[i] = set[i]
+      }else{
+        newSet[i] = 0
+      }
+    } 
+    prevDayWorkout.workout[index].reps = newSet
+    resetDayWorkout(prevDayWorkout)    
   }
 
   const repetitionType = item.repetitionType 
@@ -133,6 +156,13 @@ const ExerciseComponent = ({item, index}) => {
                   <Text style={styles.setText1}>
                     {[0, '0', '--'].includes(dayWorkout.workout[exerciseIndex].reps[index])?'TARGET: ' + format_target(item, repetitionType):format_target(dayWorkout.workout[exerciseIndex].reps[index], repetitionType)}
                   </Text>
+                  {setComplete?
+                <FontAwesome5
+                name={'trash-alt'}
+                {...deleteIconStyling} 
+                onPress={() => {if(index === isFocussed){handleDeleteSet(index)}} }
+              />:null  
+                }
                 </View>
               </TouchableWithoutFeedback>
               <Line />
@@ -156,9 +186,9 @@ const ExerciseComponent = ({item, index}) => {
       </View>
       <View style={styles.footerButtonContainer}>
         <TouchableOpacity
-          // onPress={() =>
-          //   navigation.navigate("ExerciseGuide", { index: item.index })
-          // }
+          onPress={() =>
+            navigation.navigate("ExerciseGuide", { exercise: item })
+          }
         >
           <Text style={styles.footerButtonText}>EXERCISE GUIDE</Text>
         </TouchableOpacity>
@@ -173,7 +203,7 @@ const ExerciseComponent = ({item, index}) => {
 
 
 export default ExerciseScreen = ({ navigation, route }) => {
-  const {exerciseIndex} =  route.params;
+  const [exerciseIndex, setExerciseIndex] =  useState(route.params.exerciseIndex);
   const {workoutData, dayWorkout, resetDayWorkout } = useContext(WorkoutContext)
   var currentDay = workoutData.currentDay
   var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
@@ -183,48 +213,19 @@ export default ExerciseScreen = ({ navigation, route }) => {
 
   const scrollRef = useRef();
 
+
+
   useEffect(() => {
+    console.log('Rerendered')
     scrollIndex();
   }, [exerciseIndex]);
 
   const scrollIndex = () => {
     scrollRef.current.scrollToIndex({
-      animated: false,
+      animated: true,
       index: exerciseIndex,
     });
   };
-
-  // const setHandler = (sets, item) => {
-  //   const setIndex = parseInt(isFocussed) - 1;
-  //   const nextSetNumber = "0" + (parseInt(isFocussed) + 1);
-  //   if (weight === "" || reps === "") {
-  //     null;
-  //     const sets =
-  //       exerciseList[
-  //         exerciseList.length - 1
-  //       ].sets;
-  //   } else if (
-  //     sets.length == isFocussed &&
-  //     exerciseList.length == item.index + 1
-  //   ) {
-  //     sets[setIndex].weight = weight;
-  //     sets[setIndex].reps = reps;
-  //     setShowWorkoutComplete(true);
-  //   } else if (sets.length == isFocussed) {
-  //     sets[setIndex].weight = weight;
-  //     sets[setIndex].reps = reps;
-  //     setWeight("");
-  //     setReps("");
-  //     scrollRef.current.scrollToIndex({
-  //       animated: true,
-  //       index: item.index + 1,
-  //     });
-  //   } else if (sets.length !== isFocussed) {
-  //     sets[setIndex].weight = weight;
-  //     sets[setIndex].reps = reps;
-  //     setIsFocussed(nextSetNumber);
-  //   }
-  // };
 
   const swipeHandler = () => {
     setIsFocussed(0);
@@ -241,19 +242,9 @@ export default ExerciseScreen = ({ navigation, route }) => {
   };
 
   const workoutDoneHandler = () => {
-    console.log();
+
     // Function to post the final data to the API
   };
-
-  // const workoutData = (workoutData) => {
-  //   AsyncStorage.setItem("WorkoutData", JSON.stringify(workoutData))
-  //     .then(() => {
-  //       setStoredWorkoutData(workoutData);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
-
 
 
   return (
@@ -271,18 +262,19 @@ export default ExerciseScreen = ({ navigation, route }) => {
       />
       <FlatList
         ref={scrollRef}
-        // onScroll={swipeHandler}
+        // onScroll={(val) => {}}
+        keyExtractor={(item, index) => {return item._id}}
         showsHorizontalScrollIndicator={false}
         horizontal
         pagingEnabled
         data={exerciseList}
-        keyExtractor={item => item._id}
+        
         getItemLayout={(data, index) => ({
           length: windowWidth,
           offset: windowWidth * index,
           index,
         })}
-        renderItem={({item, index}) => <ExerciseComponent item={item} index={index}/>}
+        renderItem={({item, index}) => <ExerciseComponent navigation={navigation} setExerciseIndex={setExerciseIndex} item={item} index={index} totalExercises={exerciseList.length}/>}
       />
 
       <WorkoutCompleteModal
@@ -308,6 +300,12 @@ const cirlceIconStyling = {
   color: themeColors.tertiary1,
   size: 22 * sc,
 };
+
+const deleteIconStyling = {
+  color: 'red',
+  size: 18 * sc,
+}
+
 const checkIconStyling = {
   color: themeColors.primary1,
   size: 22 * sc,

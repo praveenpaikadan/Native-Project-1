@@ -28,9 +28,21 @@ export default function App() {
   const [credentials, setCredentials] = useState(null)
   const [workoutData, setWorkoutData] = useState(null)
   const [dayWorkout, setDayWorkout] = useState(null)
+  const [token, setToken] = useState(null)
 
 
   var loadingstarted = false
+
+  const resetToken =  async (data) => {
+    try{
+      await AsyncStorage.setItem('authToken', JSON.stringify(data))
+      setCredentials(data)
+      return data
+    }catch(error){
+      console.log('Unable to set Token' , error)
+      return false
+    }
+  }
 
   const resetCredentials = async (data) => {
     try{
@@ -73,7 +85,7 @@ export default function App() {
     await AsyncStorage.removeItem('dayWorkout')
 
     try {
-      const [creds, workoutdata, token,  dayWorkout, font, ] = await Promise.all([
+      const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
         AsyncStorage.getItem("credentials"), 
         AsyncStorage.getItem("workoutData"),
         AsyncStorage.getItem("authToken"), 
@@ -86,6 +98,12 @@ export default function App() {
         }),
       ])
 
+      setCredentials(creds_temp);
+      setWorkoutData(workoutdata_temp)
+      setToken(token_temp)
+      setDayWorkout(dayWorkout_temp)
+      
+
       // console.log('before updation creds : ', JSON.parse(creds))
       // console.log('before updation workout data : ', JSON.parse(workoutdata))
 
@@ -94,7 +112,7 @@ export default function App() {
         return
       }
 
-      if(!creds){
+      if(!credentials){
         loadingstarted = true
         var response = await getAPIAllLocal()
         switch (response.status) {
@@ -157,7 +175,8 @@ export default function App() {
    
   if (appReady) {
     return (
-        <AuthContext.Provider value={{  credentials, resetCredentials, loggedIn, setLoggedIn}}>
+        <AuthContext.Provider 
+          value={{  credentials, resetCredentials, loggedIn, setLoggedIn, token}}>
           <WorkoutContext.Provider
             value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout }}
           >

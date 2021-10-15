@@ -3,12 +3,14 @@ import * as ScreenOrientation from 'expo-screen-orientation'
 import { Dimensions, StyleSheet, BackHandler, ToastAndroid} from 'react-native'
 import { Video } from 'expo-av'
 import { setStatusBarHidden } from 'expo-status-bar'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import VideoPlayer from 'expo-video-player'
+import { AuthContext } from './auth-context'
 
 export default VPlayer = ({ navigation, route }) => {
 
   var { link } = route.params
+  var {token } = useContext(AuthContext)
   var click = 0
   const [inFullscreen2, setInFullsreen2] = useState(false)
   const refVideo2 = useRef(null)
@@ -61,6 +63,7 @@ export default VPlayer = ({ navigation, route }) => {
           resizeMode: Video.RESIZE_MODE_CONTAIN,
           source: {
             uri: link,
+            headers: {'X-Access-Token': token, accept: '*/*','accept-encoding': 'gzip, deflate, br',}
           },
         }}
         fullscreen={{

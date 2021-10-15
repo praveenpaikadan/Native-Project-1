@@ -42,7 +42,7 @@ export default TrackingScreen = ({ navigation }) => {
     })
   }
 
-  console.log(dayWorkout)
+
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} style="light" />

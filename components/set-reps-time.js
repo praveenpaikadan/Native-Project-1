@@ -10,20 +10,16 @@ import { ButtonType1 } from "./buttons";
 
 export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
 
-
-
     const handleSaveButtonClick = () => {
-      console.log('Clicked')
+      setField1(field1.trim())
       if (type === 2) {
-        if (field1 !== '0' && field1 !== '--' && field2 !== '0' && field2 !== '--'){
-          console.log(field1+'X'+field2)
+        if (!['0', '--', 0, ''].includes(field1) &&  !['0', '--', 0, ''].includes(field2)){
           dataChangeHandler(field1+'X'+field2)
         }else{
           ToastAndroid.show("Enter both weight and reps ...", ToastAndroid.BOTTOM);
         }
       }else{
-        if (field1 !== '0' && field1 !== '--'){
-          console.log(field1)
+        if (!['0', '--', 0].includes(field1)){
           dataChangeHandler(field1)
         }else{
           ToastAndroid.show(`Enter ${type===0?'reps':'minutes'} ...`, ToastAndroid.BOTTOM);
@@ -35,7 +31,6 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
     const [field2, setField2] = React.useState('0')
 
     React.useEffect(() => {
-      console.log('Fired ......')
       var dv1, dv2
       if(type == 2 && !!dv){
         dv1 = dv.split('X')[0]
@@ -85,6 +80,8 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
               <Text style={styles.unit}>REPS</Text>
             </View></>
             :null }
+
+
             
           </View> 
 

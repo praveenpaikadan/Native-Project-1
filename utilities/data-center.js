@@ -82,6 +82,17 @@ const testSubscribe = async (subscriptionDatails) => {
     }
 }
 
+const getExercise = async (id) => {
+    try{
+        const response = await API.get('workoutdata/exercise/'+id)
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
 
 
-export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe }
+
+
+export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getExercise}
