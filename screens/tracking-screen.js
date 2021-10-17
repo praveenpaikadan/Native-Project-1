@@ -14,7 +14,7 @@ import { today } from "../utilities/helpers";
 export default TrackingScreen = ({ navigation }) => {
 
 
-  var {workoutData, dayWorkout, resetDayWorkout} = React.useContext(WorkoutContext);
+  var {workoutData, dayWorkout} = React.useContext(WorkoutContext);
   var programName = workoutData.program.programName
   var level = workoutData.program.level
   var currentDay = workoutData.currentDay
