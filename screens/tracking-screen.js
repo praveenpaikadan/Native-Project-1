@@ -23,24 +23,34 @@ export default TrackingScreen = ({ navigation }) => {
   var totalSets = dayWorkoutPlan.exercises.reduce((a, c) => a + c.target.length, 0)
   var totalTime = "TBD"
 
-  
-  if (dayWorkout === null){
-    var exerciseList = dayWorkoutPlan.exercises
-    var currentDay = workoutData.currentDay
-    resetDayWorkout({
-      day : currentDay,
-      date : today(),
-      workout: exerciseList.map((exercise, index) => {
-        return {
-            exerciseNumber: index,
-            exerciseName: exercise.exerciseName,
-            exerciseID: exercise.exerciseID,
-            reps: exercise.target.map(item => 0),
-            repetitionType: exercise.repetitionType, 
-        }
-      }) 
-    })
+  const makeDayWorkout = async() => {
+    if (dayWorkout === null){
+      console.log('Day workout is null making new')
+      var exerciseList = dayWorkoutPlan.exercises
+      var currentDay = workoutData.currentDay
+      await resetDayWorkout({
+        day : currentDay,
+        date : today(),
+        workoutID: workoutData._id,
+        workout: exerciseList.map((exercise, index) => {
+          return {
+              exerciseNumber: index+1,
+              exerciseName: exercise.exerciseName,
+              exerciseID: exercise.exerciseID,
+              reps: exercise.target.map(item => 0),
+              repetitionType: exercise.repetitionType, 
+          }
+        }) 
+      })
+    }else{
+      null
+    }
   }
+  
+  React.useEffect(() => {
+    makeDayWorkout()
+  }, [])
+
 
 
   return (

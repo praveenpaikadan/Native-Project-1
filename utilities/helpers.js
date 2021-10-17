@@ -1,3 +1,4 @@
+import { floor } from "react-native-reanimated"
 import { BASE_URL } from "./api"
 
 export const format_target = (value, type) => {
@@ -21,9 +22,18 @@ export const format_target = (value, type) => {
 
 export const today = () => {
     a = new Date
-    return String(a.getDate()) + '-' + String(a.getMonth()) + '-' + String(a.getFullYear())
+    return String(a.getDate()) + '-' + String(a.getMonth()+1) + '-' + String(a.getFullYear())
 }
 
 export const makeMediaUrl = (filename, secured=false) => {
     return `${BASE_URL}/${secured?'protected-media':'media'}/${filename}`
+}
+
+export const formatIntervel = (secs) => {
+    try{
+        secs = Number(secs)
+        return secs<120?secs + ' seconds': Math.round(secs/60) + ' minutes' 
+    }catch{
+        return secs + ' seconds'
+    }
 }

@@ -32,20 +32,33 @@ import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { WorkoutCompleteModal } from "./modal/workout-complete";
 import { RepInput } from "../components/set-reps-time";
-import { format_target } from "../utilities/helpers";
-import { set } from "react-native-reanimated";
-
+import { formatIntervel, format_target } from "../utilities/helpers";
+import { postDayWorkout } from "../utilities/data-center";
+import flash from "../utilities/flash-message";
 
 // We got a single source of truth to set 'sets', ie. dayworkout. proceed from that.
 
-const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExercises}) => {
-  console.log(item)
+const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExercises, setShowWorkoutComplete}) => {
   const [firstFinish, setFirstFinish] = useState(true)
-
+  const final = index === totalExercises - 1
   const [renderSwitch, setRenderSwitch] = useState(true)   // to force rerender input field on change of sets 
   const {dayWorkout, resetDayWorkout} = useContext(WorkoutContext)
+
   const [isFocussed, setIsFocussed] = useState(0);
   const Line = () => <View style={styles.line}></View>;
+
+  const scrollRef = useRef();
+
+  useEffect(() => {
+    scrollIndex();
+  }, [isFocussed]);
+
+  const scrollIndex = () => {
+    scrollRef.current.scrollToIndex({
+      animated: true,
+      index: isFocussed,
+    });
+  };
 
   const handleSetChange = (val) => {
     setExerciseIndex(index)
@@ -58,10 +71,14 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
     if (val < sets.length){
       setIsFocussed(val)
       setRenderSwitch(!renderSwitch)
-    }else if(val === sets.length && index < totalExercises-1){
-      if(firstFinish){
-        setExerciseIndex(index+1)
-        setFirstFinish(false)
+    }else if(val === sets.length){
+      if(index < totalExercises-1){
+        if(firstFinish){
+          setExerciseIndex(index+1)
+          setFirstFinish(false)
+        }
+      }else{
+        setShowWorkoutComplete(true)
       }
     }
   }
@@ -120,7 +137,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
         <MaterialIcons name="timer" {...timerIconStyling} />
         <Text style={styles.timerHeader}>REST BETWEEN SETS: </Text>
         <View style={styles.timeContainer}>
-          <Text style={styles.timerText}> {item.restInSec}</Text>
+          <Text style={styles.timerText}> {formatIntervel(item.restInSec)}</Text>
         </View>
       </View>
     </View>
@@ -128,8 +145,15 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
     
     <View>
       <FlatList
+        ref={scrollRef}
         data={item.target}
         keyExtractor={(item, index) => String(index)}
+        style={styles.setList}
+        getItemLayout={(data, index) => ({
+          length: styles.setContainer.height + 2,
+          offset: (styles.setContainer.height + 2) * index,
+          index,
+        })}
         renderItem={                  
           ({item, index}) => {
               var setComplete = [0, '0', '--'].includes(dayWorkout.workout[exerciseIndex].reps[index])?false:true
@@ -173,7 +197,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
 
     
     <View style={styles.footerContainer}>
-      <View style={styles.swipeContainer}>
+      {!final?<View style={styles.swipeContainer}>
         <FontAwesome5
           name="long-arrow-alt-left"
           {...arrowIconStyling}
@@ -183,7 +207,14 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
           name="long-arrow-alt-right"
           {...arrowIconStyling}
         />
-      </View>
+      </View>:<ButtonType1
+                arrow={false}
+                text={"MARK WORKOUT COMPLETE"}
+                styling={{marginVertical:3*sc}}
+                textStyling={{fontSize: 14*sc}}
+                onClick={() => {setShowWorkoutComplete()}}
+              />}
+              
       <View style={styles.footerButtonContainer}>
         <TouchableOpacity
           onPress={() =>
@@ -210,6 +241,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
   var exerciseList = dayWorkoutPlan.exercises
 
   const [showWorkoutComplete, setShowWorkoutComplete] = useState(false);
+  const [saving, setSaving] = useState(0)  // 0 for default, 2 for saving status, 1 for succesfull save -1 for failed
 
   const scrollRef = useRef();
 
@@ -227,24 +259,47 @@ export default ExerciseScreen = ({ navigation, route }) => {
     });
   };
 
-  const swipeHandler = () => {
-    setIsFocussed(0);
+  const handleWorkoutDone = () => {
+    setSaving(2)
+    postDayWorkout(dayWorkout)
+    .then((response) => {
+        console.log(response.status, response.data)
+        switch (response.status) {
+          case 200:
+            flash(`Succesfully saved workout data`, 'success', time=4000)
+            setSaving(1)
+    
+            // navigation.navigate("Home", {userData});
+            break;
+          case 409:
+            flash(response.data.errorMessage, 'danger', time=10000)
+            setSaving(-1)
+            navigation.navigate("SignUp");
+            break;
+          case 101:
+            setSaving(-1)
+            flash('Oops Something Happened!! Not able to save workout data. Please try again', 'danger', time=10000)
+            break;
+          default:
+            if(response.data.message){
+              setSaving(0)
+              flash(response.data.message, 'info')
+            }
+            break; 
+          }
+    })
+
   };
 
-  const editingHandler = () => {
-    const sets =
-      exerciseList[
-        exerciseList.length - 1
-      ].sets;
-    sets[sets.length - 1].weight = "";
-    sets[sets.length - 1].reps = "";
-    setShowWorkoutComplete(false);
-  };
-
-  const workoutDoneHandler = () => {
-
-    // Function to post the final data to the API
-  };
+  const continueEditingHandler = () => {
+    console.log('Continue.. editing')
+    setSaving(0)
+    setShowWorkoutComplete(false)
+  }
+  
+  const handleGoToHome = () => {
+    navigation.navigate('Home')
+  }
 
 
   return (
@@ -262,7 +317,6 @@ export default ExerciseScreen = ({ navigation, route }) => {
       />
       <FlatList
         ref={scrollRef}
-        // onScroll={(val) => {}}
         keyExtractor={(item, index) => {return item._id}}
         showsHorizontalScrollIndicator={false}
         horizontal
@@ -274,15 +328,18 @@ export default ExerciseScreen = ({ navigation, route }) => {
           offset: windowWidth * index,
           index,
         })}
-        renderItem={({item, index}) => <ExerciseComponent navigation={navigation} setExerciseIndex={setExerciseIndex} item={item} index={index} totalExercises={exerciseList.length}/>}
+        renderItem={({item, index}) => <ExerciseComponent navigation={navigation} setExerciseIndex={setExerciseIndex} item={item} index={index} totalExercises={exerciseList.length} setShowWorkoutComplete={setShowWorkoutComplete}/>}
       />
 
       <WorkoutCompleteModal
+        saving={saving}
         visible={showWorkoutComplete}
-        continueEditing={() => editingHandler()}
-        workoutDone={workoutDoneHandler}
+        continueEditingHandler={continueEditingHandler}
+        handleWorkoutDone={handleWorkoutDone}
+        handleGoToHome={handleGoToHome}
         text={"WORKOUT DONE"}
       />
+      
     </View>
   );
 };
@@ -425,10 +482,6 @@ const styles = StyleSheet.create({
   },
 
   setContainer: {
-    alignItems: "center",
-  },
-
-  setContainer: {
     paddingHorizontal: 24*sc,
     flexDirection: "row",
     height: 45 * sc,
@@ -445,6 +498,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: themeColors.secondary2,
+  },
+
+  setList:{
+    height:(45+2)*sc*3,
   },
 
   iconContainer: {

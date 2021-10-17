@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text,TextInput, StyleSheet, ToastAndroid} from "react-native";
+import {View, Text,TextInput, StyleSheet, ToastAndroid, ActivityIndicator} from "react-native";
 import {themeColors, globalFonts, sc} from "../styles/global-styles";
 import { Fontisto } from "@expo/vector-icons";
 import { ButtonType1 } from "./buttons";
@@ -9,7 +9,7 @@ import { ButtonType1 } from "./buttons";
 // unit
 
 export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
-
+  
     const handleSaveButtonClick = () => {
       setField1(field1.trim())
       if (type === 2) {
@@ -27,23 +27,33 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
       }
     }
 
+
     const [field1, setField1] = React.useState('0')
     const [field2, setField2] = React.useState('0')
 
+    const [loading, setLoading] = React.useState(true)
+
     React.useEffect(() => {
-      var dv1, dv2
-      if(type == 2 && !!dv){
-        dv1 = dv.split('X')[0]
-        dv2 = dv.split('X')[1]?dv.split('X')[1]:0
-      }else{
-        dv1 = dv
-        dv2= 0
-      }
-      setField1(String(dv1))
-      setField2(String(dv2))
+      const setDefault = async () => {
+        var dv1, dv2
+        if(type == 2 && !!dv){
+          dv1 = dv.split('X')[0]
+          dv2 = dv.split('X')[1]?dv.split('X')[1]:0
+        }else{
+          dv1 = dv
+          dv2= 0
+        }
+        setField1(String(dv1))
+        setField2(String(dv2))}
+
+      setDefault()
+      .then(() => {setLoading(false)})
+
     }, [reRender, dv])
 
- 
+    if(loading){
+      return <View style={{height: 75, justifyContent:'center', alignItems:'center'}}><ActivityIndicator size='large' color={themeColors.primary1}/></View>
+    }
     return (
       <View>
         <View style={styles.inputContainer}>
@@ -80,9 +90,6 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
               <Text style={styles.unit}>REPS</Text>
             </View></>
             :null }
-
-
-            
           </View> 
 
           <View style={styles.buttonContainer}> 
@@ -94,8 +101,7 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
                 onClick={() => {handleSaveButtonClick()}}
               />
             </View> 
-      </View>
-    
+      </View> 
       )
 }
 

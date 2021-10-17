@@ -76,13 +76,14 @@ export default function App() {
       return false
     }
   }
+  
 
   const loadResources = async () => {
 
     // await AsyncStorage.removeItem('credentials')
     // await AsyncStorage.removeItem('workoutData')
     // await AsyncStorage.removeItem('authToken')
-    await AsyncStorage.removeItem('dayWorkout')
+    // await AsyncStorage.removeItem('dayWorkout')
 
     try {
       const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
@@ -98,10 +99,15 @@ export default function App() {
         }),
       ])
 
-      setCredentials(creds_temp);
-      setWorkoutData(workoutdata_temp)
+      console.log(creds_temp, '\n\n', workoutdata_temp, '\n\n', token_temp, '\n\n',  dayWorkout_temp )
+
+
+      setCredentials(JSON.parse(creds_temp));
+      setWorkoutData(JSON.parse(workoutdata_temp))
       setToken(token_temp)
-      setDayWorkout(dayWorkout_temp)
+      setDayWorkout(JSON.parse(dayWorkout_temp))
+
+
       
 
       // console.log('before updation creds : ', JSON.parse(creds))
@@ -120,7 +126,6 @@ export default function App() {
             // console.log(response.data)
             resetCredentials(response.data.credentials)
             resetWorkoutData(response.data.workoutData)
-
             setLoggedIn(true)
             break;
           case 401:
@@ -140,6 +145,7 @@ export default function App() {
         setWorkoutData(JSON.parse(workoutData))
         setLoggedIn(true)
       }
+
 
       if(loadingstarted === false){
         console.log("Running usual update")

@@ -92,7 +92,16 @@ const getExercise = async (id) => {
     }
 }
 
+const postDayWorkout = async (data) => {
+    try{
+        const response = await API.post('workoutdata/push', {dayWorkoutData: data})
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+} 
 
 
 
-export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getExercise}
+export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getExercise, postDayWorkout}
