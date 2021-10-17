@@ -76,7 +76,47 @@ export default function App() {
       return false
     }
   }
-  
+
+  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp) => {
+    setCredentials(JSON.parse(creds_temp));
+    setWorkoutData(JSON.parse(workoutdata_temp))
+    setToken(token_temp)
+    setDayWorkout(JSON.parse(dayWorkout_temp))
+  }
+
+  const makeDayWorkout = async(workoutData, dayWorkout) => {
+
+    var currentDay = workoutData.currentDay
+    var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+    var exerciseList = dayWorkoutPlan.exercises
+
+    var dayWorkoutShape = {
+      day : currentDay,
+      date : today(),
+      workoutID: workoutData._id,
+      complete: false,
+      workout: exerciseList.map((exercise, index) => {
+        return {
+            exerciseNumber: index+1,
+            exerciseName: exercise.exerciseName,
+            exerciseID: exercise.exerciseID,
+            reps: exercise.target.map(item => 0),
+            repetitionType: exercise.repetitionType, 
+        }
+      }) 
+    }
+
+    if (dayWorkout === null){
+      console.log('Day workout is null making new')
+      var exerciseList = dayWorkoutPlan.exercises
+      var currentDay = workoutData.currentDay
+      await resetDayWorkout(dayWorkoutShape)
+    }else if(dayWorkout.complete === true && dayWorkout.dateComplete !== today()){
+      dayWorkout.day = dayWorkout.day+1
+      dayWorkout.date = today()
+      await resetDayWorkout(dayWorkout)
+    }
+  }
 
   const loadResources = async () => {
 
@@ -98,16 +138,11 @@ export default function App() {
           "ubuntu-bold": require("./assets/fonts/Ubuntu-Bold.ttf"),
         }),
       ])
+      
+      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp)
 
-      console.log(creds_temp, '\n\n', workoutdata_temp, '\n\n', token_temp, '\n\n',  dayWorkout_temp )
-
-
-      setCredentials(JSON.parse(creds_temp));
-      setWorkoutData(JSON.parse(workoutdata_temp))
-      setToken(token_temp)
-      setDayWorkout(JSON.parse(dayWorkout_temp))
-
-
+      // console.log(creds_temp, '\n\n', workoutdata_temp, '\n\n', token_temp, '\n\n',  dayWorkout_temp )
+    
       
 
       // console.log('before updation creds : ', JSON.parse(creds))
@@ -146,6 +181,10 @@ export default function App() {
         setLoggedIn(true)
       }
 
+      console.log(workoutData)
+      if(workoutdata_temp){
+        await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
+      }
 
       if(loadingstarted === false){
         console.log("Running usual update")

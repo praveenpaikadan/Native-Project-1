@@ -3,20 +3,30 @@ import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
 import { ElevatedCardTypeOne } from "../../components/cards";
+import { WorkoutContext } from "../../components/workout-context";
 
 export default TrackNowSubScreen = ({ onClick, program }) => {
+
+  const {dayWorkout} = React.useContext(WorkoutContext)
+  var completed = dayWorkout.complete
+  console.log(completed)
+
+
   return (
     <View style={styles.container}>
       <View style={styles.topBox}>
         <View>
-          <Text style={styles.topBoxTagText}>Next Workout</Text>
-          <View style={styles.triangle} />
+          <Text style={{...styles.topBoxTagText, 
+            backgroundColor: completed?'green':themeColors.tertiary3,
+            color: !completed?'black':'white', 
+            }}>{!completed?'Next Workout':'You completed today\'s workout'}</Text>
+          {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}
         </View>
         <Text style={styles.topBoxMainText}>{program}</Text>
         <ButtonType1
-          text={"TRACK NOW"}
-          arrow={20 * sc}
-          styling={styles.trackNowButton}
+          text={!completed?"TRACK NOW": 'VIEW WORKOUT'}
+          arrow={!completed?20 * sc:false}
+          styling={!completed?styles.trackNowButton:{width:210*sc, alignSelf: 'center'}}
           textStyling={styles.buttonTextStyling}
           onClick={onClick}
         />

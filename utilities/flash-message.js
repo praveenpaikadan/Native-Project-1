@@ -4,6 +4,7 @@ import { globalFonts, themeColors, sc } from "../styles/global-styles";
 
 function flashMessage(message, type='info', time=3000, autoHide=true){
     var color = type == 'success'?'#469946':type == 'danger'?"#FF0000":type=='info'? themeColors.primary1: 'grey' 
+    var m = time?time:3000
     showMessage({
         message: message,
         type: type,

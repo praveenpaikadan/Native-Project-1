@@ -32,7 +32,7 @@ import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { WorkoutCompleteModal } from "./modal/workout-complete";
 import { RepInput } from "../components/set-reps-time";
-import { formatIntervel, format_target } from "../utilities/helpers";
+import { formatIntervel, format_target, today } from "../utilities/helpers";
 import { postDayWorkout } from "../utilities/data-center";
 import flash from "../utilities/flash-message";
 
@@ -261,15 +261,17 @@ export default ExerciseScreen = ({ navigation, route }) => {
 
   const handleWorkoutDone = () => {
     setSaving(2)
-    postDayWorkout(dayWorkout)
+    var prevDayWorkout = {...dayWorkout}
+    prevDayWorkout.complete = true
+    prevDayWorkout.dateCompleted = today()
+    postDayWorkout(prevDayWorkout)
     .then((response) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
             flash(`Succesfully saved workout data`, 'success', time=4000)
+            resetDayWorkout(prevDayWorkout) 
             setSaving(1)
-    
-            // navigation.navigate("Home", {userData});
             break;
           case 409:
             flash(response.data.errorMessage, 'danger', time=10000)

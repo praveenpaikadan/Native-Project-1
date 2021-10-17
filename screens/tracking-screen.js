@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { today } from "../utilities/helpers";
 
+
 export default TrackingScreen = ({ navigation }) => {
 
 
@@ -23,33 +24,36 @@ export default TrackingScreen = ({ navigation }) => {
   var totalSets = dayWorkoutPlan.exercises.reduce((a, c) => a + c.target.length, 0)
   var totalTime = "TBD"
 
-  const makeDayWorkout = async() => {
-    if (dayWorkout === null){
-      console.log('Day workout is null making new')
-      var exerciseList = dayWorkoutPlan.exercises
-      var currentDay = workoutData.currentDay
-      await resetDayWorkout({
-        day : currentDay,
-        date : today(),
-        workoutID: workoutData._id,
-        workout: exerciseList.map((exercise, index) => {
-          return {
-              exerciseNumber: index+1,
-              exerciseName: exercise.exerciseName,
-              exerciseID: exercise.exerciseID,
-              reps: exercise.target.map(item => 0),
-              repetitionType: exercise.repetitionType, 
-          }
-        }) 
-      })
-    }else{
-      null
-    }
-  }
+  var completed = dayWorkout.complete
+
+  // const makeDayWorkout = async() => {
+
+  //   if (dayWorkout === null){
+  //     console.log('Day workout is null making new')
+  //     var exerciseList = dayWorkoutPlan.exercises
+  //     var currentDay = workoutData.currentDay
+  //     await resetDayWorkout({
+  //       day : currentDay,
+  //       date : today(),
+  //       workoutID: workoutData._id,
+  //       workout: exerciseList.map((exercise, index) => {
+  //         return {
+  //             exerciseNumber: index+1,
+  //             exerciseName: exercise.exerciseName,
+  //             exerciseID: exercise.exerciseID,
+  //             reps: exercise.target.map(item => 0),
+  //             repetitionType: exercise.repetitionType, 
+  //         }
+  //       }) 
+  //     })
+  //   }else{
+  //     null
+  //   }
+  // }
   
-  React.useEffect(() => {
-    makeDayWorkout()
-  }, [])
+  // React.useEffect(() => {
+  //   makeDayWorkout()
+  // }, [])
 
 
 
@@ -112,7 +116,7 @@ export default TrackingScreen = ({ navigation }) => {
       <ButtonType1
         styling={styles.button}
         arrow={false}
-        text={"TRACK NOW"}
+        text={!completed?"TRACK NOW":'EDIT WORKOUT DATA'}
         textStyling={styles.buttonText}
         onClick={() => {
           navigation.navigate("Exercise", {exerciseIndex : 0});
