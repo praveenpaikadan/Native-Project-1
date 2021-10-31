@@ -103,5 +103,17 @@ const postDayWorkout = async (data) => {
 } 
 
 
+const postBulkDayWorkout = async (data) => {
+    try{
+        const response = await API.post('workoutdata/bulk', {bulkDayWorkoutData: data})
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+} 
 
-export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getExercise, postDayWorkout}
+
+
+
+export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getExercise, postDayWorkout, postBulkDayWorkout}

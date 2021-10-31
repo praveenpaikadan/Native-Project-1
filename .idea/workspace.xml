@@ -7,12 +7,9 @@
     <list default="true" id="ce9b9341-fa59-414b-98b4-a7a6555ef0ed" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/set-reps-time.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/set-reps-time.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/exercise-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/exercise-screen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/modal/workout-complete.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/modal/workout-complete.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/tracking-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/tracking-screen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utilities/data-center.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/data-center.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/helpers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

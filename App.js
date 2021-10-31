@@ -9,9 +9,11 @@ import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FlashMessage from "react-native-flash-message";
 import API from './utilities/api'
-import { getAPIAllLocal } from "./utilities/data-center";
+import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
+
+//Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
 
 global.authToken 
 
@@ -20,16 +22,16 @@ export default function App() {
   // for showing loading screen
   const [appReady, setAppReady] = useState(false);
   
-  // states that stores loacal data. The are put in the wrapping context. All are loaded when app starts. 
+  // states that stores loacal data. All are loaded when app starts. 
   // The navigation flow happens according to the availablility of this data.
-  
   // The app decides to show the signIn screen or signup screen when authtoken is 'null' based on this 
   const [loggedIn, setLoggedIn] = useState(false) 
   const [credentials, setCredentials] = useState(null)
   const [workoutData, setWorkoutData] = useState(null)
   const [dayWorkout, setDayWorkout] = useState(null)
   const [token, setToken] = useState(null)
-
+  // const [pendingUploads, setPendingUploads] = useState(null)  // Boolean state to store if pendingData?
+  var pendingUploadVar                  // Non state variable to store pending data
 
   var loadingstarted = false
 
@@ -77,20 +79,32 @@ export default function App() {
     }
   }
 
-  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp) => {
+  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, pendingUploads_temp) => {
     setCredentials(JSON.parse(creds_temp));
     setWorkoutData(JSON.parse(workoutdata_temp))
     setToken(token_temp)
     setDayWorkout(JSON.parse(dayWorkout_temp))
+    pendingUploadVar = JSON.parse(pendingUploads_temp)
+  }
+
+  const getLastDay = (wd) => {  // wd => workoutdata
+    return wd.history[0]?  wd.history.map(item => item.day).reduce((max, val) => max > val ? max : val):  0
+  }
+
+  const isToday = (wd, day) => {
+    var potDayWorkout = wd.history.find(obj => {return obj.day === day})
+    var lastDateSaved = potDayWorkout?potDayWorkout.dateCompleted:false
+    return lastDateSaved === today()? potDayWorkout: false
   }
 
   const makeDayWorkout = async(workoutData, dayWorkout) => {
+    console.log('Making Day Workout')
 
-    var currentDay = workoutData.currentDay
-    var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
-    var exerciseList = dayWorkoutPlan.exercises
-
-    var dayWorkoutShape = {
+    const dayWorkoutShape = (currentDay) => {
+      var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+      var exerciseList = dayWorkoutPlan.exercises
+      return{
+      uploaded: false,
       day : currentDay,
       date : today(),
       workoutID: workoutData._id,
@@ -104,33 +118,86 @@ export default function App() {
             repetitionType: exercise.repetitionType, 
         }
       }) 
-    }
+    }}
+
+    var lastDaySaved = getLastDay(workoutData) 
+    console.log('lastDaySaved is .................', lastDaySaved)
+    var sameday = isToday(workoutData, lastDaySaved)
 
     if (dayWorkout === null){
       console.log('Day workout is null making new')
-      var exerciseList = dayWorkoutPlan.exercises
-      var currentDay = workoutData.currentDay
-      await resetDayWorkout(dayWorkoutShape)
-    }else if(dayWorkout.complete === true && dayWorkout.dateComplete !== today()){
-      dayWorkout.day = dayWorkout.day+1
-      dayWorkout.date = today()
-      await resetDayWorkout(dayWorkout)
+      if(sameday){
+        await resetDayWorkout(sameday)
+      }else{
+        await resetDayWorkout(dayWorkoutShape(lastDaySaved+1))
+      }
+      
+    }else if(dayWorkout.complete === true && dayWorkout.dateCompleted !== today()){
+      await resetDayWorkout(dayWorkoutShape(dayWorkout.day + 1))
     }
   }
 
-  const loadResources = async () => {
 
+  // Handling Pending uploads
+
+  const resetPendingUploads = async (data) => {
+    if(data === null){
+      await AsyncStorage.removeItem('pendingDayWorkouts')
+      return
+    }
+    pendingUploadVar = data
+    await AsyncStorage.setItem('pendingDayWorkouts', JSON.stringify(data))
+  }
+
+  const addToPending = async (data) => {
+    var prev = pendingUploadVar?[...pendingUploadVar]:[]
+    prev = prev.filter((item, index) => item.day !== data.day)  // to avoid duplicates
+    prev.push(data)
+    resetPendingUploads(prev)
+  }
+
+  const removeFromPending = (data) => {
+    var prev = pendingUploadVar?[...pendingUploadVar]:[]
+    prev = prev.filter((item, index) => item.day !== data.day)
+    resetPendingUploads(prev)
+  }
+
+  const uploadPendingWorkout = () => {
+    console.log('Uploading Pending')
+    console.log('pendingUploadVar is ', pendingUploadVar)
+
+    if (pendingUploadVar !== [] && pendingUploadVar !== null && pendingUploadVar !== '[]'){
+      postBulkDayWorkout(pendingUploadVar)
+      .then((response) => {
+        console.log(response.status, response.data)
+        switch (response.status) {
+          case 200:
+            flash('Succesfully uploaded pending workout', 'danger', time=4000)
+            console.log('Sucesssfully uploaded pending')
+            resetPendingUploads(null)
+            break
+          default:
+            console.log('Failed to upload peeeeeeending data')
+            break; 
+          }
+        })
+      } 
+    }
+
+  const loadResources = async () => {
     // await AsyncStorage.removeItem('credentials')
     // await AsyncStorage.removeItem('workoutData')
     // await AsyncStorage.removeItem('authToken')
     // await AsyncStorage.removeItem('dayWorkout')
+    // await AsyncStorage.removeItem('pendingDayWorkouts')
 
     try {
-      const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
+      const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, pendingUploads_temp, font, ] = await Promise.all([
         AsyncStorage.getItem("credentials"), 
         AsyncStorage.getItem("workoutData"),
         AsyncStorage.getItem("authToken"), 
         AsyncStorage.getItem("dayWorkout"), 
+        AsyncStorage.getItem('pendingDayWorkouts'),
         Font.loadAsync({
           "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
           "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
@@ -139,21 +206,28 @@ export default function App() {
         }),
       ])
       
-      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp)
+      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, pendingUploads_temp)
+      uploadPendingWorkout()
 
-      // console.log(creds_temp, '\n\n', workoutdata_temp, '\n\n', token_temp, '\n\n',  dayWorkout_temp )
-    
+      console.log("credentials: " +  creds_temp + "\n")
+      console.log("workoutData: " +  workoutdata_temp + "\n")
+      console.log("dayWorkout: " + dayWorkout_temp + "\n")
+      console.log("pendingUploads: " + pendingUploads_temp + "\n\n\n\n")
+
+
+
+      // console.log("credentials: " +  credentials + "\n")
+      // console.log("workoutData: " +  workoutData + "\n")
+      // console.log("dayWorkout: " + dayWorkout + "\n")
+      // console.log("pendingUploads: " + pendingUploads + "\n")
       
-
-      // console.log('before updation creds : ', JSON.parse(creds))
-      // console.log('before updation workout data : ', JSON.parse(workoutdata))
 
       if(!authToken){
         setLoggedIn(false)
         return
       }
 
-      if(!credentials){
+      if(!creds_temp || !workoutdata_temp){
         loadingstarted = true
         var response = await getAPIAllLocal()
         switch (response.status) {
@@ -161,6 +235,7 @@ export default function App() {
             // console.log(response.data)
             resetCredentials(response.data.credentials)
             resetWorkoutData(response.data.workoutData)
+            makeDayWorkout(response.data.workoutData, null)
             setLoggedIn(true)
             break;
           case 401:
@@ -176,12 +251,10 @@ export default function App() {
             break; 
           }
       }else{
-        setCredentials(JSON.parse(creds))
-        setWorkoutData(JSON.parse(workoutData))
+        console.log('Setting logged in basis of  local')
         setLoggedIn(true)
       }
 
-      console.log(workoutData)
       if(workoutdata_temp){
         await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
       }
@@ -217,13 +290,14 @@ export default function App() {
       console.log(e)
     }
   }
-   
+  
+
   if (appReady) {
     return (
         <AuthContext.Provider 
           value={{  credentials, resetCredentials, loggedIn, setLoggedIn, token}}>
           <WorkoutContext.Provider
-            value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout }}
+            value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending }}
           >
             <AuthStack />
             <FlashMessage position="top" />

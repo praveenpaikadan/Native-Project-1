@@ -6,6 +6,7 @@ import { ButtonType1 } from "../../components/buttons";
 import { WorkoutCompleteBadge } from "../../assets/svgs/svg-graphics";
 
 export const WorkoutCompleteModal = ({
+  editing,
   visible,
   continueEditingHandler,
   handleDiscardWorkout,
@@ -19,14 +20,13 @@ var displayText
 const [dicard, setDiscard] = useState(false)
 
 const discardWorkout = () => {
-  saving 
+  handleDiscardWorkout()
 }
 
 if(saving === 0){displayText = 'Congratultion on Completing\nToday\'s Workout'}
-else if(saving === 2){displayText = 'Please wait while saving your workout data'}
+else if(saving === 2){displayText = 'Please wait while saving your workout data...'}
 else if(saving === 1){displayText = 'Succesfully saved your workout..'}
-else if(saving === -1){displayText = 'Oops.. something happened while saving your workout. Please try again..'}
-
+else if(saving === -1){displayText = 'Saved your data. But cannot save to server. Press try again or we will upload at a later time'}
 
   return (
     <Modal transparent={true} visible={visible}>
@@ -65,9 +65,9 @@ else if(saving === -1){displayText = 'Oops.. something happened while saving you
               />
             </View>
 
-            {saving !== 1?<ButtonType1
+            {saving === 0 ?<ButtonType1
               styling={styles.button}
-              text={'SAVE WORKOUT'}
+              text={`${editing?'SAVE UPDATED':'SAVE'} WORKOUT`}
               arrow={false}
               isLoading={saving === 2}
               textStyling={styles.buttonText}
@@ -127,9 +127,10 @@ const styles = StyleSheet.create({
     fontFamily: globalFonts.primaryBold,
     color: themeColors.tertiary1,
     marginVertical: 10 * sc,
-    letterSpacing: 1 * sc,
+    letterSpacing: 0.5 * sc,
     fontSize: 16 * sc,
     lineHeight: 23 * sc,
+    paddingHorizontal: 5*sc,
   },
 
   badgeContainer: {
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    marginHorizontal: 70 * sc,
+    marginHorizontal: 45 * sc,
     marginVertical: 10 * sc,
   },
 

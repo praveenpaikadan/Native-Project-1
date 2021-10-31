@@ -28,75 +28,8 @@ const data = {
 export default HomePage = ({ navigation, route }) => {
 
   const {workoutData} = React.useContext(WorkoutContext);
-  const programData = workoutData? workoutData.program: null
 
-  
-  
-  // const workoutData = {
-  //     userId: 1,
-  //     programId: 1,
-  //     programName: "Muscle gain program",
-  //     day: 16,
-  //     target: "Shoulders, Legs, Calves",
-  //     goal: "Muscle Building",
-  //     level: "Intermediate",
-  //     totalSets: 29,
-  //     totalWorkoutTime: "01:30",
-  //     exerciselist: [
-  //       {
-  //         exerciseId: "1",
-  //         exerciseName: "Dumbbell Step Ups",
-  //         targetSets: 3,
-  //         targetReps: "8 - 12",
-  //         sets: [
-  //           { set: "01", weight: "", reps: "" },
-  //           { set: "02", weight: "", reps: "" },
-  //           { set: "03", weight: "", reps: "" },
-  //         ],
-  //         rest: "00:45",
-  //       },
-  //       {
-  //         exerciseId: "2",
-  //         exerciseName: "Barbell Shrug",
-  //         targetSets: 4,
-  //         targetReps: "8 - 12",
-  //         sets: [
-  //           { set: "01", weight: "", reps: "" },
-  //           { set: "02", weight: "", reps: "" },
-  //           { set: "03", weight: "", reps: "" },
-  //           { set: "04", weight: "", reps: "" },
-  //         ],
-
-  //         rest: "00:30",
-  //       },
-  //       {
-  //         exerciseId: "3",
-  //         exerciseName: "Leg Extensions",
-  //         targetSets: 3,
-  //         targetReps: "8 - 12",
-  //         sets: [
-  //           { set: "01", weight: "", reps: "" },
-  //           { set: "02", weight: "", reps: "" },
-  //           { set: "03", weight: "", reps: "" },
-  //         ],
-  //         rest: "00:45",
-  //       },
-  //       {
-  //         exerciseId: "4",
-  //         exerciseName: "Standing Calf Raise",
-  //         targetSets: 3,
-  //         targetReps: "8 - 12",
-  //         sets: [
-  //           { set: "01", weight: "", reps: "" },
-  //           { set: "02", weight: "", reps: "" },
-  //           { set: "03", weight: "", reps: "" },
-  //         ],
-  //         rest: "01:00",
-  //       },
-  //     ],
-  //     image1: require("../assets/images/Dumbbell-Step-Ups-1.jpg"),
-  //     image2: require("../assets/images/Dumbbell-Step-Ups-2.jpg"),
-  //   };
+  useEffect (() => {}, [workoutData])
 
   return (
     <View style={styles.container}>
@@ -140,16 +73,16 @@ export default HomePage = ({ navigation, route }) => {
 
         <View style={styles.dataContainer}>
         
-            {programData
+            {workoutData
             ? 
             (
             <TrackNowSubScreen
               program={
-                programData.programName
+                workoutData.program.programName
                 + ": Day " +
                 workoutData.currentDay 
               
-                //  + programData.target? programData.target: " "                        // TBD => add dayTarget to the program form
+                //  + workoutData.program.target? workoutData.program.target: " "                        // TBD => add dayTarget to the program form
               }
               onClick={() =>
                 navigation.navigate("Root", { screen: "TrackNow" })

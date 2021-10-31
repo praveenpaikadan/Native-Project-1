@@ -28,7 +28,6 @@ const API = axios.create({
 API.interceptors.request.use(
   async config => {
       config.headers['X-Access-Token'] = authToken
-      console.log(`Auth token attached in request is ${config.headers['X-Access-Token']} `)
       return config;
   },
   error => Promise.reject(error)

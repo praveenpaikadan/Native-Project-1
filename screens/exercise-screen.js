@@ -35,6 +35,7 @@ import { RepInput } from "../components/set-reps-time";
 import { formatIntervel, format_target, today } from "../utilities/helpers";
 import { postDayWorkout } from "../utilities/data-center";
 import flash from "../utilities/flash-message";
+import { Alert } from "./modal/alert";
 
 // We got a single source of truth to set 'sets', ie. dayworkout. proceed from that.
 
@@ -42,12 +43,14 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   const [firstFinish, setFirstFinish] = useState(true)
   const final = index === totalExercises - 1
   const [renderSwitch, setRenderSwitch] = useState(true)   // to force rerender input field on change of sets 
-  const {dayWorkout, resetDayWorkout} = useContext(WorkoutContext)
+  const {dayWorkout, resetDayWorkout } = useContext(WorkoutContext)
 
   const [isFocussed, setIsFocussed] = useState(0);
   const Line = () => <View style={styles.line}></View>;
 
   const scrollRef = useRef();
+
+  // console.log(dayWorkout)
 
   useEffect(() => {
     scrollIndex();
@@ -85,14 +88,14 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
 
   const setSaveHandler = (val) => {
     console.log(index, isFocussed)
-    var prevDayWorkout = {...dayWorkout}   
-    prevDayWorkout.workout[index].reps[isFocussed] = val
-    resetDayWorkout(prevDayWorkout)
+    var orgDayWorkout = {...dayWorkout}   
+    orgDayWorkout.workout[index].reps[isFocussed] = val
+    resetDayWorkout(orgDayWorkout)
     handleSetChange(isFocussed+1)
   }
 
   const handleDeleteSet = (setIndexToDelete) => {
-    var prevDayWorkout = {...dayWorkout}
+    var orgDayWorkout = {...dayWorkout}
     var set = dayWorkout.workout[index].reps.filter((item, setIndex) => setIndex !== setIndexToDelete)
     var newSet = []
     for (let i = 0; i < dayWorkout.workout[index].reps.length; i++) {
@@ -102,8 +105,8 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
         newSet[i] = 0
       }
     } 
-    prevDayWorkout.workout[index].reps = newSet
-    resetDayWorkout(prevDayWorkout)    
+    orgDayWorkout.workout[index].reps = newSet
+    resetDayWorkout(orgDayWorkout)    
   }
 
   const repetitionType = item.repetitionType 
@@ -235,17 +238,15 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
 
 export default ExerciseScreen = ({ navigation, route }) => {
   const [exerciseIndex, setExerciseIndex] =  useState(route.params.exerciseIndex);
-  const {workoutData, dayWorkout, resetDayWorkout } = useContext(WorkoutContext)
+  const {workoutData, resetWorkoutData,  dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending,  pendingUploads } = useContext(WorkoutContext)
   var currentDay = workoutData.currentDay
   var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
   var exerciseList = dayWorkoutPlan.exercises
 
   const [showWorkoutComplete, setShowWorkoutComplete] = useState(false);
   const [saving, setSaving] = useState(0)  // 0 for default, 2 for saving status, 1 for succesfull save -1 for failed
-
+  const [discardAlert, setDiscardAlert ] = useState(false)
   const scrollRef = useRef();
-
-
 
   useEffect(() => {
     console.log('Rerendered')
@@ -259,34 +260,36 @@ export default ExerciseScreen = ({ navigation, route }) => {
     });
   };
 
+
   const handleWorkoutDone = () => {
     setSaving(2)
-    var prevDayWorkout = {...dayWorkout}
-    prevDayWorkout.complete = true
-    prevDayWorkout.dateCompleted = today()
-    postDayWorkout(prevDayWorkout)
+    var orgDayWorkout = {...dayWorkout}
+    orgDayWorkout.complete = true
+    orgDayWorkout.dateCompleted = today()
+    resetDayWorkout(orgDayWorkout)
+    var orgWorkoutData = {...workoutData}
+    orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== orgDayWorkout.day).push(orgDayWorkout)
+    resetWorkoutData(orgWorkoutData)
+    postDayWorkout(orgDayWorkout)
     .then((response) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
             flash(`Succesfully saved workout data`, 'success', time=4000)
-            resetDayWorkout(prevDayWorkout) 
+            removeFromPending(orgDayWorkout)
             setSaving(1)
-            break;
-          case 409:
-            flash(response.data.errorMessage, 'danger', time=10000)
-            setSaving(-1)
-            navigation.navigate("SignUp");
             break;
           case 101:
             setSaving(-1)
-            flash('Oops Something Happened!! Not able to save workout data. Please try again', 'danger', time=10000)
+            flash('Oops Something Happened!! Not able to upload workout data. Your workout data is saved will try to upload later. You can safely go back, try again or continue editing', 'danger', time=10000)
+            addToPending(orgDayWorkout)
             break;
           default:
             if(response.data.message){
-              setSaving(0)
+              setSaving(-1)
               flash(response.data.message, 'info')
             }
+            addToPending(orgDayWorkout)
             break; 
           }
     })
@@ -300,7 +303,20 @@ export default ExerciseScreen = ({ navigation, route }) => {
   }
   
   const handleGoToHome = () => {
+    setSaving(0)
     navigation.navigate('Home')
+  }
+
+  const handleDiscardWorkout = () => {
+    setShowWorkoutComplete(false)
+    setDiscardAlert(true)
+  }
+
+  const handleConfirmDiscard = () => {
+    setSaving(0)
+    navigation.navigate('Home')
+    makeDayWorkout(workoutData, null)
+    setDiscardAlert(false)
   }
 
 
@@ -334,13 +350,22 @@ export default ExerciseScreen = ({ navigation, route }) => {
       />
 
       <WorkoutCompleteModal
+        editing={dayWorkout.complete}
         saving={saving}
         visible={showWorkoutComplete}
         continueEditingHandler={continueEditingHandler}
         handleWorkoutDone={handleWorkoutDone}
+        handleDiscardWorkout={handleDiscardWorkout}
         handleGoToHome={handleGoToHome}
         text={"WORKOUT DONE"}
       />
+
+      <Alert 
+        visible={discardAlert}
+        message={'Are you sure you want to discard today\'s workout ? '}
+        yesHandler={handleConfirmDiscard}
+        noHandler={() => {setDiscardAlert(false); setShowWorkoutComplete(true)} }
+        />
       
     </View>
   );
