@@ -82,6 +82,16 @@ const testSubscribe = async (subscriptionDatails) => {
     }
 }
 
+const getWorkoutData = async (id) => {
+    try{
+        const response = await API.get('workoutdata')
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
+
 const getExercise = async (id) => {
     try{
         const response = await API.get('workoutdata/exercise/'+id)
@@ -91,6 +101,8 @@ const getExercise = async (id) => {
         return error.response?error.response:{status: 101}
     }
 }
+
+
 
 const postDayWorkout = async (data) => {
     try{
@@ -116,4 +128,4 @@ const postBulkDayWorkout = async (data) => {
 
 
 
-export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getExercise, postDayWorkout, postBulkDayWorkout}
+export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getWorkoutData, getExercise, postDayWorkout, postBulkDayWorkout}

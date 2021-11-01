@@ -30,6 +30,8 @@ export default function App() {
   const [workoutData, setWorkoutData] = useState(null)
   const [dayWorkout, setDayWorkout] = useState(null)
   const [token, setToken] = useState(null)
+  const [programOver, setProgramOver] = useState(false)
+
   // const [pendingUploads, setPendingUploads] = useState(null)  // Boolean state to store if pendingData?
   var pendingUploadVar                  // Non state variable to store pending data
 
@@ -79,65 +81,90 @@ export default function App() {
     }
   }
 
-  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, pendingUploads_temp) => {
+  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp, pendingUploads_temp) => {
     setCredentials(JSON.parse(creds_temp));
     setWorkoutData(JSON.parse(workoutdata_temp))
     setToken(token_temp)
-    setDayWorkout(JSON.parse(dayWorkout_temp))
     pendingUploadVar = JSON.parse(pendingUploads_temp)
   }
+
+  const dayWorkoutShape = (workoutData, currentDay) => {
+    var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+    var exerciseList = dayWorkoutPlan.exercises
+    return{
+    day : currentDay,
+    date : today(),
+    workoutID: workoutData._id,
+    programName: workoutData.program.programName,
+    complete: false,
+    level: workoutData.program.level,
+    dayWorkoutPlan: dayWorkoutPlan,
+    finalDay: currentDay === workoutData.program.schedule.length,
+    workout: exerciseList.map((exercise, index) => {
+      return {
+          exerciseNumber: index+1,
+          exerciseName: exercise.exerciseName,
+          exerciseID: exercise.exerciseID,
+          reps: exercise.target.map(item => 0),
+          repetitionType: exercise.repetitionType, 
+      }
+    }) 
+  }}
 
   const getLastDay = (wd) => {  // wd => workoutdata
     return wd.history[0]?  wd.history.map(item => item.day).reduce((max, val) => max > val ? max : val):  0
   }
 
-  const isToday = (wd, day) => {
-    var potDayWorkout = wd.history.find(obj => {return obj.day === day})
-    var lastDateSaved = potDayWorkout?potDayWorkout.dateCompleted:false
-    return lastDateSaved === today()? potDayWorkout: false
-  }
-
   const makeDayWorkout = async(workoutData, dayWorkout) => {
     console.log('Making Day Workout')
-
-    const dayWorkoutShape = (currentDay) => {
-      var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
-      var exerciseList = dayWorkoutPlan.exercises
-      return{
-      uploaded: false,
-      day : currentDay,
-      date : today(),
-      workoutID: workoutData._id,
-      complete: false,
-      workout: exerciseList.map((exercise, index) => {
-        return {
-            exerciseNumber: index+1,
-            exerciseName: exercise.exerciseName,
-            exerciseID: exercise.exerciseID,
-            reps: exercise.target.map(item => 0),
-            repetitionType: exercise.repetitionType, 
-        }
-      }) 
-    }}
-
-    var lastDaySaved = getLastDay(workoutData) 
+    lastDaySaved = getLastDay(workoutData) 
     console.log('lastDaySaved is .................', lastDaySaved)
-    var sameday = isToday(workoutData, lastDaySaved)
-
-    if (dayWorkout === null){
-      console.log('Day workout is null making new')
-      if(sameday){
-        await resetDayWorkout(sameday)
+    finalDay = workoutData.program.schedule.length
+    
+    const isToday = () => {
+      // console.log('wd in isToday is ', wd)    
+      var potDayWorkout = dayWorkoutShape(workoutData, lastDaySaved)
+      var lastDateSaved = potDayWorkout?potDayWorkout['dateCompleted']:false
+      if (lastDateSaved === today() || lastDaySaved === finalDay){  // if it is same day or the final day return the original item from the workout history.
+        var coreDayWorkout = workoutData.history.find(obj => {return obj.day === lastDaySaved})
+        for (let i of Object.keys(coreDayWorkout)) {
+          potDayWorkout[i] = coreDayWorkout[i]
+        }
+        potDayWorkout.complete = true
+        return potDayWorkout
       }else{
-        await resetDayWorkout(dayWorkoutShape(lastDaySaved+1))
+        return false
       }
-      
-    }else if(dayWorkout.complete === true && dayWorkout.dateCompleted !== today()){
-      await resetDayWorkout(dayWorkoutShape(dayWorkout.day + 1))
     }
+    
+    var newDayWorkout 
+    
+    if (dayWorkout === null){
+      var sameday = lastDaySaved?isToday():false
+      if(sameday){
+        console.log('Day workout is null making new - Same day as that of last saved.')
+        newDayWorkout = sameday
+      }else{
+        console.log('Day workout is null making new - New day after the last saved for day ', lastDaySaved+1)
+        newDayWorkout = dayWorkoutShape(workoutData, lastDaySaved+1)
+      }
+   
+    }else{
+      if(dayWorkout.complete === true && dayWorkout.dateCompleted !== today()){
+        if(finalDay <= lastDaySaved){
+          console.log('Day workout is present but new day, so making new after the last saved.')
+          newDayWorkout = dayWorkoutShape(workoutData, finalDay <= dayWorkout.day?dayWorkout.day:dayWorkout.day + 1)
+        }else{
+          newDayWorkout = dayWorkout
+        }
+      }else{
+        console.log('Day workout is present for today but not complete, so no changes made')
+        newDayWorkout = dayWorkout
+      }
+    }
+
+    resetDayWorkout(newDayWorkout)
   }
-
-
   // Handling Pending uploads
 
   const resetPendingUploads = async (data) => {
@@ -182,7 +209,7 @@ export default function App() {
           }
         })
       } 
-    }
+  }
 
   const loadResources = async () => {
     // await AsyncStorage.removeItem('credentials')
@@ -206,8 +233,9 @@ export default function App() {
         }),
       ])
       
-      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, pendingUploads_temp)
-      uploadPendingWorkout()
+      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp, pendingUploads_temp)
+
+      
 
       console.log("credentials: " +  creds_temp + "\n")
       console.log("workoutData: " +  workoutdata_temp + "\n")
@@ -219,12 +247,18 @@ export default function App() {
       // console.log("credentials: " +  credentials + "\n")
       // console.log("workoutData: " +  workoutData + "\n")
       // console.log("dayWorkout: " + dayWorkout + "\n")
-      // console.log("pendingUploads: " + pendingUploads + "\n")
+      // console.log("pendingUploads: " + pendingUploadVar + "\n")
       
 
       if(!authToken){
         setLoggedIn(false)
         return
+      }
+
+      uploadPendingWorkout()
+      if(workoutdata_temp){
+        console.log('Exeeeeeeeeeeeecu')
+        await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
       }
 
       if(!creds_temp || !workoutdata_temp){
@@ -233,9 +267,9 @@ export default function App() {
         switch (response.status) {
           case 200:
             // console.log(response.data)
-            resetCredentials(response.data.credentials)
-            resetWorkoutData(response.data.workoutData)
-            makeDayWorkout(response.data.workoutData, null)
+            await resetCredentials(response.data.credentials)
+            await resetWorkoutData(response.data.workoutData)
+            await makeDayWorkout(response.data.workoutData, null)
             setLoggedIn(true)
             break;
           case 401:
@@ -255,10 +289,7 @@ export default function App() {
         setLoggedIn(true)
       }
 
-      if(workoutdata_temp){
-        await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
-      }
-
+      // To be optimized
       if(loadingstarted === false){
         console.log("Running usual update")
         getAPIAllLocal()
@@ -297,7 +328,7 @@ export default function App() {
         <AuthContext.Provider 
           value={{  credentials, resetCredentials, loggedIn, setLoggedIn, token}}>
           <WorkoutContext.Provider
-            value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending }}
+            value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending, programOver, setProgramOver }}
           >
             <AuthStack />
             <FlashMessage position="top" />

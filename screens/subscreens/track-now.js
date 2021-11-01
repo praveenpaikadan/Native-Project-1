@@ -9,7 +9,7 @@ export default TrackNowSubScreen = ({ onClick, program }) => {
 
   const {dayWorkout} = React.useContext(WorkoutContext)
   var completed = dayWorkout.complete
-  console.log(completed)
+  // console.log(completed)
 
 
   return (

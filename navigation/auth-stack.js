@@ -57,13 +57,13 @@ export const AuthStack = () => {
   return (
     <AuthContext.Consumer>
 
-      {({ loggedIn }) => (
+      {({ loggedIn, credentials }) => (
 
         <NavigationContainer>
 
           {
           
-          loggedIn
+          loggedIn && credentials
           
           ? 
            

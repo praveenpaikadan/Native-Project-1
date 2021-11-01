@@ -48,6 +48,8 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   const [isFocussed, setIsFocussed] = useState(0);
   const Line = () => <View style={styles.line}></View>;
 
+  console.log('dayWorkout -> workout at Exercise component with index ' , index, ' is ', dayWorkout.workout[index])
+
   const scrollRef = useRef();
 
   // console.log(dayWorkout)
@@ -238,9 +240,9 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
 
 export default ExerciseScreen = ({ navigation, route }) => {
   const [exerciseIndex, setExerciseIndex] =  useState(route.params.exerciseIndex);
-  const {workoutData, resetWorkoutData,  dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending,  pendingUploads } = useContext(WorkoutContext)
-  var currentDay = workoutData.currentDay
-  var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+  const {workoutData, resetWorkoutData,  dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending } = useContext(WorkoutContext)
+  var currentDay = dayWorkout.day
+  var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})  //obtainng targets from the original workoutData 
   var exerciseList = dayWorkoutPlan.exercises
 
   const [showWorkoutComplete, setShowWorkoutComplete] = useState(false);

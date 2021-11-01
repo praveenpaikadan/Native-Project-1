@@ -8,22 +8,20 @@ import { sc, themeColors } from "../styles/global-styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
 import { WorkoutContext } from "../components/workout-context";
-import { loginUser } from "../utilities/data-center";
+import { getWorkoutData, loginUser } from "../utilities/data-center";
 import flash from '../utilities/flash-message'
 
 export default SignInScreen = ({navigation}) => {
 
-  const {setLoggedIn} = React.useContext(AuthContext)
+  const {setLoggedIn, resetCredentials} = React.useContext(AuthContext)
+  const {resetWorkoutData, makeDayWorkout} = React.useContext(WorkoutContext)
   const [errorMessage, setErrorMessage] = React.useState("");
   const [userInfo, setUserInfo] = React.useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = React.useState(false);
-  const { storedCredentials, setStoredCredentials } =
-    React.useContext(AuthContext);
-  const { storedWorkoutData, setStoredWorkoutData } =
-    React.useContext(WorkoutContext);
+
 
   const emailChangeHandler = (value) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -49,8 +47,21 @@ export default SignInScreen = ({navigation}) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
+            resetCredentials(response.data)
+            .then(() => {
+              getWorkoutData()
+              .then((response) =>{ 
+                if(response.data){
+
+                  // console.log('workoutData received after signIn, ', response.data)
+                  resetWorkoutData(response.data)
+                  makeDayWorkout(response.data, null)
+                }
+              })})
+
             var user = response.data
             console.log(user)
+            
             flash(`Welcome ${user.name}`, 'success', time=4000)
             setLoggedIn(true)
             break;
@@ -69,22 +80,6 @@ export default SignInScreen = ({navigation}) => {
       setIsLoading(false)
     })
     
-  };
-
-  const persistLogin = (credentials) => {
-    AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
-      .then(() => {
-        setStoredCredentials(credentials);
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const persistWorkoutData = (workOutData) => {
-    AsyncStorage.setItem("WorkoutData", JSON.stringify(workOutData))
-      .then(() => {
-        setStoredWorkoutData(workoutdata);
-      })
-      .catch((error) => console.log(error));
   };
 
   return (

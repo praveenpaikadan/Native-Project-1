@@ -22,7 +22,8 @@ export const format_target = (value, type) => {
 
 export const today = () => {
     a = new Date
-    return String(a.getDate()) + '-' + String(a.getMonth()+1) + '-' + String(a.getFullYear())
+    // return String(a.getDate()) + '-' + String(a.getMonth()+1) + '-' + String(a.getFullYear())
+    return '4-11-2021'
 }
 
 export const makeMediaUrl = (filename, secured=false) => {

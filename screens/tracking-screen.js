@@ -13,49 +13,18 @@ import { today } from "../utilities/helpers";
 
 export default TrackingScreen = ({ navigation }) => {
 
+  var { dayWorkout } = React.useContext(WorkoutContext);
 
-  var {workoutData, dayWorkout} = React.useContext(WorkoutContext);
-  var programName = workoutData.program.programName
-  var level = workoutData.program.level
-  var currentDay = workoutData.currentDay
-  var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
+  var programName = dayWorkout.programName
+  var level = dayWorkout.level
+  var currentDay = dayWorkout.day
+  var dayWorkoutPlan = dayWorkout.dayWorkoutPlan
   var exerciseList = dayWorkoutPlan.exercises
   var totalExercises = dayWorkoutPlan.exercises.length
   var totalSets = dayWorkoutPlan.exercises.reduce((a, c) => a + c.target.length, 0)
   var totalTime = "TBD"
 
   var completed = dayWorkout.complete
-
-  // const makeDayWorkout = async() => {
-
-  //   if (dayWorkout === null){
-  //     console.log('Day workout is null making new')
-  //     var exerciseList = dayWorkoutPlan.exercises
-  //     var currentDay = workoutData.currentDay
-  //     await resetDayWorkout({
-  //       day : currentDay,
-  //       date : today(),
-  //       workoutID: workoutData._id,
-  //       workout: exerciseList.map((exercise, index) => {
-  //         return {
-  //             exerciseNumber: index+1,
-  //             exerciseName: exercise.exerciseName,
-  //             exerciseID: exercise.exerciseID,
-  //             reps: exercise.target.map(item => 0),
-  //             repetitionType: exercise.repetitionType, 
-  //         }
-  //       }) 
-  //     })
-  //   }else{
-  //     null
-  //   }
-  // }
-  
-  // React.useEffect(() => {
-  //   makeDayWorkout()
-  // }, [])
-
-
 
   return (
     <View style={styles.container}>

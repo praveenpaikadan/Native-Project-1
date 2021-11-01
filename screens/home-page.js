@@ -11,26 +11,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 
-const data = {
-  userId: 1,
-  name: "Olivia Charlotte",
-  avatar: require("../assets/images/profile.jpg"),
-  gender: "Female",
-  dob: "01-01-1986",
-  height: 168,
-  weigth: 55,
-  status: "active",
-  subscription: "complete",
-  workoutsTracked: 28,
-  caloriesBurnt: 14000,
-};
+
 
 export default HomePage = ({ navigation, route }) => {
 
-  const {workoutData} = React.useContext(WorkoutContext);
 
-  useEffect (() => {}, [workoutData])
+  const {credentials} = React.useContext(AuthContext);
+  const {dayWorkout, programOver, setProgramOver} = React.useContext(WorkoutContext);
 
+  const data = {
+    userId: 1,
+    name: credentials.name,
+    avatar: require("../assets/images/profile.jpg"),
+    gender: credentials.gender,
+    dob: "01-01-1986",
+    height: 168,
+    weight: 55,
+    status: "active",
+    subscription: "complete",
+    workoutsTracked: 28,
+    caloriesBurnt: 14000,
+  };
+
+  setTimeout(() => {console.log('dayWorkout in HomePage after 10s is',  dayWorkout)}, 10000)
+
+  console.log('dayWorkout in HomePage is',  dayWorkout)
+
+  useEffect (() => {}, [dayWorkout])
+
+  
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
@@ -73,14 +82,14 @@ export default HomePage = ({ navigation, route }) => {
 
         <View style={styles.dataContainer}>
         
-            {workoutData
+            {![null, [], '', undefined].includes(dayWorkout)
             ? 
             (
             <TrackNowSubScreen
               program={
-                workoutData.program.programName
+                dayWorkout.programName
                 + ": Day " +
-                workoutData.currentDay 
+                dayWorkout.day
               
                 //  + workoutData.program.target? workoutData.program.target: " "                        // TBD => add dayTarget to the program form
               }
