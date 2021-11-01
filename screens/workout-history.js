@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 
 export default WorkoutHistory = () => {
+  const [total, setTotal] = React.useState(0)
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -24,11 +25,11 @@ export default WorkoutHistory = () => {
           <Text style={styles.headingText}>WORKOUT HISTORY</Text>
         </View>
         <View>
-          <Text style={styles.totalWorkouts}>TOTAL WORKOUTS TRACKED: 152 </Text>
+          <Text style={styles.totalWorkouts}>TOTAL WORKOUTS TRACKED: {total}  </Text>
         </View>
       </View>
       <View style={styles.listContainer}>
-        <HistoryList />
+        <HistoryList setTotal={setTotal}/>
         <Feather name="chevrons-down" {...chevronIconStyling} />
       </View>
     </View>

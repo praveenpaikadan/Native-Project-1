@@ -5,13 +5,10 @@ import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
 import ProgramList from "./subscreens/program-list";
 import TrackNowSubScreen from "./subscreens/track-now";
-import { AuthContext } from "../components/auth-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
+import ProfileBox from "../components/profilebox";
 
-export default HomePage = ({ navigation }) => {
-  const { storedCredentials, setStoredCredentials } = React.useContext(AuthContext);
-  // const { status, id, token } = storedCredentials;
+export default Store = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
@@ -19,39 +16,7 @@ export default HomePage = ({ navigation }) => {
       <Header onPressMenu={() => navigation.openDrawer()} />
 
       <View style={styles.contentContainer}>
-        <ImageBackground
-          source={require("../assets/images/dead-lift.jpg")}
-          style={styles.profileWrapper}
-        >
-          <View style={styles.profileContainer}>
-            <View style={styles.profilePhotoContainer}>
-              <Image
-                source={require("../assets/images/profile.jpg")}
-                style={styles.profilePhoto}
-              />
-            </View>
-            <View style={styles.profileDataContainer}>
-              <View style={styles.profileDataRowContainer1}>
-                <Text style={styles.profileName}>{"Olivia Charlotte"}</Text>
-              </View>
-              <View style={styles.profileDataRowContainer2}>
-                <View style={styles.profileDataRowItem}>
-                  <Text style={styles.rowItemValue}>{95}</Text>
-                  <Text style={styles.rowItemTag}>Workout Tracked</Text>
-                </View>
-                <View style={styles.profileDataRowItem}>
-                  <View
-                    style={{ flexDirection: "row", justifyContent: "center" }}
-                  >
-                    <Text style={styles.rowItemValue}>{152}</Text>
-                    <Text style={styles.rowItemTag}>kg</Text>
-                  </View>
-                  <Text style={styles.rowItemTag}>Weight Lifted</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </ImageBackground>
+        <ProfileBox />
 
         <View style={styles.dataContainer}>
           {/* {status !== 200 ? ( */}
@@ -61,12 +26,8 @@ export default HomePage = ({ navigation }) => {
             />
           ) : (
             <ProgramList
-              onPress={() =>
-                navigation.navigate("Root", {
-                  screen: "ProgramDetails",
-                })
-              }
-            />
+            navigation={navigation}
+          />
           )}
         </View>
       </View>

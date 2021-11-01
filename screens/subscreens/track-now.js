@@ -5,7 +5,7 @@ import { ButtonType1 } from "../../components/buttons";
 import { ElevatedCardTypeOne } from "../../components/cards";
 import { WorkoutContext } from "../../components/workout-context";
 
-export default TrackNowSubScreen = ({ onClick, program }) => {
+export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
   const {dayWorkout} = React.useContext(WorkoutContext)
   var completed = dayWorkout.complete
@@ -14,6 +14,7 @@ export default TrackNowSubScreen = ({ onClick, program }) => {
 
   return (
     <View style={styles.container}>
+      {!programEnded?
       <View style={styles.topBox}>
         <View>
           <Text style={{...styles.topBoxTagText, 
@@ -31,9 +32,35 @@ export default TrackNowSubScreen = ({ onClick, program }) => {
           onClick={onClick}
         />
       </View>
+      :
+      <View style={styles.topBox}>
+        <View>
+          <Text style={{...styles.topBoxTagText, 
+            backgroundColor: 'green',
+            color: 'white', 
+            }}>{'Congradulations !!! You have completed the Program'}</Text>
+          {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}
+        </View>
+        <Text style={styles.topBoxMainText}>{'Completed: '+programName}</Text>
+        <ButtonType1
+          text={'VIEW WORKOUT HISTORY'}
+          arrow={!completed?20 * sc:false}
+          styling={{width:280*sc, alignSelf: 'center'}}
+          textStyling={styles.buttonTextStyling}
+          onClick={() => {navigation.navigate('Root', { screen: "WorkoutHistory" })}}
+        />
+        <ButtonType1
+          text={'PICK ANOTHER PROGRAM'}
+          arrow={!completed?20 * sc:false}
+          styling={{marginTop: 10*sc, width:300*sc, alignSelf: 'center'}}
+          textStyling={styles.buttonTextStyling}
+          onClick={() => {navigation.navigate('Root', { screen: "Store" })}}
+        />
+      </View>
+      }
 
       <View style={styles.bottomBox}>
-        <ElevatedCardTypeOne styling={styles.card}>
+        <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
           <ImageBackground
             style={styles.cardImage}
             source={require("../../assets/images/diet-plan.jpg")}
@@ -46,7 +73,7 @@ export default TrackNowSubScreen = ({ onClick, program }) => {
           </ImageBackground>
         </ElevatedCardTypeOne>
 
-        <ElevatedCardTypeOne styling={styles.card}>
+        <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
           <ImageBackground
             style={styles.cardImage}
             source={require("../../assets/images/recipes.jpg")}
@@ -127,6 +154,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     justifyContent: "center",
   },
+
+  smallcard: {
+    height: 150 * sc,
+    width: 150 * sc,
+    overflow: "hidden",
+    justifyContent: "center",
+  },
+  
   cardImage: {
     width: "100%",
     height: "100%",

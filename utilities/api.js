@@ -27,7 +27,7 @@ const API = axios.create({
 
 API.interceptors.request.use(
   async config => {
-      config.headers['X-Access-Token'] = authToken
+      config.headers['X-Access-Token'] = await AsyncStorage.getItem('authToken')
       return config;
   },
   error => Promise.reject(error)

@@ -10,75 +10,28 @@ import { AuthContext } from "../components/auth-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
+import ProfileBox from "../components/profilebox";
+
 
 
 
 export default HomePage = ({ navigation, route }) => {
 
-
-  const {credentials} = React.useContext(AuthContext);
   const {dayWorkout, programOver, setProgramOver} = React.useContext(WorkoutContext);
 
-  const data = {
-    userId: 1,
-    name: credentials.name,
-    avatar: require("../assets/images/profile.jpg"),
-    gender: credentials.gender,
-    dob: "01-01-1986",
-    height: 168,
-    weight: 55,
-    status: "active",
-    subscription: "complete",
-    workoutsTracked: 28,
-    caloriesBurnt: 14000,
-  };
+  // setTimeout(() => {console.log('dayWorkout in HomePage after 10s is',  dayWorkout)}, 10000)
 
-  setTimeout(() => {console.log('dayWorkout in HomePage after 10s is',  dayWorkout)}, 10000)
-
-  console.log('dayWorkout in HomePage is',  dayWorkout)
+  // console.log('dayWorkout in HomePage is',  dayWorkout)
 
   useEffect (() => {}, [dayWorkout])
 
-  
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
       <Header onPressMenu={() => navigation.openDrawer()} />
       <View style={styles.contentContainer}>
-        <ImageBackground
-          source={require("../assets/images/dead-lift.jpg")}
-          style={styles.profileWrapper}
-        >
-          <View style={styles.profileContainer}>
-            <View style={styles.profilePhotoContainer}>
-              <Image source={data.avatar} style={styles.profilePhoto} />
-            </View>
-            <View style={styles.profileDataContainer}>
-              <View style={styles.profileDataRowContainer1}>
-                <Text style={styles.profileName}>{data.name}</Text>
-              </View>
-              <View style={styles.profileDataRowContainer2}>
-                <View style={styles.profileDataRowItem}>
-                  <Text style={styles.rowItemValue}>
-                    {data.workoutsTracked}
-                  </Text>
-                  <Text style={styles.rowItemTag}>Workout Tracked</Text>
-                </View>
-                <View style={styles.profileDataRowItem}>
-                  <View
-                    style={{ flexDirection: "row", justifyContent: "center" }}
-                  >
-                    <Text style={styles.rowItemValue}>
-                      {data.caloriesBurnt / 1000}
-                    </Text>
-                    <Text style={styles.rowItemTag}>kCal</Text>
-                  </View>
-                  <Text style={styles.rowItemTag}>Calories Burnt</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </ImageBackground>
+        <ProfileBox />
 
         <View style={styles.dataContainer}>
         
@@ -86,12 +39,13 @@ export default HomePage = ({ navigation, route }) => {
             ? 
             (
             <TrackNowSubScreen
+              navigation={navigation}
+              programEnded = {dayWorkout.finalDay && dayWorkout.complete}
+              programName = {dayWorkout.programName}
               program={
                 dayWorkout.programName
                 + ": Day " +
                 dayWorkout.day
-              
-                //  + workoutData.program.target? workoutData.program.target: " "                        // TBD => add dayTarget to the program form
               }
               onClick={() =>
                 navigation.navigate("Root", { screen: "TrackNow" })

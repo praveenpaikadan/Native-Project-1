@@ -13,7 +13,7 @@ export const format_target = (value, type) => {
             return value + ' reps'
         }else{
             sep = value.replace('X', 'x').split('x')
-            return sep[0] + ' kg X ' + sep[1] + ' reps'
+            return sep[0] + ' kg X ' + (sep[1]?sep[1]:'0') + ' reps'
         }
     }catch{
         return value + type

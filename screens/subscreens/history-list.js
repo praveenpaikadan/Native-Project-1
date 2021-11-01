@@ -3,11 +3,20 @@ import { View, Text, StyleSheet, Image, FlatList, } from 'react-native';
 import { globalFonts, sc, themeColors, globalShadows, globalStyles } from '../../styles/global-styles';
 import { ElevatedCardTypeOne } from '../../components/cards'
 import { MaterialIcons } from '@expo/vector-icons';
+import { WorkoutContext } from '../../components/workout-context';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { format_target } from '../../utilities/helpers';
+import { useEffect } from 'react/cjs/react.development';
+
+
+
 
 export const HistoryCard = (props) => { 
+    var focus = props.focus
+    var data = props.data
     return(
         <View style={cardStyles.cardConatiner}>
-            <ElevatedCardTypeOne styling={cardStyles.card}>
+            <ElevatedCardTypeOne styling={!focus?cardStyles.card:cardStyles.focusedCard}>
                 <View style={cardStyles.historyContainer}>
                     <View>
                         <View style={cardStyles.monthContainer}>
@@ -25,7 +34,29 @@ export const HistoryCard = (props) => {
                         <Text style={cardStyles.calories}>Calories Burnt: {props.calories}Kcal</Text>
                     </View>
                 </View>
-            </ElevatedCardTypeOne>
+
+                {focus?
+                
+                <View style={{paddingHorizontal: 10*sc}}>
+                    <Text style={{paddingHorizontal: 10*sc, paddingVertical: 10*sc, fontFamily: globalFonts.primaryRegular}}>Details of workout : </Text>
+                    <View style={cardStyles.line}></View>
+                    {data.workout.map((exercise, index) => {
+                        var sets = exercise.reps.filter(item =>item !== '0').map((rep, index) => <Text key={String(index)}style={{fontFamily: globalFonts.primaryLight}}>{'Set '+ (index+1) + ' : '+format_target(rep, exercise.repetitionType)}</Text>)
+                        return(
+                    <View key={String(index)}>
+                    <View style={{flexDirection: 'row', paddingHorizontal: 20*sc, paddingVertical:2*sc}}>
+                        <View style={{flex:1}}><Text style={{fontFamily: globalFonts.primaryLight}}>{exercise.exerciseNumber}</Text></View>
+                        <View style={{flex:4}}><Text style={{fontFamily: globalFonts.primaryLight}}>{exercise.exerciseName}</Text></View>
+                        <View style={{flex:4}}>{sets[0]?sets:<Text style={{fontFamily: globalFonts.primaryLight}}>Skipped</Text>}</View>
+                    </View>
+                    <View style={cardStyles.line}></View>
+                    </View>
+                )})}</View>
+
+                :
+                null}
+                
+            </ElevatedCardTypeOne> 
         </View>
         
     );
@@ -37,12 +68,21 @@ const cardStyles = StyleSheet.create({
         zIndex:1
     },
     card:{
+        paddingVertical: 10*sc,
         width:340*sc,
-        height:100*sc,
         marginVertical:5*sc,
         backgroundColor:themeColors.primary2 ,
-        justifyContent:'center',
-        
+        justifyContent:'flex-start',
+
+    },
+
+    focusedCard:{
+        paddingVertical: 10*sc,
+        width:340*sc,
+        // height:200*sc,
+        marginVertical:5*sc,
+        backgroundColor:themeColors.primary2 ,
+        justifyContent:'flex-start',
     },
 
     historyContainer:{
@@ -110,32 +150,55 @@ const cardStyles = StyleSheet.create({
         marginTop:10*sc
     },
 
+    line:{
+        margin: 5*sc,
+        height:2*sc,
+        backgroundColor: themeColors.tertiary2,
+    }
+
     
 })
 
 export const HistoryList = (props) => {
-    
-    const List = [1,2,3,4,5,6,7,8,9];
-    
+    const {workoutData} = React.useContext(WorkoutContext)
+    const List = workoutData?workoutData.history:null
+    const MONTHS =  ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+
+    useEffect(() => {
+        var total = 0
+        for(var i=0; i<List.length; i++){
+            total = total + List[i].workout.length
+        }
+        props.setTotal(total)
+    }, [])
+
+
+    const [focus, setFocus] = React.useState(-1)
     return(
         <FlatList
             showsVerticalScrollIndicator={false}
             data={List}
-            renderItem={(itemData) => (
-                <View>
-                    <HistoryCard
-                    month={'JUN'}
-                    date={itemData.item}
-                    year='2021'
-                    programName='Aboo Thahir’s Muscle Gain Program'
-                    day='14'
-                    muscles='Shoulders, Legs, Calves'
-                    calories='500' />
-                </View>
+            keyExtractor={item => String(item.day)}
+            renderItem={({item, index}) => {
+                var dA = item['dateCompleted'].split('-') 
+                return(
+                    <TouchableWithoutFeedback onPress={() => {console.log(index);setFocus(focus === index?-1:index)}}> 
+                     <HistoryCard
+                        day={item.day}
+                        date={dA[0]}
+                        month={MONTHS[Number(dA[1]) - 1]}
+                        year={dA[2]}
+                        programName={workoutData.program.programName}
+                        muscles={'TBD-Target'}
+                        calories='TBD-calories' 
+                        focus={focus===index}
+                        data={item}
+                    />
                 
-                
-                
-            )}
+                    </TouchableWithoutFeedback>
+              
+                   
+            )}}
         /> 
     );
 }
