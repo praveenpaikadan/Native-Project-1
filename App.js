@@ -12,6 +12,8 @@ import API from './utilities/api'
 import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
+import { SetCompleteModal } from "./screens/modal/set-complete";
+import { AgendaCalendar } from "./components/calendar";
 
 //Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
 
@@ -111,21 +113,29 @@ export default function App() {
     }) 
   }}
 
-  const getLastDay = (wd) => {  // wd => workoutdata
-    return wd.history[0]?  wd.history.map(item => item.day).reduce((max, val) => max > val ? max : val):  0
+  const getLastDayDate = (wd) => {  // wd => workoutdata
+    if (wd.history[0]){
+      var day = wd.history.map(item => item.day).reduce((max, val) => max > val ? max : val)
+      var date = wd.history.find(obj => obj.day === day).dateCompleted
+
+      console.log(day, date)
+      return {lastDaySaved: day, lastDateSaved: date}
+    }
+    return {lastDateSaved: 0, lastDateSaved: false}
   }
 
   const makeDayWorkout = async(workoutData, dayWorkout) => {
     console.log('Making Day Workout')
-    lastDaySaved = getLastDay(workoutData) 
+    var {lastDaySaved, lastDateSaved} = getLastDayDate(workoutData) 
+    console.log('After calling the makeWorkout ', lastDateSaved,' ', lastDateSaved)
     console.log('lastDaySaved is .................', lastDaySaved)
-    finalDay = workoutData.program.schedule.length
-    
+    var finalDay = workoutData.program.schedule.length
+
     const isToday = () => {
       // console.log('wd in isToday is ', wd)    
-      var potDayWorkout = dayWorkoutShape(workoutData, lastDaySaved)
-      var lastDateSaved = potDayWorkout?potDayWorkout['dateCompleted']:false
+      console.log('lastSaved date', lastDateSaved, 'today', today(), '  ', lastDateSaved === today())
       if (lastDateSaved === today() || lastDaySaved === finalDay){  // if it is same day or the final day return the original item from the workout history.
+        var potDayWorkout = dayWorkoutShape(workoutData, lastDaySaved)
         var coreDayWorkout = workoutData.history.find(obj => {return obj.day === lastDaySaved})
         for (let i of Object.keys(coreDayWorkout)) {
           potDayWorkout[i] = coreDayWorkout[i]
@@ -151,7 +161,7 @@ export default function App() {
    
     }else{
       if(dayWorkout.complete === true && dayWorkout.dateCompleted !== today()){
-        if(finalDay <= lastDaySaved){
+        if(finalDay > lastDaySaved){
           console.log('Day workout is present but new day, so making new after the last saved.')
           newDayWorkout = dayWorkoutShape(workoutData, finalDay <= dayWorkout.day?dayWorkout.day:dayWorkout.day + 1)
         }else{
@@ -322,6 +332,7 @@ export default function App() {
     }
   }
   
+  // return <BodyCalendar/>
 
   if (appReady) {
     return (

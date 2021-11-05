@@ -4,6 +4,7 @@ import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
 import { ElevatedCardTypeOne } from "../../components/cards";
 import { WorkoutContext } from "../../components/workout-context";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
@@ -49,13 +50,14 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
           textStyling={styles.buttonTextStyling}
           onClick={() => {navigation.navigate('Root', { screen: "WorkoutHistory" })}}
         />
-        <ButtonType1
-          text={'PICK ANOTHER PROGRAM'}
-          arrow={!completed?20 * sc:false}
-          styling={{marginTop: 10*sc, width:300*sc, alignSelf: 'center'}}
-          textStyling={styles.buttonTextStyling}
-          onClick={() => {navigation.navigate('Root', { screen: "Store" })}}
-        />
+        <TouchableOpacity onPress={() => {navigation.navigate('Root', { screen: "Store" })}}>
+          <Text style={styles.pickAnotherProgramText}>Pick Another Program</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.pickAnotherProgramText}>Contact Trainer</Text>
+        </TouchableOpacity>
+        
+      
       </View>
       }
 
@@ -182,4 +184,12 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 50,
   },
+
+  pickAnotherProgramText:{
+    opacity: 0.6,
+    fontFamily: globalFonts.primaryRegular,
+    marginTop: 10*sc,
+    textAlign: 'center',
+    textDecorationLine: 'underline'
+  }
 });

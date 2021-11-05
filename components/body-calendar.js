@@ -13,94 +13,8 @@ import { sc } from "../styles/global-styles";
 import { BodyCalendarCurrent } from "../screens/modal/body-calender-current";
 import { BodyCalendarFuture } from "../screens/modal/body-calendar-future";
 import { BodyCalendarRest } from "../screens/modal/body-calendar-rest";
-
-const currentDate = () => {
-  const today = new Date();
-  const month = parseInt(today.getMonth() + 1);
-  const day = parseInt(today.getDay() + 1);
-  switch (month) {
-    case 1:
-      let mmm = "Jan";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 2:
-      mmm = "Feb";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 3:
-      mmm = "Mar";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 4:
-      mmm = "Apr";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 5:
-      mmm = "May";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 6:
-      mmm = "Jun";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 7:
-      mmm = "Jul";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 8:
-      mmm = "Aug";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 9:
-      mmm = "Sep";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 10:
-      mmm = "Oct";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 11:
-      mmm = "Nov";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-    case 12:
-      mmm = "Dec";
-      date = today.getDate() + "-" + mmm + "-" + today.getFullYear();
-      break;
-  }
-
-  switch (day) {
-    case 1:
-      dddd = "Sunday";
-      return (dayDate = dddd + " " + date);
-      break;
-    case 2:
-      dddd = "Monday";
-      return (dayDate = dddd + " " + date);
-      break;
-    case 3:
-      dddd = "Tuesday";
-      return (dayDate = dddd + " " + date);
-      break;
-    case 4:
-      dddd = "Wednesday";
-      return (dayDate = dddd + " " + date);
-      break;
-    case 5:
-      dddd = "Thursday";
-      return (dayDate = dddd + " " + date);
-      break;
-    case 6:
-      dddd = "Friday";
-      return (dayDate = dddd + " " + date);
-      break;
-    case 7:
-      dddd = "Saturday";
-      return (dayDate = dddd + " " + date);
-      break;
-  }
-};
-currentDate();
+import { todayInWord } from "../utilities/helpers";
+import { AgendaCalendar } from "./calendar";
 
 export default BodyCalendar = ({ visible, closeMenu }) => {
   const [showItem, setShowItem] = useState({
@@ -112,6 +26,7 @@ export default BodyCalendar = ({ visible, closeMenu }) => {
     <Modal transparent={true} visible={visible} animationType="fade">
       <View style={{ ...styles.overlay }}>
         <View style={styles.container}>
+
           <View style={styles.line}></View>
           <View style={styles.headingContainer}>
             <View style={styles.headingContent}>
@@ -122,9 +37,11 @@ export default BodyCalendar = ({ visible, closeMenu }) => {
               <AntDesign name="closecircle" {...closeIconStylingSmall} />
             </TouchableOpacity>
           </View>
+          <AgendaCalendar />
 
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>{dayDate}</Text>
+
+          {/* <View style={styles.dateContainer}>
+            <Text style={styles.date}>{todayInWord()}</Text>
             <View style={styles.viewButtonContainer}>
               <View style={styles.verticalLine}></View>
               <FontAwesome5 name="calendar-alt" {...calendarIconStylingSmall} />
@@ -141,7 +58,7 @@ export default BodyCalendar = ({ visible, closeMenu }) => {
             ) : (
               <BodyCalendarCurrent />
             )}
-          </View>
+          </View> */}
         </View>
       </View>
     </Modal>

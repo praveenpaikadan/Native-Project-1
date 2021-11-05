@@ -40,12 +40,13 @@ export default MyWorkouts = ({ visible, closeMenu }) => {
               onClick={todaysWorkoutHandler}
             />
             <ButtonType1
-              text={"WORKOUT HISTORY"}
+              text={"WORKOUT PLAN"}
               arrow={false}
               styling={styles.button}
               textStyling={styles.buttonText}
               onClick={workoutHistoryHandler}
             />
+            
           </View>
         </View>
       </View>

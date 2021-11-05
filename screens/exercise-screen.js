@@ -48,7 +48,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   const [isFocussed, setIsFocussed] = useState(0);
   const Line = () => <View style={styles.line}></View>;
 
-  console.log('dayWorkout -> workout at Exercise component with index ' , index, ' is ', dayWorkout.workout[index])
+  // console.log('dayWorkout -> workout at Exercise component with index ' , index, ' is ', dayWorkout.workout[index])
 
   const scrollRef = useRef();
 
@@ -215,7 +215,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
       </View>:<ButtonType1
                 arrow={false}
                 text={"MARK WORKOUT COMPLETE"}
-                styling={{marginVertical:3*sc}}
+                styling={{marginVertical:20*sc}}
                 textStyling={{fontSize: 14*sc}}
                 onClick={() => {setShowWorkoutComplete()}}
               />}
@@ -270,7 +270,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
     orgDayWorkout.dateCompleted = today()
     resetDayWorkout(orgDayWorkout)
     var orgWorkoutData = {...workoutData}
-    orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== orgDayWorkout.day).push(orgDayWorkout)
+    orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== orgDayWorkout.day).push(orgDayWorkout) // needs correction
     resetWorkoutData(orgWorkoutData)
     postDayWorkout(orgDayWorkout)
     .then((response) => {

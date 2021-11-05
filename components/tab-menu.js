@@ -18,7 +18,18 @@ export const TabMenu = () => {
     calendar: false,
     workout: false,
   });
+
+  const calendarCloseHandler = () => {
+    setShowCalendar(false);
+    setactive({ home: true, calendar: false, store: false, workout: false });
+  };
+  const workoutCloseHandler = () => {
+    setShowWorkout(false);
+    setactive({ home: true, calendar: false, store: false, workout: false });
+  };
+
   const homePress = () => {
+    setShowCalendar(false)
     setactive({ home: true, calendar: false, workout: false });
   };
   const calendarPress = () => {
@@ -38,14 +49,6 @@ export const TabMenu = () => {
     size: 25 * sc,
   };
 
-  const calendarCloseHandler = () => {
-    setShowCalendar(false);
-    setactive({ home: true, calendar: false, store: false, workout: false });
-  };
-  const workoutCloseHandler = () => {
-    setShowWorkout(false);
-    setactive({ home: true, calendar: false, store: false, workout: false });
-  };
 
   return (
     <View style={styles.container}>

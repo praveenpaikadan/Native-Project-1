@@ -13,7 +13,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "../screens/modal/my-workouts";
 import TrackingScreen from "../screens/tracking-screen";
-import workoutHistory from "../screens/workout-history";
+import workoutHistory from "../screens/workout-plan";
 import ExerciseScreen from "../screens/exercise-screen";
 import ShowExerciseList from "../screens/showexerciselist";
 import programDetails from "../screens/program-details";

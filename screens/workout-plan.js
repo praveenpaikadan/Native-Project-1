@@ -8,7 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 
-export default WorkoutHistory = () => {
+export default WorkoutPlan = () => {
   const [total, setTotal] = React.useState(0)
   const navigation = useNavigation();
   return (
