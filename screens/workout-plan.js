@@ -21,8 +21,8 @@ export default WorkoutPlan = () => {
       />
       <View style={styles.headingContainer}>
         <View style={styles.heading}>
-          <FontAwesome5 name="dumbbell" {...menuIconStyling} />
-          <Text style={styles.headingText}>WORKOUT HISTORY</Text>
+          <FontAwesome5 name="dumbbell" {... menuIconStyling} />
+          <Text style={styles.headingText}>WORKOUT PLAN</Text>
         </View>
         <View>
           <Text style={styles.totalWorkouts}>TOTAL WORKOUTS TRACKED: {total}  </Text>

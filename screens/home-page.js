@@ -22,10 +22,13 @@ export default HomePage = ({ navigation, route }) => {
   // setTimeout(() => {console.log('dayWorkout in HomePage after 10s is',  dayWorkout)}, 10000)
 
   // console.log('dayWorkout in HomePage is',  dayWorkout)
+  const [active, setactive] = React.useState({ // tab menu active
+    home: true,
+    calendar: false,
+    workout: false,
+  });
 
   useEffect (() => {}, [dayWorkout])
-
-
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
@@ -62,7 +65,7 @@ export default HomePage = ({ navigation, route }) => {
         </View>
       </View>
 
-      <TabMenu />
+      <TabMenu active={active} setactive={setactive}/>
     </View>
   );
 };

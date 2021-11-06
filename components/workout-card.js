@@ -10,6 +10,7 @@ export const WorkoutCard = (props) => {
     var data = props.data
     var tick = props.tick
     var dot = props.dot
+    var active = props.data.active
     return(
         <View style={cardStyles.cardConatiner}>
             <ElevatedCardTypeOne styling={!focus?cardStyles.card:cardStyles.focusedCard}>
@@ -48,13 +49,13 @@ export const WorkoutCard = (props) => {
                     <Text style={{paddingHorizontal: 10*sc, paddingVertical: 10*sc, fontFamily: globalFonts.primaryRegular}}>Details of workout : </Text>
                     <View style={cardStyles.line}></View>
                     {data.workout.map((exercise, index) => {
-                        var sets = exercise.reps.filter(item =>item !== '0').map((rep, index) => <Text key={String(index)}style={{fontFamily: globalFonts.primaryLight}}>{`${dot?'Target Set ':'Set '}`+ (index+1) + ' : '+format_target(rep, exercise.repetitionType)}</Text>)
+                        var sets = exercise.reps.filter(item =>item !== '0').map((rep, index) => <Text key={String(index)}style={{fontFamily: globalFonts.primaryLight, paddingVertical:2*sc}}>{`${dot?'Target Set ':'Set '}`+ (index+1) + ' : '+format_target(rep, exercise.repetitionType)}</Text>)
                         return(
                     <View key={String(index)}>
                     <View style={{flexDirection: 'row', paddingHorizontal: 5*sc, paddingVertical:2*sc}}>
                         <View style={{flex:1}}><Text style={{fontFamily: globalFonts.primaryLight}}>{exercise.exerciseNumber}</Text></View>
-                        <View style={{flex:4}}><Text style={{fontFamily: globalFonts.primaryLight}}>{exercise.exerciseName}</Text></View>
-                        <View style={{flex:4}}>{sets[0]?sets:<Text style={{fontFamily: globalFonts.primaryLight}}>Skipped</Text>}</View>
+                        <View style={{flex:7}}><Text style={{fontFamily: globalFonts.primaryLight}}>{exercise.exerciseName}</Text></View>
+                        <View style={{flex:12}}>{sets[0]?sets:<Text style={{fontFamily: globalFonts.primaryLight}}>Skipped</Text>}</View>
                     </View>
                     <View style={cardStyles.line}></View>
                     </View>
@@ -64,9 +65,8 @@ export const WorkoutCard = (props) => {
                 null}
                 
             </ElevatedCardTypeOne> 
-            {/* <Text style={{zIndex: 1000, position: 'absolute', top: 5*sc, right: 8*sc, color: 'green', fontFamily: globalFonts.primaryLight,  fontSize: 12*sc, elevation: (Platform.OS === 'android') ? 25 : 0}}> Completed</Text> */}
            <View style={{
-                zIndex: 1000, position: 'absolute', top: 0, right: 0,
+                zIndex: 150, position: 'absolute', top: 0, right: 0,
                 elevation: (Platform.OS === 'android') ? 80 : 0,
                 width: 0,
                 height: 0,
@@ -81,8 +81,10 @@ export const WorkoutCard = (props) => {
                 borderBottomColor: 'transparent',
                 borderTopRightRadius: 10*sc,
                 opacity:0.6,
-                borderTopColor: !dot && !tick?'green':'transparent'
+                borderTopColor: !dot && !tick?'green':(!active?'transparent': 'blue')
                 }}>
+                <Text style={{zIndex: 151, position: 'absolute', top: -45*sc, right: 0*sc, transform: [{rotateZ : '42deg'}], color: 'white', fontFamily: globalFonts.primaryBold,
+                elevation: (Platform.OS === 'android') ? 81 : 0,}}>{!dot && !tick?'Done':(!active?'': 'Active')}</Text>
             </View>          
         </View>
         

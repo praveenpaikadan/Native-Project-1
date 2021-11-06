@@ -47,14 +47,14 @@ const DownKnob = ({text=true}) => {
   return(
     <View style={{width: '100%'}}
     >{!text?
-    <View style={{width:100, height: 8*sc, backgroundColor: themeColors.primary1, borderRadius: 10, opacity: 0.4, transform: [{translateY: 8}] }} >
-    </View>: <Text style={{fontFamily: globalFonts.primaryLight, color: themeColors.primary1}}>Swipe down for calender</Text>}
+    <View style={{width:100, height: 8*sc, backgroundColor: themeColors.tertiary1, borderRadius: 10, opacity: 0.1, transform: [{translateY: 8}], elevation: 10 }} >
+    </View>: <Text style={{fontFamily: globalFonts.primaryLight, opacity: 0.5, color: themeColors.tertiary1}}>Swipe down for calender</Text>}
     </View>
   )
 }
 
 const WorkoutCardCover = ({selectedDate, item, programName}) => {
-  console.log(item)
+
   var dA = selectedDate.split('-')
   return (
     <ScrollView style={{flex: 1}}>
@@ -117,8 +117,6 @@ export const AgendaCalendar = () => {
   })
 
 
-  console.log(items)
-
   // const [day, setDay] = useState(today.getDate())
   // const [month, setMonth] = useState(today.getDate())
   // const [year, setYear] = useState(today.getDate())
@@ -136,7 +134,7 @@ export const AgendaCalendar = () => {
   // The list of items that have to be displayed in agenda. If you want to render item as empty date
   // the value of date key has to be an empty array []. If there exists no value for date key it is
   // considered that the date in question is not yet loaded
-  items={[{'2018-01-01': []}]}
+  items={{'2018-01-01': []}}
   // Callback that gets called when items for a certain month should be loaded (month became visible)
   loadItemsForMonth={(month) => {console.log('trigger items loading')}}
   // Callback that fires when the calendar is opened or closed

@@ -7,16 +7,11 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import { globalFonts, themeColors } from "../styles/global-styles";
+import { globalFonts, themeColors, sc } from "../styles/global-styles";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
-import { sc } from "../styles/global-styles";
-import { BodyCalendarCurrent } from "../screens/modal/body-calender-current";
-import { BodyCalendarFuture } from "../screens/modal/body-calendar-future";
-import { BodyCalendarRest } from "../screens/modal/body-calendar-rest";
-import { todayInWord } from "../utilities/helpers";
-import { AgendaCalendar } from "./calendar";
+import { AgendaCalendar } from "../components/calendar";
 
-export default BodyCalendar = ({ visible, closeMenu }) => {
+export default BodyCalendar = ({ visible, closeMenu, active, setactive }) => {
   const [showItem, setShowItem] = useState({
     future: false,
     rest: false,
@@ -38,27 +33,6 @@ export default BodyCalendar = ({ visible, closeMenu }) => {
             </TouchableOpacity>
           </View>
           <AgendaCalendar />
-
-
-          {/* <View style={styles.dateContainer}>
-            <Text style={styles.date}>{todayInWord()}</Text>
-            <View style={styles.viewButtonContainer}>
-              <View style={styles.verticalLine}></View>
-              <FontAwesome5 name="calendar-alt" {...calendarIconStylingSmall} />
-              <TouchableWithoutFeedback onPress={pressHandler}>
-                <Text style={styles.buttonText}>VIEW</Text>
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
-          <View style={styles.childrenContainer}>
-            {showItem.future ? (
-              <BodyCalendarFuture />
-            ) : <BodyCalendarCurrent /> && showItem.rest ? (
-              <BodyCalendarRest />
-            ) : (
-              <BodyCalendarCurrent />
-            )}
-          </View> */}
         </View>
       </View>
     </Modal>

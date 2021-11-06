@@ -46,11 +46,11 @@ export default MyWorkouts = ({ visible, closeMenu }) => {
               textStyling={styles.buttonText}
               onClick={workoutHistoryHandler}
             />
-            
+
           </View>
         </View>
       </View>
-    </Modal>
+    </Modal> 
   );
 };
 

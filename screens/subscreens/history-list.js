@@ -16,7 +16,8 @@ export const HistoryList = (props) => {
     const listOfDays = List.map((item, index) => item.day)
     
     // adding coming up workout list - making a similar object as that of historyc object to make minimum modification in history card component
-    workoutData.program.schedule.forEach(dayData => {
+    var first = true // to find currently active one
+    workoutData.program.schedule.forEach((dayData, index) => {
         if(!listOfDays.includes(dayData.day)){
             var dayObj = {}
             dayObj.day = dayData.day
@@ -24,13 +25,12 @@ export const HistoryList = (props) => {
             dayObj._id = dayData._id
             dayObj.workout = dayData.exercises.map((item, index) => {return {...item, reps: item.target, exerciseNumber: index+1}})
             dayObj.future = true
+            dayObj.active = first 
             List.push(dayObj)
+            first = false
         }
-
     });
 
-
-    console.log(List)
 
     const MONTHS =  ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
