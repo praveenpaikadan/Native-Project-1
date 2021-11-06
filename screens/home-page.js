@@ -11,24 +11,31 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import ProfileBox from "../components/profilebox";
-
-
-
+import BodyCalendar from "../components/body-calendar";
+import MyWorkouts from "./modal/my-workouts";
 
 export default HomePage = ({ navigation, route }) => {
 
   const {dayWorkout, programOver, setProgramOver} = React.useContext(WorkoutContext);
 
-  // setTimeout(() => {console.log('dayWorkout in HomePage after 10s is',  dayWorkout)}, 10000)
+  useEffect (() => {}, [dayWorkout])
 
-  // console.log('dayWorkout in HomePage is',  dayWorkout)
-  const [active, setactive] = React.useState({ // tab menu active
+  // Tab Menu management: 
+
+  const [active, setactive] = React.useState({
     home: true,
     calendar: false,
     workout: false,
   });
 
-  useEffect (() => {}, [dayWorkout])
+  const calendarCloseHandler = () => {
+    setactive({ home: true, calendar: false, store: false, workout: false });
+  };
+  const workoutCloseHandler = () => {
+    setactive({ home: true, calendar: false, store: false, workout: false });
+  };
+
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
@@ -66,6 +73,8 @@ export default HomePage = ({ navigation, route }) => {
       </View>
 
       <TabMenu active={active} setactive={setactive}/>
+      <BodyCalendar active={active} setactive={setactive} visible={active.calendar} closeMenu={calendarCloseHandler} />
+      <MyWorkouts active={active} setactive={setactive} visible={active.workout} closeMenu={workoutCloseHandler} />
     </View>
   );
 };

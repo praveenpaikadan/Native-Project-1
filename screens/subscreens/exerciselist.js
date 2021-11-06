@@ -108,7 +108,6 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
   const navigation = useNavigation();
   return (
     <FlatList
-
       showsVerticalScrollIndicator={false}
       data={data}
       keyExtractor={(item, index) => item._id}

@@ -91,6 +91,7 @@ export default TrackingScreen = ({ navigation }) => {
           navigation.navigate("Exercise", {exerciseIndex : 0});
         }}
       />
+      
       <View style={styles.listContainer}>
         <ExerciseList data={exerciseList} />
         <Feather name="chevrons-down" {...chevronIconStyling} />

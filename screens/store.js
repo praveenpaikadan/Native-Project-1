@@ -13,7 +13,7 @@ export default Store = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} />
-      <Header onPressMenu={() => navigation.openDrawer()} />
+      <Header title={'Store'} onPressMenu={() => navigation.openDrawer()} />
 
       <View style={styles.contentContainer}>
         <ProfileBox />
@@ -31,8 +31,6 @@ export default Store = ({ navigation }) => {
           )}
         </View>
       </View>
-
-      <TabMenu />
     </View>
   );
 };

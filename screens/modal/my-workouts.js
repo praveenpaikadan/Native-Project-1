@@ -4,8 +4,9 @@ import { globalFonts, themeColors, sc } from "../../styles/global-styles";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { ButtonType1 } from "../../components/buttons";
 import { useNavigation } from "@react-navigation/native";
+import {TabMenu} from "../../components/tab-menu";
 
-export default MyWorkouts = ({ visible, closeMenu }) => {
+export default MyWorkouts = ({ visible, closeMenu, active, setactive }) => {
   const navigation = useNavigation();
 
   const todaysWorkoutHandler = () => {
@@ -50,6 +51,7 @@ export default MyWorkouts = ({ visible, closeMenu }) => {
           </View>
         </View>
       </View>
+      <TabMenu style={{position: 'absolute', bottom: 0}} active={active} setactive={setactive}/>
     </Modal> 
   );
 };

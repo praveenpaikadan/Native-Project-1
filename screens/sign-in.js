@@ -13,7 +13,7 @@ import flash from '../utilities/flash-message'
 
 export default SignInScreen = ({navigation}) => {
 
-  const {setLoggedIn, resetCredentials} = React.useContext(AuthContext)
+  const {setLoggedIn, resetCredentials, uploadPendingWorkout} = React.useContext(AuthContext)
   const {resetWorkoutData, makeDayWorkout} = React.useContext(WorkoutContext)
   const [errorMessage, setErrorMessage] = React.useState("");
   const [userInfo, setUserInfo] = React.useState({
@@ -21,6 +21,10 @@ export default SignInScreen = ({navigation}) => {
     password: "",
   });
   const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useState(() => {
+    uploadPendingWorkout()
+  }, [])
 
 
   const emailChangeHandler = (value) => {
@@ -62,7 +66,7 @@ export default SignInScreen = ({navigation}) => {
             var user = response.data
             console.log(user)
             
-            flash(`Welcome ${user.name}`, 'success', time=4000)
+            flash(`Welcome ${user.name}`, 'success', 4000)
             setLoggedIn(true)
             break;
           case 401:

@@ -10,13 +10,10 @@ import {
 import { globalFonts, themeColors, sc } from "../styles/global-styles";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { AgendaCalendar } from "../components/calendar";
+import { TabMenu } from "./tab-menu";
 
 export default BodyCalendar = ({ visible, closeMenu, active, setactive }) => {
-  const [showItem, setShowItem] = useState({
-    future: false,
-    rest: false,
-  });
-  const pressHandler = () => {};
+
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
       <View style={{ ...styles.overlay }}>
@@ -35,6 +32,7 @@ export default BodyCalendar = ({ visible, closeMenu, active, setactive }) => {
           <AgendaCalendar />
         </View>
       </View>
+      <TabMenu style={{position: 'absolute', bottom: 0}} active={active} setactive={setactive}/>
     </Modal>
   );
 };

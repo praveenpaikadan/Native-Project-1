@@ -30,6 +30,16 @@ const loginUser = async (data) => {
     }
 }
 
+const logoutUser = async () => {
+    try{
+        const response = await API.get('logout')
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
+
 const getAPICredentials = async () => {
     try{
         console.log("entered getAPICredentials")
@@ -115,7 +125,20 @@ const postDayWorkout = async (data) => {
 } 
 
 
+const postDiscardWorkout = async (data) => {
+    try{
+        const response = await API.post('workoutdata/delete-day', {data}) // data => {workoutId: <value>, day: <value>}
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+} 
+
+
 const postBulkDayWorkout = async (data) => {
+
+    console.log({bulkDayWorkoutData: data})
     try{
         const response = await API.post('workoutdata/bulk', {bulkDayWorkoutData: data})
         return response
@@ -128,4 +151,4 @@ const postBulkDayWorkout = async (data) => {
 
 
 
-export {checkEmail, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getWorkoutData, getExercise, postDayWorkout, postBulkDayWorkout}
+export {checkEmail, logoutUser, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getWorkoutData, getExercise, postDayWorkout, postDiscardWorkout, postBulkDayWorkout}

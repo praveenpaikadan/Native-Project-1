@@ -35,7 +35,7 @@ export default function App() {
   const [programOver, setProgramOver] = useState(false)
 
   // const [pendingUploads, setPendingUploads] = useState(null)  // Boolean state to store if pendingData?
-  var pendingUploadVar                  // Non state variable to store pending data
+
 
   var loadingstarted = false
 
@@ -83,11 +83,10 @@ export default function App() {
     }
   }
 
-  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp, pendingUploads_temp) => {
+  const setObtainedLocalData = async (creds_temp, workoutdata_temp, token_temp) => {
     setCredentials(JSON.parse(creds_temp));
     setWorkoutData(JSON.parse(workoutdata_temp))
     setToken(token_temp)
-    pendingUploadVar = JSON.parse(pendingUploads_temp)
   }
 
   const dayWorkoutShape = (workoutData, currentDay) => {
@@ -121,7 +120,7 @@ export default function App() {
       console.log(day, date)
       return {lastDaySaved: day, lastDateSaved: date}
     }
-    return {lastDateSaved: 0, lastDateSaved: false}
+    return {lastDaySaved: 0, lastDateSaved: false}
   }
 
   const makeDayWorkout = async(workoutData, dayWorkout) => {
@@ -182,28 +181,33 @@ export default function App() {
       await AsyncStorage.removeItem('pendingDayWorkouts')
       return
     }
-    pendingUploadVar = data
     await AsyncStorage.setItem('pendingDayWorkouts', JSON.stringify(data))
   }
 
   const addToPending = async (data) => {
-    var prev = pendingUploadVar?[...pendingUploadVar]:[]
+    var prev = await AsyncStorage.getItem('pendingDayWorkouts')
+    var prev = prev?JSON.parse(prev):[]
     prev = prev.filter((item, index) => item.day !== data.day)  // to avoid duplicates
     prev.push(data)
     resetPendingUploads(prev)
   }
 
-  const removeFromPending = (data) => {
-    var prev = pendingUploadVar?[...pendingUploadVar]:[]
+  const removeFromPending = async (data) => {
+    var prev = await AsyncStorage.getItem('pendingDayWorkouts')
+    if(!prev){return}
+    var prev = JSON.parse(prev)
     prev = prev.filter((item, index) => item.day !== data.day)
+    if(prev === []){AsyncStorage.removeItem('pendingDayWorkouts'); return}
     resetPendingUploads(prev)
   }
 
-  const uploadPendingWorkout = () => {
-    console.log('Uploading Pending')
-    console.log('pendingUploadVar is ', pendingUploadVar)
+  const uploadPendingWorkout = async () => {
+    var pendingUploadVar =  await AsyncStorage.getItem('pendingDayWorkouts')
+    console.log('\npendingUploadVar: ', pendingUploadVar)
+    pendingUploadVar = JSON.parse(pendingUploadVar)
+    
 
-    if (pendingUploadVar !== [] && pendingUploadVar !== null && pendingUploadVar !== '[]'){
+    if ( ![undefined, [], null, 'null', '[]'].includes(pendingUploadVar)){
       postBulkDayWorkout(pendingUploadVar)
       .then((response) => {
         console.log(response.status, response.data)
@@ -229,12 +233,11 @@ export default function App() {
     // await AsyncStorage.removeItem('pendingDayWorkouts')
 
     try {
-      const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, pendingUploads_temp, font, ] = await Promise.all([
+      const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
         AsyncStorage.getItem("credentials"), 
         AsyncStorage.getItem("workoutData"),
         AsyncStorage.getItem("authToken"), 
         AsyncStorage.getItem("dayWorkout"), 
-        AsyncStorage.getItem('pendingDayWorkouts'),
         Font.loadAsync({
           "ubuntu-light": require("./assets/fonts/Ubuntu-Light.ttf"),
           "ubuntu-regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
@@ -243,23 +246,21 @@ export default function App() {
         }),
       ])
       
-      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp, pendingUploads_temp)
+      await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp)
 
       
 
       console.log("credentials: " +  creds_temp + "\n")
       console.log("workoutData: " +  workoutdata_temp + "\n")
       console.log("dayWorkout: " + dayWorkout_temp + "\n")
-      console.log("pendingUploads: " + pendingUploads_temp + "\n\n\n\n")
 
 
 
       // console.log("credentials: " +  credentials + "\n")
       // console.log("workoutData: " +  workoutData + "\n")
       // console.log("dayWorkout: " + dayWorkout + "\n")
-      // console.log("pendingUploads: " + pendingUploadVar + "\n")
-      
 
+    
       if(!authToken){
         setLoggedIn(false)
         return
@@ -337,7 +338,7 @@ export default function App() {
   if (appReady) {
     return (
         <AuthContext.Provider 
-          value={{  credentials, resetCredentials, loggedIn, setLoggedIn, token}}>
+          value={{  uploadPendingWorkout, credentials, resetCredentials, loggedIn, setLoggedIn, token}}>
           <WorkoutContext.Provider
             value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending, programOver, setProgramOver }}
           >

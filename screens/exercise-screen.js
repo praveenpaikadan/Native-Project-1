@@ -24,16 +24,14 @@ import {
 import { ButtonType1 } from "../components/buttons";
 import { Header } from "../components/header";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import { ExerciseCard } from "./subscreens/exerciselist";
-import { Fontisto } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { WorkoutCompleteModal } from "./modal/workout-complete";
 import { RepInput } from "../components/set-reps-time";
 import { formatIntervel, format_target, today } from "../utilities/helpers";
-import { postDayWorkout } from "../utilities/data-center";
+import { postDayWorkout, postDiscardWorkout } from "../utilities/data-center";
 import flash from "../utilities/flash-message";
 import { Alert } from "./modal/alert";
 
@@ -250,6 +248,8 @@ export default ExerciseScreen = ({ navigation, route }) => {
   const [discardAlert, setDiscardAlert ] = useState(false)
   const scrollRef = useRef();
 
+  const [discarding, setDiscarding] = useState(0) // // 0 for default, 2 for saving status, 1 for succesfull save -1 for failed
+
   useEffect(() => {
     console.log('Rerendered')
     scrollIndex();
@@ -262,7 +262,6 @@ export default ExerciseScreen = ({ navigation, route }) => {
     });
   };
 
-
   const handleWorkoutDone = () => {
     setSaving(2)
     var orgDayWorkout = {...dayWorkout}
@@ -270,32 +269,35 @@ export default ExerciseScreen = ({ navigation, route }) => {
     orgDayWorkout.dateCompleted = today()
     resetDayWorkout(orgDayWorkout)
     var orgWorkoutData = {...workoutData}
-    orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== orgDayWorkout.day).push(orgDayWorkout) // needs correction
+    orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== orgDayWorkout.day) 
+    orgWorkoutData.history.push(orgDayWorkout)
     resetWorkoutData(orgWorkoutData)
     postDayWorkout(orgDayWorkout)
     .then((response) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
-            flash(`Succesfully saved workout data`, 'success', time=4000)
+            flash(`Succesfully saved workout data`, 'success', 4000)
             removeFromPending(orgDayWorkout)
             setSaving(1)
             break;
           case 101:
             setSaving(-1)
-            flash('Oops Something Happened!! Not able to upload workout data. Your workout data is saved will try to upload later. You can safely go back, try again or continue editing', 'danger', time=10000)
+            flash('Oops Something Happened!! Not able to upload workout data. Your workout data is saved will try to upload later. You can safely go back, try again or continue editing', 'danger', 10000)
             addToPending(orgDayWorkout)
             break;
+          case 403: 
+            setSaving(-1)
+            flash('You are not logged in. Please Sign out and Sign in again', 'danger', 10000)
           default:
+            setSaving(-1)
             if(response.data.message){
-              setSaving(-1)
               flash(response.data.message, 'info')
             }
             addToPending(orgDayWorkout)
             break; 
           }
     })
-
   };
 
   const continueEditingHandler = () => {
@@ -315,10 +317,43 @@ export default ExerciseScreen = ({ navigation, route }) => {
   }
 
   const handleConfirmDiscard = () => {
+    setDiscarding(2)
+    var reqBody = {toDel : 1, workoutID: dayWorkout.workoutID, day:dayWorkout.day}
+
+    var orgWorkoutData = {...workoutData}
+    orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== dayWorkout.day) 
+    resetWorkoutData(orgWorkoutData)
+    makeDayWorkout(orgWorkoutData, null)
+    postDiscardWorkout(reqBody)
+    .then((response) => {
+        console.log(response.status, response.data)
+        switch (response.status) {
+          case 200:
+            flash(`Succesfully removed today's workout data`, 'success', 4000)
+            removeFromPending(reqBody)
+            setDiscarding(1)
+            break;
+          case 101:
+            setDiscarding(-1)
+            flash('Oops Something Happened!! Not able to delete workout data from database. Will try later ..', 'danger', 10000)
+            addToPending(reqBody)
+            break;
+          default:
+            setDiscarding(-1)
+            if(response.data.message){
+              
+              flash(response.data.message, 'info')
+            }
+            addToPending(reqBody)
+            break; 
+          }
+    })
+    
+    
+    
+    setDiscardAlert(false)
     setSaving(0)
     navigation.navigate('Home')
-    makeDayWorkout(workoutData, null)
-    setDiscardAlert(false)
   }
 
 
@@ -327,13 +362,10 @@ export default ExerciseScreen = ({ navigation, route }) => {
       <StatusBar translucent={true} style="light" />
       <Header
         backButton={true}
-        backButtonText={true}
         onPressMenu={() => navigation.openDrawer()}
-        // onPress={() => {
-        //   navigation.navigate("ExerciseList", workoutData);
-        //   setWeight("");
-        //   setReps("");
-        // }}
+        onPress={() => {
+          navigation.navigate("Root", { screen: "TrackNow" });
+        }}
       />
       <FlatList
         ref={scrollRef}
@@ -354,6 +386,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
       <WorkoutCompleteModal
         editing={dayWorkout.complete}
         saving={saving}
+        discarding={discarding}
         visible={showWorkoutComplete}
         continueEditingHandler={continueEditingHandler}
         handleWorkoutDone={handleWorkoutDone}

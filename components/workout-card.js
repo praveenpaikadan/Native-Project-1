@@ -84,7 +84,7 @@ export const WorkoutCard = (props) => {
                 borderTopColor: !dot && !tick?'green':(!active?'transparent': 'blue')
                 }}>
                 <Text style={{zIndex: 151, position: 'absolute', top: -45*sc, right: 0*sc, transform: [{rotateZ : '42deg'}], color: 'white', fontFamily: globalFonts.primaryBold,
-                elevation: (Platform.OS === 'android') ? 81 : 0,}}>{!dot && !tick?'Done':(!active?'': 'Active')}</Text>
+                elevation: (Platform.OS === 'android') ? 81 : 0,}}>{!dot && !tick?'Done':(!active?'': 'Next')}</Text>
             </View>          
         </View>
         

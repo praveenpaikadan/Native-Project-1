@@ -15,6 +15,7 @@ export const Header = ({
   onPress,
   backButtonText,
   onPressMenu,
+  title
 }) => (
   <View style={styles.headerContainer}>
     <TouchableOpacity onPress={onPress} style={styles.backButtonContainer}>
@@ -28,7 +29,7 @@ export const Header = ({
       {backButtonText ? <Text style={styles.backButtonText}>LIST</Text> : null}
     </TouchableOpacity>
     <View style={styles.textContainer}>
-      <Text style={styles.headerText}>Personal Trainer</Text>
+      <Text style={styles.headerText}>{title?title:'Personal Trainer'}</Text>
     </View>
     <View>
       <TouchableOpacity style={styles.menuContainer} onPress={onPressMenu}>

@@ -12,7 +12,7 @@ import {WorkoutCard} from '../../components/workout-card'
 
 export const HistoryList = (props) => {
     const {workoutData} = React.useContext(WorkoutContext)
-    const List = workoutData?workoutData.history:[]
+    const List = workoutData?[...workoutData.history]:[]
     const listOfDays = List.map((item, index) => item.day)
     
     // adding coming up workout list - making a similar object as that of historyc object to make minimum modification in history card component

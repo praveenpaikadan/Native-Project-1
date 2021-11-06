@@ -9,8 +9,43 @@ import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
+import { logoutUser } from "../utilities/data-center";
+import flash from '../utilities/flash-message'
+import { Alert } from "../screens/modal/alert";
 
 export default DrawerContent = (props) => {
+
+  const [logoutWarn, setLogoutWarn] = React.useState(false)
+  const {setLoggedIn, uploadPendingWorkout} = React.useContext(AuthContext)
+
+  const handleSignOut = async () => {
+    await uploadPendingWorkout()
+    setLogoutWarn(true)
+    logoutUser()
+    .then(async response => {
+      if(response.status == 200){
+        flash(`Succesfully Logged out`, 'success')
+        await AsyncStorage.removeItem('credentials')
+        await AsyncStorage.removeItem('workoutData')
+        await AsyncStorage.removeItem('authToken')
+        await AsyncStorage.removeItem('dayWorkout')
+        await AsyncStorage.removeItem('pendingDayWorkouts')
+    setLoggedIn(false)
+      }else{
+        flash('Failed to logout from server', 'danger')
+        await AsyncStorage.removeItem('credentials')
+        await AsyncStorage.removeItem('workoutData')
+        await AsyncStorage.removeItem('authToken')
+        await AsyncStorage.removeItem('dayWorkout')
+        await AsyncStorage.removeItem('pendingDayWorkouts')
+      }
+    })
+    .catch(() => {flash('Failed to logout from server', 'danger')})
+    
+  }
+
+  
+
   const { storedCredentials, setStoredCredentials } =
     React.useContext(AuthContext);
 
@@ -89,12 +124,19 @@ export default DrawerContent = (props) => {
         </View>
       </DrawerContentScrollView>
 
-      <TouchableOpacity onPress={logout}>
+      <TouchableOpacity onPress={() => setLogoutWarn(true)}>
         <View style={styles.logoutButton}>
           <Feather name="log-out" {...logoutIconStyling} />
           <Text>Sign Out</Text>
         </View>
       </TouchableOpacity>
+
+      <Alert 
+          visible={logoutWarn} 
+          message={'Are you sure to Sign Out ?'} 
+          yesHandler={() => {handleSignOut()}} 
+          noHandler={() => {setLogoutWarn(false)}}
+          />
     </View>
   );
 };

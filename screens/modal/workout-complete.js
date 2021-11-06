@@ -13,6 +13,7 @@ export const WorkoutCompleteModal = ({
   handleWorkoutDone,
   handleGoToHome,
   saving = 0,  // values are 0,2,1,-1 2 for undergoing process 
+  discarding= 0, 
   text,
 }) => {
 
@@ -56,13 +57,15 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
                 textStyling={styles.buttonText1}
                 onClick={() => continueEditingHandler()}
               />
-              <ButtonType1
+              {<ButtonType1
                 styling={styles.button1}
                 text={"DISCARD WORKOUT"}
+                isLoading={discarding === 2}
                 arrow={false}
                 textStyling={styles.buttonText1}
+                disabled={discarding !== 0}
                 onClick={discardWorkout}
-              />
+              />}
             </View>
 
             {saving === 0 ?<ButtonType1

@@ -4,6 +4,7 @@ import Constants from "expo-constants";
 const { manifest } = Constants;
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
+import flash from "./flash-message";
 
 const ap = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
   ? manifest.debuggerHost.split(`:`).shift().concat(`:3567`)
@@ -43,6 +44,11 @@ API.interceptors.response.use( async response => {
         }catch(error){
             console.log('failed to store token')
         }
+    }
+
+    if(response.status === 403){
+      console.log('Not logged in ........................')
+      flash(`You are logged out. Please log in again`, 'success', time=4000)
     }
     return response
 })
