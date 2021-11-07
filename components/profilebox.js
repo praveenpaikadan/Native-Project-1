@@ -1,16 +1,20 @@
 import * as React from "react";
 import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
+import { calculateCalories } from "../utilities/helpers";
 import { AuthContext } from "./auth-context";
+import { WorkoutContext } from "./workout-context";
 
 
 export default ProfileBox = () => {
 
     const {credentials} = React.useContext(AuthContext);
-    // const {dayWorkout, programOver, setProgramOver} = React.useContext(WorkoutContext);
+    const {workoutData} = React.useContext(WorkoutContext);
+
+    var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
   
     const data = {
-      userId: 1,
+      userId: credentials._id,
       name: credentials.name,
       avatar: require("../assets/images/profile.jpg"),
       gender: credentials.gender,
@@ -19,8 +23,8 @@ export default ProfileBox = () => {
       weight: 55,
       status: "active",
       subscription: "complete",
-      workoutsTracked: 28,
-      caloriesBurnt: 14000,
+      workoutsTracked: workoutsTracked,
+      caloriesBurned: caloriesBurned,
     };
 
     return (
@@ -48,11 +52,11 @@ export default ProfileBox = () => {
                   style={{ flexDirection: "row", justifyContent: "center" }}
                 >
                   <Text style={styles.rowItemValue}>
-                    {data.caloriesBurnt / 1000}
+                    {data.caloriesBurned / 1000}
                   </Text>
                   <Text style={styles.rowItemTag}>kCal</Text>
                 </View>
-                <Text style={styles.rowItemTag}>Calories Burnt</Text>
+                <Text style={styles.rowItemTag}>Calories Burned</Text>
               </View>
             </View>
           </View>

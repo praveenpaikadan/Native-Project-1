@@ -22,7 +22,7 @@ export default TrackingScreen = ({ navigation }) => {
   var exerciseList = dayWorkoutPlan.exercises
   var totalExercises = dayWorkoutPlan.exercises.length
   var totalSets = dayWorkoutPlan.exercises.reduce((a, c) => a + c.target.length, 0)
-  var totalTime = "TBD"
+  var totalTime = String(dayWorkoutPlan.timeInMins)
 
   var completed = dayWorkout.complete
 

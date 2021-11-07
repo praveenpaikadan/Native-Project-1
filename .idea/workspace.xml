@@ -5,11 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ce9b9341-fa59-414b-98b4-a7a6555ef0ed" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/exercise-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/exercise-screen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/modal/workout-complete.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/modal/workout-complete.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/data-center.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/data-center.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/body-calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/body-calendar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/calendar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/tab-menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/tab-menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/workout-card.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/workout-card.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/home-page.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/home-page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/modal/my-workouts.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/modal/my-workouts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/showexerciselist.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/showexerciselist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/subscreens/exerciselist.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/subscreens/exerciselist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/subscreens/history-list.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/subscreens/history-list.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/tracking-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/tracking-screen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

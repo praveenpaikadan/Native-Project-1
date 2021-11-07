@@ -1,6 +1,43 @@
 import { floor } from "react-native-reanimated"
 import { BASE_URL } from "./api"
 
+
+const repInNum = ( rep) => {
+    if(rep.includes('X')){
+        try{
+            // additional modifications in calories calculation formula for kg X reps goes here
+            return Number(rep.split('X')[1])
+        }catch{
+            return 0
+        }
+    }else{
+        return Number(rep)
+    }
+}
+
+export const calculateCalories = (history, refList) => {  // refList is an on=bject with {<exerciseid>: <calories per rep>}
+
+    var workoutsTracked = 0
+    var calsBurned = 0
+    if(history){
+        history.forEach(dayData => {
+          var workout = dayData.workout
+          workoutsTracked = workoutsTracked + workout.length
+          workout.forEach(exercise => {
+              var calsPerRep = refList[exercise['exerciseID']]
+              var totalReps = 0
+              exercise.reps.forEach(rep => {
+                  totalReps = totalReps + repInNum(rep)
+                })
+              calsBurned = calsBurned + (calsPerRep * totalReps)
+          })
+        })
+      }
+
+    return {caloriesBurned: calsBurned, workoutsTracked: workoutsTracked}
+}
+
+
 export const format_target = (value, type) => {
     try{
         if (type === 'seconds') {
@@ -33,6 +70,7 @@ export const today = (ymd) => {
     return [d,m,y].join('-')
     // return '4-11-2021'
 }
+
 
 export const todayInWord = (week=true) => {
     const MONTHS =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']

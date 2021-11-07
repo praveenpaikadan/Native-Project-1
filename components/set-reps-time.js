@@ -19,7 +19,7 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
           ToastAndroid.show("Enter both weight and reps ...", ToastAndroid.BOTTOM);
         }
       }else{
-        if (!['0', '--', 0].includes(field1)){
+        if (!['0', '--', 0, ''].includes(field1)){
           dataChangeHandler(field1)
         }else{
           ToastAndroid.show(`Enter ${type===0?'reps':'minutes'} ...`, ToastAndroid.BOTTOM);

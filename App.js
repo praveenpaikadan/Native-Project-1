@@ -8,12 +8,11 @@ import { AuthContext } from "./components/auth-context";
 import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FlashMessage from "react-native-flash-message";
-import API from './utilities/api'
 import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
-import { SetCompleteModal } from "./screens/modal/set-complete";
-import { AgendaCalendar } from "./components/calendar";
+
+
 
 //Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
 
@@ -334,6 +333,8 @@ export default function App() {
   }
   
   // return <BodyCalendar/>
+
+  
 
   if (appReady) {
     return (

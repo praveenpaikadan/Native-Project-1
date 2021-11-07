@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, } from "react-native";
 import {
   CreateAccountGraphics,
   GenderFemaleGraphics,
@@ -8,6 +8,9 @@ import {
 import { ButtonType1 } from "../components/buttons";
 import { ElevatedCardTypeOne } from "../components/cards";
 import { formPageStyles } from "../styles/form-pages-styles";
+import { globalFonts, sc, themeColors } from "../styles/global-styles";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 export default GenderScreen = ({ navigation, route }) => {
 
@@ -15,6 +18,9 @@ export default GenderScreen = ({ navigation, route }) => {
   const [femaleSelected, setFemaleSelected] = React.useState(false);
   const [gender, setGender] = React.useState("");
   const [validationMessage, setValidationMessage] = React.useState("");
+  const [dob, setDob] = React.useState(null);
+  const [show, setShow] = React.useState(false);
+
 
   const selectionHandlerMale = () => {
     setMaleSelected(true);
@@ -30,12 +36,20 @@ export default GenderScreen = ({ navigation, route }) => {
   };
 
   const buttonClickHandler = () => {
+    
     if (gender === "") {
-      setValidationMessage("Please select gender");
-    } else {
-      var userData = {...route.params.userData, gender: gender}
-      navigation.push("HeightWeight", {userData});
+      setValidationMessage("Select your gender ...");
+      // ToastAndroid.show("Select your gender", ToastAndroid.BOTTOM);
+      return    
+    } 
+    if(!dob){
+      setValidationMessage("Select Date of Birth");
+      return
     }
+   
+    var userData = {...route.params.userData, gender: gender, dob: dob}
+    navigation.push("HeightWeight", {userData});
+  
   };
 
   return (
@@ -46,31 +60,13 @@ export default GenderScreen = ({ navigation, route }) => {
       <View style={styles.container}>
         <View style={styles.headerGraphicsContainer}>
           <CreateAccountGraphics style={{ width: "100%" }} />
-          <View style={styles.heading}>
-            <Text style={styles.mainHeading}>What is your {"\n"}Gender?</Text>
+          <View style={{...styles.heading, transform: [{translateY: -20*sc}]}}>
+            <Text style={styles.mainHeading}>What is your {"\n"}Gender and Date {"\n"}of Birth?</Text>
           </View>
         </View>
 
         <View style={styles.contentContainer}>
-          <View style={styles.cardscontainer}>
-            {/* {
-                        [   
-                            ['Male', <GenderMaleGraphics size={'75%'}/>],
-                            ['Female',<GenderFemaleGraphics size={'75%'}/>]
-                        ].map(data => (
-                            
-                            <TouchableOpacity key={data[0]}>   
-                                <ElevatedCardTypeOne
-                                styling={styles.card}>
-                                    {data[1]}
-                                    <Text style={styles.genderTag}>{data[0]}</Text>
-                                </ElevatedCardTypeOne>
-                            </TouchableOpacity>      
-                            
-                            )
-                        )
-                    } */}
-
+          <View style={{...styles.cardscontainer}}>
             <TouchableOpacity onPress={selectionHandlerMale}>
               <ElevatedCardTypeOne
                 styling={maleSelected ? styles.cardSelected : styles.card}
@@ -89,6 +85,23 @@ export default GenderScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
 
+          <View style={{
+            width: 300*sc, 
+            height: 50*sc,
+            borderWidth:2,
+            borderColor: themeColors.primary1,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center'
+            }}>
+              <TouchableOpacity onPress={() => {setShow(true)}}>
+              <Text style={{
+                color: themeColors.primary1,
+                fontFamily: globalFonts.primaryBold,
+                fontSize: 25*sc
+              }}>{dob?dob:'SELECT DOB'}</Text></TouchableOpacity>
+          </View>
+
           <View style={styles.formContainer}>
             <Text style={styles.errorText}>{validationMessage}</Text>
             <ButtonType1
@@ -97,10 +110,29 @@ export default GenderScreen = ({ navigation, route }) => {
               onClick={buttonClickHandler}
             />
           </View>
+          
 
           <View style={styles.footContainer}></View>
         </View>
       </View>
+      {show&&<DateTimePicker
+          testID="dateTimePicker"
+          value={new Date()}
+          mode={'date'} 
+          is24Hour={false}
+          display="default"
+          maximumDate={new Date()}
+          onChange={(value) => {
+            setShow(false);
+            if(value.type !== 'dismissed'){
+              var d = value['nativeEvent']['timestamp']
+              var yr = new Date(d).toString().split(' ')[3]
+              var arr = new Date(d).toLocaleDateString().split('/')
+              var modDS = arr[1]+'-'+arr[0]+'-'+yr
+              setDob(modDS)  
+            }
+          }}
+        />}
     </View>
   );
 };
