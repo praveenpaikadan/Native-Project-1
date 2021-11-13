@@ -12,6 +12,7 @@ import { AuthContext } from "../components/auth-context";
 import { logoutUser } from "../utilities/data-center";
 import flash from '../utilities/flash-message'
 import { Alert } from "../screens/modal/alert";
+import { ProfilePhoto } from "../components/profile-photo";
 
 export default DrawerContent = (props) => {
 
@@ -46,37 +47,27 @@ export default DrawerContent = (props) => {
 
   
 
-  const { storedCredentials, setStoredCredentials } =
+  const { credentials } =
     React.useContext(AuthContext);
 
-  const logout = () => {
-    AsyncStorage.removeItem("Credentials")
-      .then(() => {
-        setStoredCredentials("");
-      })
-      .catch((error) => console.log(error));
-  };
 
   return (
     <View style={styles.container}>
       <StatusBar style={"light"} />
       <DrawerContentScrollView>
         <View style={styles.userInfo}>
-          <Image
-            source={require("../assets/images/profile.jpg")}
-            style={styles.profilePhoto}
-          />
+          <ProfilePhoto style={styles.profilePhoto} filename={credentials.profilePhoto.filename} />
           <View style={styles.headingContainer}>
-            <Text style={styles.heading}>Olivia Charlotte</Text>
+            <Text style={styles.heading}>{credentials.name}</Text>
             <View style={styles.heightWeightContainer}>
               <View style={styles.heightWeightTextContainer}>
                 <Text style={styles.heightWeightText}>WEIGHT </Text>
-                <Text style={styles.number}>55</Text>
+                <Text style={styles.number}>{credentials.weight}</Text>
                 <Text style={styles.heightWeightText}>kg</Text>
               </View>
               <View style={styles.heightWeightTextContainer}>
                 <Text style={styles.heightWeightText}>HEIGHT </Text>
-                <Text style={styles.number}>168</Text>
+                <Text style={styles.number}>{credentials.height}</Text>
                 <Text style={styles.heightWeightText}>cm</Text>
               </View>
             </View>

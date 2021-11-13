@@ -23,7 +23,7 @@ export default TrackingScreen = ({ navigation }) => {
   var totalExercises = dayWorkoutPlan.exercises.length
   var totalSets = dayWorkoutPlan.exercises.reduce((a, c) => a + c.target.length, 0)
   var totalTime = String(dayWorkoutPlan.timeInMins)
-
+  var targetBodyPart = dayWorkoutPlan.targetBodyPart
   var completed = dayWorkout.complete
 
   return (
@@ -41,15 +41,14 @@ export default TrackingScreen = ({ navigation }) => {
             {programName +
               ": " +
               "Day " +
-             currentDay +
-              " -" +
-              "Target-TBD"}
+             currentDay 
+              }
           </Text>
         </View>
 
         <View style={styles.subHeadingContainer}>
-          <Text style={styles.subHeading}>{"Goal: " + "TBD"}</Text>
-          <Text style={styles.subHeading}>{"Level: " + level}</Text>
+          <Text style={{...styles.subHeading, maxWidth: 210*sc}}>{`Goal: ${'\n'}` + targetBodyPart}</Text>
+          <Text style={{...styles.subHeading, textAlign:'right'}}>{`Level: ${'\n'}` + level}</Text>
         </View>
 
         <View style={styles.detailsContainer}>

@@ -4,13 +4,13 @@ import { globalFonts, sc, themeColors } from "../styles/global-styles";
 import { calculateCalories } from "../utilities/helpers";
 import { AuthContext } from "./auth-context";
 import { WorkoutContext } from "./workout-context";
+import { ProfilePhoto } from "./profile-photo";
 
 
 export default ProfileBox = () => {
 
     const {credentials} = React.useContext(AuthContext);
     const {workoutData} = React.useContext(WorkoutContext);
-
     var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
   
     const data = {
@@ -33,9 +33,12 @@ export default ProfileBox = () => {
         style={styles.profileWrapper}
       >
         <View style={styles.profileContainer}>
+ 
+  
           <View style={styles.profilePhotoContainer}>
-            <Image source={data.avatar} style={styles.profilePhoto} />
-          </View>
+            <ProfilePhoto filename={credentials.profilePhoto.filename} style={styles.profilePhoto}/>
+
+    </View>
           <View style={styles.profileDataContainer}>
             <View style={styles.profileDataRowContainer1}>
               <Text style={styles.profileName}>{data.name}</Text>
@@ -52,7 +55,7 @@ export default ProfileBox = () => {
                   style={{ flexDirection: "row", justifyContent: "center" }}
                 >
                   <Text style={styles.rowItemValue}>
-                    {data.caloriesBurned / 1000}
+                    {data.caloriesBurned}
                   </Text>
                   <Text style={styles.rowItemTag}>kCal</Text>
                 </View>

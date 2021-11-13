@@ -34,6 +34,22 @@ export const calculateCalories = (history, refList) => {  // refList is an on=bj
         })
       }
 
+    calsBurned = (calsBurned/1000).toFixed(2)
+    if(workoutsTracked > 99999){
+        workoutsTracked = String(Math.floor(workoutsTracked/1000) + 'k')
+    }
+    if(calsBurned <10){
+        null;
+    }else{
+        calsBurned = Math.floor(calsBurned)
+        if(calsBurned > 99999999){
+            calsBurned = String(Math.floor(calsBurned/1000000) + 'm')
+        }else if(calsBurned > 9999){
+            calsBurned = String(Math.floor(calsBurned/1000) + 'k')
+        }
+
+    }
+
     return {caloriesBurned: calsBurned, workoutsTracked: workoutsTracked}
 }
 

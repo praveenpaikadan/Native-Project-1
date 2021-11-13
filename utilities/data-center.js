@@ -148,7 +148,42 @@ const postBulkDayWorkout = async (data) => {
     }
 } 
 
+const postEditProfile = async (data) => {
 
+    try{
+        const response = await API.post('user/editprofile', data)
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+} 
 
+const postProfilePhoto = async (data) => {
 
-export {checkEmail, logoutUser, postNewUserData, loginUser, getAPICredentials, getAPIAllLocal, getAPIAvailablePrograms, getAPIMedia, testSubscribe, getWorkoutData, getExercise, postDayWorkout, postDiscardWorkout, postBulkDayWorkout}
+    try{
+        const response = await API.post('user/profilephoto', data)
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+} 
+
+export {
+    checkEmail, 
+    logoutUser, 
+    postNewUserData, 
+    loginUser, 
+    getAPICredentials, 
+    getAPIAllLocal, 
+    getAPIAvailablePrograms, 
+    getAPIMedia, 
+    testSubscribe, 
+    getWorkoutData, 
+    getExercise, 
+    postDayWorkout,
+    postDiscardWorkout, 
+    postBulkDayWorkout, 
+    postEditProfile
+}

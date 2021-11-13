@@ -28,7 +28,6 @@ const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
   return (
     <ElevatedCardTypeOne styling={cardStyles.card}>
       <ImageBackground style={cardStyles.cardImage} source={source}>
-        
         <View style={cardStyles.cardOverlay}>
           <Text style={cardStyles.mainText}>{heading}</Text>
           <View style={cardStyles.detailsContainer}>
@@ -180,7 +179,7 @@ const cardIconStyling = {
 const cardStyles = StyleSheet.create({
   card: {
     width: 340 * sc,
-    height: 100 * sc,
+    height: 130 * sc,
     marginVertical: 5 * sc,
   },
 
@@ -200,7 +199,8 @@ const cardStyles = StyleSheet.create({
 
   mainText: {
     fontFamily: globalFonts.primaryMedium,
-    fontSize: 30 * sc,
+    fontSize: 25 * sc,
+    marginTop: 10*sc,
     color: themeColors.secondary2,
     marginBottom: 10 * sc,
     ...globalShadows.orangeTextShadow1,

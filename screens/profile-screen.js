@@ -19,8 +19,32 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { ElevatedCardTypeOne } from "../components/cards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
+import { AuthContext } from "../components/auth-context";
+import { WorkoutContext } from "../components/workout-context";
+import { calculateCalories } from '../utilities/helpers'
+import ProfilePhotoPicker from "../components/image-picker";
+import { ProfilePhoto } from "../components/profile-photo";
 
 export default ProfileScreen = ({ navigation }) => {
+
+  const [image, setImage ] = React.useState(null)
+
+  const { credentials } = React.useContext(AuthContext)
+  const { workoutData } = React.useContext(WorkoutContext)
+  var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
+
+  const calcAge = (dob) => {
+    var today = new Date()
+    var yob = Number(dob.split('-')[2])
+    return today.getFullYear() - yob 
+  }
+
+  const uploadImage = (image) => {
+    // posting of profile to server goes here
+    setImage(image)
+  }
+
+  //Needs modification
   const logout = () => {
     AsyncStorage.removeItem("Credentials")
       .then(() => {
@@ -28,6 +52,7 @@ export default ProfileScreen = ({ navigation }) => {
       })
       .catch((error) => console.log(error));
   };
+
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} style="light" />
@@ -45,20 +70,27 @@ export default ProfileScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.image}
-          source={require("../assets/images/profile.jpg")}
-        />
-        <View style={styles.pencilContainer}>
-          <FontAwesome5 name="pencil-alt" {...pencilIconStyling} />
+      <View style={styles.topContainer}>
+
+        <View style={styles.avatar}>
+
+          {/* <Image
+              style={styles.image}
+              source={image?{uri: image}:require("../assets/images/profile.jpg")}
+            /> */}
+
+          <ProfilePhoto style={styles.image} filename={credentials.profilePhoto.filename} source={image}/>
         </View>
-        <Text style={styles.userName}>Olivia Charlotte</Text>
+        <ProfilePhotoPicker style={styles.pencilContainer} setImage={setImage} uploadImage={uploadImage}>
+            <FontAwesome5 name="pencil-alt" {...pencilIconStyling} />
+          </ProfilePhotoPicker>
+
+        <Text style={styles.userName}>{credentials.name}</Text>
       </View>
       <View style={styles.userDetailsContainer}>
         <View>
           <View style={styles.unitContainer}>
-            <Text style={styles.quantity}>55</Text>
+            <Text style={styles.quantity}>{credentials.weight}</Text>
             <Text style={styles.unit}>kg</Text>
           </View>
           <Text style={styles.parameter}>WEIGHT</Text>
@@ -66,7 +98,7 @@ export default ProfileScreen = ({ navigation }) => {
         <View style={styles.line}></View>
         <View>
           <View style={styles.unitContainer}>
-            <Text style={styles.quantity}>168</Text>
+            <Text style={styles.quantity}>{credentials.height}</Text>
             <Text style={styles.unit}>cm</Text>
           </View>
           <Text style={styles.parameter}>HEIGHT</Text>
@@ -74,7 +106,7 @@ export default ProfileScreen = ({ navigation }) => {
         <View style={styles.line}></View>
         <View>
           <View style={styles.unitContainer}>
-            <Text style={styles.quantity}>29</Text>
+            <Text style={styles.quantity}>{calcAge(credentials.dob)}</Text>
             <Text style={styles.unit}>y</Text>
           </View>
           <Text style={styles.parameter}>AGE</Text>
@@ -85,7 +117,7 @@ export default ProfileScreen = ({ navigation }) => {
           <FontAwesome5 name="dumbbell" {...dumbbellIconStyling} />
           <View>
             <Text style={styles.programStatus}>ACTIVE PROGRAM</Text>
-            <Text style={styles.programName}>ABOO THAHIR’S MUSCLE GAIN</Text>
+            <Text style={styles.programName}>{workoutData?workoutData.program.programName:'NO ACTIVE PROGRAMS'}</Text>
           </View>
         </ElevatedCardTypeOne>
         <View style={styles.workoutCardConatiner}>
@@ -93,14 +125,14 @@ export default ProfileScreen = ({ navigation }) => {
             <FontAwesome5 name="running" {...runIconStyling} />
             <View>
               <Text style={styles.workoutHeading}>WORKOUTS{"\n"}TRACKED</Text>
-              <Text style={styles.workoutText}>152</Text>
+              <Text style={styles.workoutText}>{workoutsTracked}</Text>
             </View>
           </ElevatedCardTypeOne>
           <ElevatedCardTypeOne styling={styles.workoutCard}>
             <FontAwesome5 name="gripfire" {...fireIconStyling} />
             <View>
               <Text style={styles.workoutHeading}>WORKOUTS{"\n"}TRACKED</Text>
-              <Text style={styles.workoutText}>200K Kcal</Text>
+              <Text style={styles.workoutText}>{caloriesBurned} Kcal</Text>
             </View>
           </ElevatedCardTypeOne>
         </View>
@@ -176,17 +208,27 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5 * sc,
   },
 
-  imageContainer: {
-    alignItems: "center",
-    marginTop: 20 * sc,
-  },
-
-  image: {
+  avatar:{
     width: 150 * sc,
     height: 150 * sc,
     borderRadius: 75 * sc,
     borderWidth: 3 * sc,
     borderColor: themeColors.primary2,
+    overflow: 'hidden',
+  },
+
+  topContainer: {
+    alignItems: "center",
+    marginTop: 20 * sc,
+    
+  },
+
+  image: {
+    width: 150 * sc,
+    height: 150 * sc,
+    // borderRadius: 75 * sc,
+    // borderWidth: 3 * sc,
+    // borderColor: themeColors.primary2,
   },
 
   pencilContainer: {
@@ -279,6 +321,8 @@ const styles = StyleSheet.create({
     color: themeColors.secondary2,
     fontSize: 15 * sc,
     marginTop: 5 * sc,
+    width: 230*sc,
+    textAlign: 'center'
   },
 
   workoutCardConatiner: {
