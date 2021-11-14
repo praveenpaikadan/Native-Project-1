@@ -38,7 +38,8 @@
     "react-native-web": "^0.17.0",
     "react-navigation": "^4.4.4",
     "@react-native-community/datetimepicker": "3.2.0",
-    "expo-image-picker": "~10.1.4"
+    "expo-image-picker": "~10.1.4",
+    "expo-linking": "~2.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

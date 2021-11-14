@@ -36,7 +36,7 @@ export default ProfileBox = () => {
  
   
           <View style={styles.profilePhotoContainer}>
-            <ProfilePhoto filename={credentials.profilePhoto.filename} style={styles.profilePhoto}/>
+            <ProfilePhoto filename={credentials.profilePhoto?credentials.profilePhoto.filename:null} style={styles.profilePhoto}/>
 
     </View>
           <View style={styles.profileDataContainer}>
@@ -86,9 +86,13 @@ const styles = StyleSheet.create({
     },
   
     profilePhotoContainer: {
+      backgroundColor: themeColors.tertiary3,
       flex: 1,
       marginRight: 2 * sc,
+      width: "100%",
+      height: "100%",
     },
+    
     profilePhoto: {
       width: "100%",
       height: "100%",

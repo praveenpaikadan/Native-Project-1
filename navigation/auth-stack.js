@@ -22,6 +22,7 @@ import DrawerContent from "./drawer-content";
 import ProfileScreen from "../screens/profile-screen";
 import EditProfileScreen from "../screens/edit-profile-screen";
 import ExerciseGuideScreen from "../screens/exercise-guide";
+import Contact from "../screens/contact";
 import Store from "../screens/store";
 import VPlayer from "../components/video-player";
 
@@ -48,6 +49,7 @@ const Root = () => {
       <Stack.Screen name="Store" component={Store} />
       <Stack.Screen name="ExerciseGuide" component={ExerciseGuideScreen} />
       <Stack.Screen name="VideoPlayer" component={VPlayer} />
+      <Stack.Screen name="Contact" component={Contact} />
     </Stack.Navigator>
   );
 };

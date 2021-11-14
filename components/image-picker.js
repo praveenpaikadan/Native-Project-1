@@ -27,7 +27,7 @@ export default function ProfilePhotoPicker(props) {
     console.log(result);
 
     if (!result.cancelled) {
-      uploadImage(result.uri);
+      uploadImage(result);
     }
   };
 

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextPropTypes,
   TouchableOpacity,
+  Platform
 } from "react-native";
 import {
   globalFonts,
@@ -24,12 +25,16 @@ import { WorkoutContext } from "../components/workout-context";
 import { calculateCalories } from '../utilities/helpers'
 import ProfilePhotoPicker from "../components/image-picker";
 import { ProfilePhoto } from "../components/profile-photo";
+import { postProfilePhoto } from "../utilities/data-center";
+import flash from "../utilities/flash-message";
+import { BASE_URL } from "../utilities/api";
+import { Logout } from "../components/logout";
 
 export default ProfileScreen = ({ navigation }) => {
 
   const [image, setImage ] = React.useState(null)
 
-  const { credentials } = React.useContext(AuthContext)
+  const { credentials, resetCredentials } = React.useContext(AuthContext)
   const { workoutData } = React.useContext(WorkoutContext)
   var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
 
@@ -40,8 +45,37 @@ export default ProfileScreen = ({ navigation }) => {
   }
 
   const uploadImage = (image) => {
+
+    const createFormData = () => {
+      var data = new FormData();
+      var arr = image.uri.split('.') 
+      var ext = arr[arr.length - 1]
+
+      data.append("profilephoto", {
+        name: credentials.name + '-profile.'+ext,
+        type: image.type+'/ext',
+        uri:
+          Platform.OS === "android" ? image.uri : image.uri.replace("file://", "")
+      });
+
+      return data;
+    };
+
     // posting of profile to server goes here
-    setImage(image)
+
+    postProfilePhoto(createFormData())
+    .then((response) => {
+      switch (response.status) {
+        case 200:
+          flash('Succesfully changed profile photo', 'success', 1500)
+          setImage(image.uri)
+          resetCredentials(response.data)
+          break
+        default:
+          flash('Failed to change profile photo. Check you internet.', 'danger')
+          break; 
+        }
+    })
   }
 
   //Needs modification
@@ -79,7 +113,7 @@ export default ProfileScreen = ({ navigation }) => {
               source={image?{uri: image}:require("../assets/images/profile.jpg")}
             /> */}
 
-          <ProfilePhoto style={styles.image} filename={credentials.profilePhoto.filename} source={image}/>
+          <ProfilePhoto style={styles.image} filename={credentials.profilePhoto?credentials.profilePhoto.filename:null} source={image?image.uri:null}/>
         </View>
         <ProfilePhotoPicker style={styles.pencilContainer} setImage={setImage} uploadImage={uploadImage}>
             <FontAwesome5 name="pencil-alt" {...pencilIconStyling} />
@@ -136,12 +170,12 @@ export default ProfileScreen = ({ navigation }) => {
             </View>
           </ElevatedCardTypeOne>
         </View>
-        <TouchableOpacity style={{ alignSelf: "flex-start" }} onPress={logout}>
+        <Logout style={{ alignSelf: "flex-start" }} >
           <ElevatedCardTypeOne styling={styles.signOut}>
             <Feather name="log-out" {...signOutIconStyling} />
             <Text style={styles.signOutText}>Sign Out</Text>
           </ElevatedCardTypeOne>
-        </TouchableOpacity>
+      </Logout>
       </View>
     </View>
   );

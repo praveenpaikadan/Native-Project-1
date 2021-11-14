@@ -212,7 +212,7 @@ export default function App() {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
-            flash('Succesfully uploaded pending workout', 'danger', time=4000)
+            flash('Succesfully uploaded pending workout', 'danger', 4000)
             console.log('Sucesssfully uploaded pending')
             resetPendingUploads(null)
             break

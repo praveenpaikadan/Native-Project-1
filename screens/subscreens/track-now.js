@@ -53,11 +53,11 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
         <TouchableOpacity onPress={() => {navigation.navigate('Root', { screen: "Store" })}}>
           <Text style={styles.pickAnotherProgramText}>Pick Another Program</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {navigation.navigate('Root', { screen: "Contact" })}}>
           <Text style={styles.pickAnotherProgramText}>Contact Trainer</Text>
         </TouchableOpacity>
         
-      
+
       </View>
       }
 

@@ -13,12 +13,12 @@ import { logoutUser } from "../utilities/data-center";
 import flash from '../utilities/flash-message'
 import { Alert } from "../screens/modal/alert";
 import { ProfilePhoto } from "../components/profile-photo";
+import { Logout } from "../components/logout";
 
 export default DrawerContent = (props) => {
 
   const [logoutWarn, setLogoutWarn] = React.useState(false)
   const {setLoggedIn, uploadPendingWorkout} = React.useContext(AuthContext)
-
   const handleSignOut = async () => {
     await uploadPendingWorkout()
     setLogoutWarn(true)
@@ -56,7 +56,7 @@ export default DrawerContent = (props) => {
       <StatusBar style={"light"} />
       <DrawerContentScrollView>
         <View style={styles.userInfo}>
-          <ProfilePhoto style={styles.profilePhoto} filename={credentials.profilePhoto.filename} />
+          <ProfilePhoto style={styles.profilePhoto} filename={credentials.profilePhoto?credentials.profilePhoto.filename:null} />
           <View style={styles.headingContainer}>
             <Text style={styles.heading}>{credentials.name}</Text>
             <View style={styles.heightWeightContainer}>
@@ -107,6 +107,13 @@ export default DrawerContent = (props) => {
             icon={() => <Ionicons name="notifications" {...iconStyling} />}
           />
           <DrawerItem
+            label="Contact trainer"
+            labelStyle={styles.menuText}
+            icon={() => <FontAwesome5 name="phone" {...iconStyling} />}
+            onPress={() => props.navigation.navigate("Contact")}
+          />
+
+          <DrawerItem
             label="Settings"
             labelStyle={styles.menuText}
             icon={() => <Ionicons name="ios-settings" {...iconStyling} />}
@@ -115,19 +122,12 @@ export default DrawerContent = (props) => {
         </View>
       </DrawerContentScrollView>
 
-      <TouchableOpacity onPress={() => setLogoutWarn(true)}>
-        <View style={styles.logoutButton}>
-          <Feather name="log-out" {...logoutIconStyling} />
-          <Text>Sign Out</Text>
-        </View>
-      </TouchableOpacity>
-
-      <Alert 
-          visible={logoutWarn} 
-          message={'Are you sure to Sign Out ?'} 
-          yesHandler={() => {handleSignOut()}} 
-          noHandler={() => {setLogoutWarn(false)}}
-          />
+        <Logout>
+          <View style={styles.logoutButton}>
+              <Feather name="log-out" {...logoutIconStyling} />
+              <Text>Sign Out</Text>
+            </View>
+        </Logout>
     </View>
   );
 };

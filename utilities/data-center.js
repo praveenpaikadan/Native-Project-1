@@ -160,7 +160,7 @@ const postEditProfile = async (data) => {
 } 
 
 const postProfilePhoto = async (data) => {
-
+    console.log(data)
     try{
         const response = await API.post('user/profilephoto', data)
         return response
@@ -185,5 +185,6 @@ export {
     postDayWorkout,
     postDiscardWorkout, 
     postBulkDayWorkout, 
-    postEditProfile
+    postEditProfile,
+    postProfilePhoto
 }
