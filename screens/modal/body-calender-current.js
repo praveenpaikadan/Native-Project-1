@@ -3,10 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { themeColors, sc, globalFonts } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
-import { useNavigation } from "@react-navigation/native";
 
-export const BodyCalendarCurrent = ({ trackNow }) => {
-  navigation = useNavigation();
+export const BodyCalendarCurrent = () => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -27,7 +25,6 @@ export const BodyCalendarCurrent = ({ trackNow }) => {
             arrow={false}
             textStyling={styles.buttonText}
             buttonPadding={styles.buttonPadding}
-            onClick={trackNow}
           />
         </View>
       </View>
