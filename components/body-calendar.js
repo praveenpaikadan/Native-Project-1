@@ -25,7 +25,12 @@ export default BodyCalendar = ({ visible, closeMenu, active, setactive }) => {
               <FontAwesome5 name="calendar-alt" {...calendarIconStyling} />
               <Text style={styles.heading}>BODY CALENDAR</Text>
             </View>
-            <TouchableOpacity onPress={closeMenu}>
+            <TouchableOpacity
+              onPress={() => {
+                closeMenu();
+                dateSetter();
+              }}
+            >
               <AntDesign name="closecircle" {...closeIconStylingSmall} />
             </TouchableOpacity>
           </View>
@@ -86,6 +91,10 @@ const styles = StyleSheet.create({
     color: themeColors.secondary2,
     paddingLeft: 10 * sc,
     fontSize: 18 * sc,
+  },
+
+  calendarContainer: {
+    backgroundColor: themeColors.secondary2,
   },
 
   dateContainer: {
