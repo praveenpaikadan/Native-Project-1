@@ -56,6 +56,7 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
                 arrow={false}
                 textStyling={styles.buttonText1}
                 onClick={() => continueEditingHandler()}
+                disabled={saving === 2}
               />
               {<ButtonType1
                 styling={styles.button1}
@@ -65,6 +66,7 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
                 textStyling={styles.buttonText1}
                 disabled={discarding !== 0}
                 onClick={discardWorkout}
+                disabled={saving === 2}
               />}
             </View>
 
@@ -74,6 +76,7 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
               arrow={false}
               isLoading={saving === 2}
               textStyling={styles.buttonText}
+              activityIndicatorSize={20*sc}
               onClick={() => {handleWorkoutDone()}}
             />: <ButtonType1
             styling={styles.button}
@@ -81,6 +84,7 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
             arrow={false}
             isLoading={saving === 2}
             textStyling={styles.buttonText}
+            activityIndicatorSize={20*sc}
             onClick={() => {handleGoToHome()}}
           />}
 

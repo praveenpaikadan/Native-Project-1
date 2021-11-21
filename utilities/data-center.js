@@ -1,3 +1,4 @@
+import axios from 'axios'
 import API from './api'
 
 
@@ -160,7 +161,6 @@ const postEditProfile = async (data) => {
 } 
 
 const postProfilePhoto = async (data) => {
-    console.log(data)
     try{
         const response = await API.post('user/profilephoto', data)
         return response
@@ -169,6 +169,17 @@ const postProfilePhoto = async (data) => {
         return error.response?error.response:{status: 101}
     }
 } 
+
+
+const getTrainerContact = async () => {
+    try{
+        const response = await API.get('general/contact')
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
 
 export {
     checkEmail, 
@@ -186,5 +197,6 @@ export {
     postDiscardWorkout, 
     postBulkDayWorkout, 
     postEditProfile,
-    postProfilePhoto
+    postProfilePhoto, 
+    getTrainerContact,
 }

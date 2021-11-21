@@ -14,15 +14,8 @@ export default ProfileBox = () => {
     var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
   
     const data = {
-      userId: credentials._id,
       name: credentials.name,
-      avatar: require("../assets/images/profile.jpg"),
       gender: credentials.gender,
-      dob: "01-01-1986",
-      height: 168,
-      weight: 55,
-      status: "active",
-      subscription: "complete",
       workoutsTracked: workoutsTracked,
       caloriesBurned: caloriesBurned,
     };
@@ -38,7 +31,7 @@ export default ProfileBox = () => {
           <View style={styles.profilePhotoContainer}>
             <ProfilePhoto filename={credentials.profilePhoto?credentials.profilePhoto.filename:null} style={styles.profilePhoto}/>
 
-    </View>
+      </View>
           <View style={styles.profileDataContainer}>
             <View style={styles.profileDataRowContainer1}>
               <Text style={styles.profileName}>{data.name}</Text>

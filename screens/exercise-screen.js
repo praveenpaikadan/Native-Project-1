@@ -319,7 +319,6 @@ export default ExerciseScreen = ({ navigation, route }) => {
   const handleConfirmDiscard = () => {
     setDiscarding(2)
     var reqBody = {toDel : 1, workoutID: dayWorkout.workoutID, day:dayWorkout.day}
-
     var orgWorkoutData = {...workoutData}
     orgWorkoutData.history =  orgWorkoutData.history.filter((item, index) => item.day !== dayWorkout.day) 
     resetWorkoutData(orgWorkoutData)
@@ -347,13 +346,12 @@ export default ExerciseScreen = ({ navigation, route }) => {
             addToPending(reqBody)
             break; 
           }
+          setDiscardAlert(false)
+          setSaving(0)
+          navigation.navigate('Home')
     })
+
     
-    
-    
-    setDiscardAlert(false)
-    setSaving(0)
-    navigation.navigate('Home')
   }
 
 
@@ -396,6 +394,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
       />
 
       <Alert 
+        yesLoading={discarding === 2}
         visible={discardAlert}
         message={'Are you sure you want to discard today\'s workout ? '}
         yesHandler={handleConfirmDiscard}

@@ -25,41 +25,42 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default EditProfileScreen = ({ navigation }) => {
 
-  const [visible, setVisible] = React.useState(false)
+  const [visible, setVisible] = React.useState(false) // edit box visible or not
   const [tag, setTag] = React.useState({id: null, icon: null, text: null})
   const [newVal, setNewVal] = React.useState('')
-  const { credentials, resetCredentials } = React.useContext(AuthContext)
+  const {credentials, resetCredentials } = React.useContext(AuthContext)
   const [show, setShow] = React.useState(false)  // date picker show
   const [tempDate, setTempDate] = React.useState(null)
+  const [saving, setSaving] = React.useState(false)
 
   
   const handleEdit = (tag, newVal) => {
     if(!newVal || String(credentials[tag.id]) === String(newVal)){
       return
     }
-
+    setSaving(true)
     // validation goes here
 
     postEditProfile({field: tag.id, value: newVal})
-    .then(response => {
-      if(response.status === 200){
-        
-      }
-      switch (response.status) {
-        case 200:
-          console.log(response.data)
-          resetCredentials(response.data)
-          flashMessage(`Changed ${tag.text} successfully`, 'success')
-          break
-        default:
-          flashMessage(`Unable to change ${tag.text}. Please try later.`, 'danger')
-          break; 
-        }
+      .then(response => {
+        switch (response.status) {
+          case 200:
+            console.log(response.data)
+            resetCredentials(response.data)
+            flashMessage(`Changed ${tag.text} successfully`, 'success')
+            setVisible(false)
+            break
+          default:
+            flashMessage(`Unable to change ${tag.text}. Please try later.`, 'danger')
+           
+            break; 
+          }
+        setSaving(false)
 
-    })
-    .catch((e) => {
-      flashMessage(`Failed to change ${tag.text}. Try again later`)
-    })
+      })
+      .catch((e) => {
+        flashMessage(`Failed to change ${tag.text}. Try again later`)
+      })
   }
 
   const Pencil = (props) => {
@@ -83,7 +84,8 @@ export default EditProfileScreen = ({ navigation }) => {
     <KeyboardHideOnTouchOutside>
     <View style={styles.container}>
     
-    {show&&<DateTimePicker
+    
+    {show&&<DateTimePicker           // date picker for changing dob.
           testID="dateTimePicker"
           value={new Date()}
           mode={'date'} 
@@ -104,7 +106,7 @@ export default EditProfileScreen = ({ navigation }) => {
         />}
 
     {
-    //edit box starts here
+    //edit box starts here------------------------------------------------------
     visible?<View style={{...styles.editBox}}>
         <TouchableOpacity 
           style={{position: 'absolute', right: 15*sc, top: 10*sc}}
@@ -116,6 +118,7 @@ export default EditProfileScreen = ({ navigation }) => {
             <View>
               {tag.icon}
             </View>
+
             <View style={styles.deatilsContainer}>
                 <Text style={{...styles.infoHeading, marginTop: 5*sc}}>Edit {tag.text}</Text>
                 
@@ -147,13 +150,15 @@ export default EditProfileScreen = ({ navigation }) => {
                   </View>
                   
                   <ButtonType1
+                    activityIndicatorSize={20*sc}
+                    isLoading = {saving}
                     arrow={false}
                     text='SAVE'
-                    styling={{marginLeft: 10*sc,marginTop: 8*sc, width: 70*sc, height: 30*sc, borderWidth: 2*sc, borderColor: themeColors.primary1}}
+                    styling={{marginLeft: 10*sc,marginTop: 8*sc, width: 70*sc, height: 30*sc, borderWidth: saving? 0:2*sc, borderColor: themeColors.primary1}}
                     textStyling={{fontSize: 12*sc}}
                     small={10*sc}
                     invertColor={true}
-                    disabled={String(credentials[tag.id]) === String(newVal) || !newVal? true: false}
+                    disabled={ saving || String(credentials[tag.id]) === String(newVal) || !newVal? true: false}
                     onClick={() => {handleEdit(tag, newVal)}}
                   />
                 </View>
@@ -161,7 +166,7 @@ export default EditProfileScreen = ({ navigation }) => {
             </View>
           </View>
         </View>:null
-        // edit box end here
+        // edit box end here ----------------------------------------
         }
 
         
