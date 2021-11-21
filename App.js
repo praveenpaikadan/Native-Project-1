@@ -11,6 +11,7 @@ import FlashMessage from "react-native-flash-message";
 import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
+import DietPlan from "./screens/diet-plan";
 
 
 
@@ -204,9 +205,13 @@ export default function App() {
     var pendingUploadVar =  await AsyncStorage.getItem('pendingDayWorkouts')
     console.log('\npendingUploadVar: ', pendingUploadVar)
     pendingUploadVar = JSON.parse(pendingUploadVar)
+    if(pendingUploadVar !== null){
+      if(!pendingUploadVar[0]){
+        pendingUploadVar = null
+      }
+    }
     
-
-    if ( ![undefined, [], null, 'null', '[]'].includes(pendingUploadVar)){
+    if (pendingUploadVar){
       postBulkDayWorkout(pendingUploadVar)
       .then((response) => {
         console.log(response.status, response.data)
@@ -217,6 +222,7 @@ export default function App() {
             resetPendingUploads(null)
             break
           default:
+            flash('Failed to sync data with server. Please check your internet.', 'danger', 3000)
             console.log('Failed to upload peeeeeeending data')
             break; 
           }
@@ -334,8 +340,6 @@ export default function App() {
   
   // return <BodyCalendar/>
 
-  
-
   if (appReady) {
     return (
         <AuthContext.Provider 
@@ -344,6 +348,10 @@ export default function App() {
             value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending, programOver, setProgramOver }}
           >
             <AuthStack />
+            
+            
+            {/* <DietPlan /> */}
+            
             <FlashMessage position="top" />
           </WorkoutContext.Provider>
         </AuthContext.Provider>

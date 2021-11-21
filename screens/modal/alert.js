@@ -3,7 +3,7 @@ import { themeColors, sc, globalFonts } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
 import React from "react";
 
-export const Alert = ({visible, message, yesHandler, noHandler}) => {
+export const Alert = ({visible, message, yesHandler, noHandler, yesLoading}) => {
 
   return (
     <Modal transparent={true} visible={visible}>
@@ -18,11 +18,13 @@ export const Alert = ({visible, message, yesHandler, noHandler}) => {
 
             <View style={styles.row}>
               <ButtonType1
+                isLoading={yesLoading}
                 styling={styles.button1}
                 text={"YES"}
                 arrow={false}
                 textStyling={styles.buttonText1}
                 onClick={() => yesHandler()}
+                activityIndicatorSize={15*sc}
               />
               <ButtonType1
                 styling={styles.button1}
@@ -30,6 +32,7 @@ export const Alert = ({visible, message, yesHandler, noHandler}) => {
                 arrow={false}
                 textStyling={styles.buttonText1}
                 onClick={() => noHandler()}
+                disabled={yesLoading}
               />
             </View>
 

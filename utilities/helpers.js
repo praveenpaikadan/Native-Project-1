@@ -3,16 +3,32 @@ import { BASE_URL } from "./api"
 
 
 const repInNum = ( rep) => {
-    if(rep.includes('X')){
-        try{
-            // additional modifications in calories calculation formula for kg X reps goes here
-            return Number(rep.split('X')[1])
-        }catch{
-            return 0
+    if(rep){
+        if(rep.includes('X')){
+            try{
+                // additional modifications in calories calculation formula for kg X reps goes here
+                return Number(rep.split('X')[1])
+            }catch{
+                return 0
+            }
+        }else{
+            return Number(rep)
         }
     }else{
-        return Number(rep)
+        return 0
     }
+        
+}
+
+export const convDecimalTime = (decimalTime) => {   // input eg : 6.5 for returning 06: 30 AM
+    let dt  = Number(decimalTime)
+    let hour24 = Math.floor(dt)
+    let minFrac = dt - hour24
+    let hrString = String(hour24 <= 12 ? hour24 : hour24 - 12)
+    let amOrPm = dt > 12 ? "PM" : "AM"
+    let minString = String(Math.round(60*minFrac))
+    minString = minString.length === 1? '0'+minString: minString
+    return hrString+ ":"+minString + " "+amOrPm
 }
 
 export const calculateCalories = (history, refList) => {  // refList is an on=bject with {<exerciseid>: <calories per rep>}
@@ -24,7 +40,8 @@ export const calculateCalories = (history, refList) => {  // refList is an on=bj
           var workout = dayData.workout
           workoutsTracked = workoutsTracked + workout.length
           workout.forEach(exercise => {
-              var calsPerRep = refList[exercise['exerciseID']]
+              // Needs to review this approach
+              var calsPerRep = refList[exercise['exerciseID']]?refList[exercise['exerciseID']]:0
               var totalReps = 0
               exercise.reps.forEach(rep => {
                   totalReps = totalReps + repInNum(rep)
@@ -47,12 +64,9 @@ export const calculateCalories = (history, refList) => {  // refList is an on=bj
         }else if(calsBurned > 9999){
             calsBurned = String(Math.floor(calsBurned/1000) + 'k')
         }
-
     }
-
     return {caloriesBurned: calsBurned, workoutsTracked: workoutsTracked}
 }
-
 
 export const format_target = (value, type) => {
     try{
@@ -87,11 +101,10 @@ export const today = (ymd) => {
     // return '4-11-2021'
 }
 
-
 export const todayInWord = (week=true) => {
     const MONTHS =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    a = new Date
+    var a = new Date
     return (week?DAYS[a.getDay()] + ' ': '') + String(a.getDate()) + '-' + MONTHS[a.getMonth()] + '-' + String(a.getFullYear())
 }
 
@@ -113,5 +126,11 @@ export const formatIntervel = (secs) => {
         return secs<120?secs + ' seconds': Math.round(secs/60) + ' minutes' 
     }catch{
         return secs + ' seconds'
+    }
+}
+
+export const getImageUrl  = (filename, level) => {
+    if(level == 'open'){
+        return BASE_URL+'/media/'+ filename
     }
 }

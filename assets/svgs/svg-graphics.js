@@ -10,6 +10,7 @@ import Svg, {
   Mask,
 } from "react-native-svg";
 import { Dimensions } from "react-native";
+import { themeColors } from "../../styles/global-styles";
 
 const windowWidth = Dimensions.get("window").width;
 const sc = windowWidth / 360;
@@ -712,6 +713,7 @@ export const SetCompleteBadge = () => (
     />
   </Svg>
 );
+
 export const WorkoutCompleteBadge = () => (
   <Svg
     width={96}
@@ -750,6 +752,7 @@ export const WorkoutCompleteBadge = () => (
     />
   </Svg>
 );
+
 export const EditProfileGraphics = () => (
   <Svg
     width={360 * sc}
@@ -764,6 +767,7 @@ export const EditProfileGraphics = () => (
     />
   </Svg>
 );
+
 export const RulerIcon = () => (
   <Svg
     width={10 * sc}
@@ -782,6 +786,7 @@ export const RulerIcon = () => (
     <Path stroke="#FF4C00" d="M1 4.5h8" />
   </Svg>
 );
+
 export const WeightIcon = () => (
   <Svg
     width={25 * sc}
@@ -933,4 +938,23 @@ export const EmptyPaper = (props) => {
     </Svg>
   )
 }
+
+export function DietPlanGraphics(props) {
+  return (
+    <Svg
+      width={360*sc}
+      height={212*sc}
+      viewBox="0 0 360 212"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      {/* <Path d="M359.5 211.5V0H-.5s-44 221.5 360 211.5z" fill="#FF4C00" /> */}
+      <Path d="M359.5 211.5V0H-.5s-44 221.5 360 211.5z" fill={themeColors.primary1}/>
+
+    </Svg>
+  )
+}
+
+
 
