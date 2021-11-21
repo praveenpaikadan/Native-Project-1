@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TouchableHighlight, ScrollView } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TouchableHighlight, ScrollView, TouchableWithoutFeedback } from "react-native";
 import { TabMenu } from "../components/tab-menu";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
@@ -23,8 +23,8 @@ import { ElevatedCardTypeOne } from "../components/cards";
 import { ButtonType1 } from "../components/buttons";
 import Svg, { Path, Circle, Defs, RadialGradient, Stop } from "react-native-svg"
 
-function BMIGraphics(props) {
 
+function BMIGraphics(props) {
   return (
     <Svg
       width={166}
@@ -46,7 +46,7 @@ function BMIGraphics(props) {
           cy={0}
           r={1}
           gradientUnits="userSpaceOnUse"
-          gradientTransform="rotate(-90 47 36) scale(185)"
+          gradientTransform={`rotate(${(-90) + props.angle} 47 36) scale(185)`}
         >
           <Stop stopColor="#FF4C00" />
           <Stop offset={1} stopColor="#FF4C00" stopOpacity={0} />
@@ -55,6 +55,70 @@ function BMIGraphics(props) {
     </Svg>
   )
 }
+
+const BMI = ({weight, height}) => {
+    var bmi = weight/(height*height/10000)
+    var min = 10
+    var max = 60
+    var startAngle = 0
+    var endAngle = 180/ (max-min)*bmi
+    var pointerWidth = 70
+    var pointerLength = 2
+    const [angle, setAngle] = useState(startAngle)
+    const [rs, setRs] = useState(true)  //render switch
+    const [text, setText] = useState('--')
+    var cond //condion 
+    var col  //color
+
+    if(bmi<18.5){cond = 'UNDER WEIGHT'; col = 'orange'}
+    else if(bmu>=18.5 && bmi<25 ){cond = 'HEALTHY'; col = 'green'}
+    else if(bmu>=25 && bmi<30 ){cond = 'OVER WEIGHT'; col = 'orange'}
+    else{cond = 'OBESE'; col = 'red'}
+
+
+    useEffect(() => {
+        setText('--')
+        setAngle(startAngle)
+        var i 
+        let a = 0
+        i = setInterval(() => {
+            if(a < endAngle){
+                setAngle(a)
+                a = a + 5
+            }else{
+                a = endAngle
+                clearInterval(i)
+                setTimeout(() => {   
+                    setText(cond)
+                }, 500)
+            }
+        }, 30)
+    }, [rs])
+
+    return(
+        <TouchableWithoutFeedback onPress={() => {setRs(!rs)}}>
+            <View style={{position: 'relative', transform:[{scale: 1*sc}]}}>
+                <View style={{position: 'absolute', width: '100%', top: 20,justifyContent:'center', alignItems:'center'}}>
+                    <Text style={{fontFamily: globalFonts.primaryBold, fontSize: 15, opacity: 0.2 }}>{'BMI'}</Text>
+                    <Text style={{fontFamily: globalFonts.primaryBold, fontSize: 25, opacity: 0.4 }}>{Math.round(angle/180*(max-min) * 10) / 10}</Text>
+                    <Text style={{fontFamily: globalFonts.primaryRegular, marginTop: 28, opacity: 0.8, color: col}}>{text}</Text>
+                </View>
+                
+                <BMIGraphics angle={angle}/>
+                <View style={{
+                    width: pointerWidth, 
+                    height: pointerLength, 
+                    backgroundColor: themeColors.primary1, 
+                    position:'absolute', 
+                    bottom: 7, 
+                    left: 47.5,
+                    transform:[{rotateZ: `${angle}deg`}, {translateX:  -1 * pointerWidth/2}]}
+                    }></View>
+            </View>
+        </TouchableWithoutFeedback>
+    )
+}
+
 
 export default DietPlan = ({ navigation, route }) => {
 
@@ -260,8 +324,8 @@ export default DietPlan = ({ navigation, route }) => {
 
         <View style={{flex: 1,}}>
 
-            <View style={{position: 'absolute', right: 10*sc, top: 10*sc}}> 
-                <BMIGraphics />
+            <View style={{position: 'absolute', right: 12*sc, top: 10*sc}}> 
+                <BMI height={credentials.height} weight={credentials.weight}/>
             </View>
             
             <View style={{marginTop: 10*sc, paddingLeft: 12*sc, height: 90*sc}}> 
