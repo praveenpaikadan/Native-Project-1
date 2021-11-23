@@ -25,6 +25,7 @@ import ExerciseGuideScreen from "../screens/exercise-guide";
 import Contact from "../screens/contact";
 import Store from "../screens/store";
 import VPlayer from "../components/video-player";
+import DietPlan from "../screens/diet-plan";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -50,6 +51,7 @@ const Root = () => {
       <Stack.Screen name="ExerciseGuide" component={ExerciseGuideScreen} />
       <Stack.Screen name="VideoPlayer" component={VPlayer} />
       <Stack.Screen name="Contact" component={Contact} />
+      <Stack.Screen name="DietPlan" component={DietPlan} />
     </Stack.Navigator>
   );
 };

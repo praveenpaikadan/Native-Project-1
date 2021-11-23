@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ce9b9341-fa59-414b-98b4-a7a6555ef0ed" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/screens/diet-plan.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/svgs/svg-graphics.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/svgs/svg-graphics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/cards.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/cards.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/profilebox.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/profilebox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/edit-profile-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/edit-profile-screen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/exercise-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/exercise-screen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/modal/alert.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/modal/alert.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/modal/workout-complete.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/modal/workout-complete.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/data-center.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/data-center.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/helpers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

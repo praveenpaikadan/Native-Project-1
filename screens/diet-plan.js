@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TouchableHighlight, ScrollView, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TouchableHighlight, ScrollView, TouchableWithoutFeedback } from "react-native";
 import { TabMenu } from "../components/tab-menu";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
@@ -23,6 +23,120 @@ import { ElevatedCardTypeOne } from "../components/cards";
 import { ButtonType1 } from "../components/buttons";
 import Svg, { Path, Circle, Defs, RadialGradient, Stop } from "react-native-svg"
 
+const DietPlanModel = ({visible, dietItem, setVisible}) => {
+
+    const styles = StyleSheet.create({
+        overlay: {
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      
+        modalContainer: {
+          width: "90%",
+          backgroundColor: themeColors.secondary2,
+          padding: 20 * sc,
+          borderRadius: 20*sc,
+          height: '80 %',
+          paddingVertical: 30*sc
+        },
+      
+        headingContainer: {
+          justifyContent: "center",
+          alignItems: "center",
+          height: 30 * sc,
+          marginBottom: 30*sc
+        },
+      
+        heading: {
+          fontFamily: globalFonts.primaryBold,
+          color: themeColors.tertiary1,
+          marginTop: 10 * sc,
+          marginBottom: 5*sc,
+          // letterSpacing: 0.5 * sc,
+          fontSize: 18 * sc,
+          lineHeight: 23 * sc,
+          paddingHorizontal: 5*sc,
+        },
+      
+        line: {
+          width: "100%",
+          height: 5 * sc,
+          backgroundColor: themeColors.primary2,
+          marginBottom: 15 * sc,
+        },
+
+        content:{
+            fontFamily: globalFonts.primaryRegular,
+            opacity: 0.7,
+            paddingVertical: 5*sc
+        },
+
+        time:{
+            fontFamily: globalFonts.primaryLight,
+            opacity: 0.5,
+            fontSize: 12
+        },
+      
+        row: {
+          flexDirection: "row",
+          justifyContent: "center",
+        },
+      
+        button: {
+          marginHorizontal: 70 * sc,
+          marginVertical: 10 * sc,
+        },
+      
+        buttonText: {
+          fontSize: 15 * sc,
+        },
+        button1: {
+          marginHorizontal: 2 * sc,
+          marginVertical: 10 * sc,
+        },
+      
+        buttonText1: {
+          fontSize: 12 * sc,
+        },
+      });
+      
+
+    return(
+        <Modal transparent={true} visible={visible} animationType="fade">
+        <View style={styles.overlay}>
+          <View style={styles.modalContainer}>
+            <View style={{position: 'absolute', right: 20*sc, top: 20*sc}}>
+                <TouchableOpacity style={{width: 30*sc, height: 30*sc, alignItems:'center', justifyContent: 'center'}} onPress={() => setVisible(false)}>
+                    <FontAwesome5
+                        name="window-close"
+                        size={17*sc}
+                        color={themeColors.primary1}
+                    />    
+                </TouchableOpacity>
+                
+            </View>
+
+            <View style={styles.headingContainer}>
+              <Text style={styles.heading}>{dietItem.title}</Text>
+              <Text style={styles.time}>Reccomended Time: {convDecimalTime(dietItem.time)}</Text>
+            </View>
+
+            <View style={styles.line}></View>
+
+            <ScrollView>
+                {dietItem.content.map((subItem, index) => {
+                    return (<Text key={index} style={styles.content} >{subItem}</Text>)
+                })}
+            </ScrollView>
+  
+              </View>
+            </View>
+      </Modal>
+    )
+}
 
 function BMIGraphics(props) {
   return (
@@ -65,7 +179,6 @@ const BMI = ({weight, height}) => {
     var pointerWidth = 70
     var pointerLength = 2
     const [angle, setAngle] = useState(startAngle)
-    const [rs, setRs] = useState(true)  //render switch
     const [text, setText] = useState('--')
     var cond //condion 
     var col  //color
@@ -75,28 +188,45 @@ const BMI = ({weight, height}) => {
     else if(bmu>=25 && bmi<30 ){cond = 'OVER WEIGHT'; col = 'orange'}
     else{cond = 'OBESE'; col = 'red'}
 
-
-    useEffect(() => {
-        setText('--')
-        setAngle(startAngle)
-        var i 
-        let a = 0
-        i = setInterval(() => {
+    const raiseAngle = () => {
+        var a = startAngle // angle
+        var i = setInterval(() => {
             if(a < endAngle){
                 setAngle(a)
                 a = a + 5
             }else{
-                a = endAngle
+                setAngle(endAngle)
                 clearInterval(i)
                 setTimeout(() => {   
                     setText(cond)
-                }, 500)
+                }, 100)
             }
-        }, 30)
-    }, [rs])
+        }, 30)}
+
+    const dipAngle = () => {
+        setText('--')
+        var a = endAngle // angle
+        var i = setInterval(() => {
+            if(a > startAngle){
+                console.log('Hola')
+                setAngle(a)
+                a = a - 10
+            }else{
+                setAngle(startAngle)
+                clearInterval(i)
+                raiseAngle()
+            }
+        }, 30)}
+
+    useEffect(() => {
+        setText('--')
+        setAngle(startAngle)
+        raiseAngle()
+    }, [])
 
     return(
-        <TouchableWithoutFeedback onPress={() => {setRs(!rs)}}>
+        <TouchableWithoutFeedback onPress={() => {dipAngle()}}>
+
             <View style={{position: 'relative', transform:[{scale: 1*sc}]}}>
                 <View style={{position: 'absolute', width: '100%', top: 20,justifyContent:'center', alignItems:'center'}}>
                     <Text style={{fontFamily: globalFonts.primaryBold, fontSize: 15, opacity: 0.2 }}>{'BMI'}</Text>
@@ -105,13 +235,13 @@ const BMI = ({weight, height}) => {
                 </View>
                 
                 <BMIGraphics angle={angle}/>
-                <View style={{
+                <View style={{                      // pointer
                     width: pointerWidth, 
                     height: pointerLength, 
                     backgroundColor: themeColors.primary1, 
                     position:'absolute', 
                     bottom: 7, 
-                    left: 47.5,
+                    left: 48,
                     transform:[{rotateZ: `${angle}deg`}, {translateX:  -1 * pointerWidth/2}]}
                     }></View>
             </View>
@@ -124,6 +254,8 @@ export default DietPlan = ({ navigation, route }) => {
 
   const {dayWorkout} = React.useContext(WorkoutContext);
   const {credentials} = React.useContext(AuthContext)
+  const [modalVisible, setModalVisible] = React.useState(false)
+  
 
   var program = dayWorkout?dayWorkout.programName:'You have no active programs. Contact your trainer'
 
@@ -144,8 +276,12 @@ export default DietPlan = ({ navigation, route }) => {
       {title: 'Dinner', time: 20.5, content: ['egg Whites :2', 'Vegetable salad:1cup or 100g']},
       {title: 'Before Sleep', time: 21.0, content: ['1/2 scoop casein (10g) in half cup skimmed milk']},
   ]
+
+  const [modalContent, setModalContent] = React.useState(dayDiet[0])
+
   return (
     <View style={{width: '100%', height: '100%'}}>
+        <DietPlanModel visible={modalVisible} dietItem={modalContent} setVisible={setModalVisible} />
         <View>
             <StatusBar style="light" translucent={true} />
             <DietPlanGraphics style={{width: '100%'}}/>
@@ -153,7 +289,7 @@ export default DietPlan = ({ navigation, route }) => {
                 position: 'absolute', 
                 top:35*sc, 
                 left: 15*sc}} 
-                onPress={console.log('Back')}>
+                onPress={() => {navigation.goBack()}}>
                 <FontAwesome5
                     name="chevron-left"
                     size={25*sc}
@@ -178,13 +314,13 @@ export default DietPlan = ({ navigation, route }) => {
                 width: 250*sc,
                 }}>{program}</Text>
 
-            <TouchableOpacity 
-                style={{
+            <TouchableOpacity                    
+                style={{                      // Hamburger
                     position: 'absolute',
                     top: 35*sc,
                     right: 20*sc,
                 }}
-                onPress={() => {console.log('Hamburger Pressed')}}>
+                onPress={() => {navigation.openDrawer()}}>
                 <Feather 
                 name="menu" 
                 size={30 * sc} 
@@ -252,7 +388,9 @@ export default DietPlan = ({ navigation, route }) => {
                 }}
                 >{todayInWord().split(' ')[1].replace('-', ' ').replace('-', ' ')}</Text>
                 
-                <View style={{
+                <TouchableOpacity 
+                    onPress={() => {navigation.navigate('EditProfile')}}
+                    style={{                  // Height and weight
                     position: 'absolute', 
                     top: 30*sc,
                     right: 105*sc,
@@ -317,8 +455,17 @@ export default DietPlan = ({ navigation, route }) => {
                             color={themeColors.secondary2}
                             />
                         </View>
-                    </View>                
-                </View>
+                    </View>   
+                    <Text style={{
+                        fontFamily: globalFonts.primaryLight,
+                        color: themeColors.primary2,
+                        fontSize: 10*sc,
+                        position: 'absolute',
+                        bottom: 6*sc,
+                        left: 14*sc
+                    }}
+                    >(Tap to edit)</Text>             
+                </TouchableOpacity>
             </View>
         </View>
 
@@ -363,7 +510,7 @@ export default DietPlan = ({ navigation, route }) => {
                                 <TouchableHighlight key={index}
                                     activeOpacity={0.6}
                                     underlayColor= 'rgba(255, 76, 0, 0.2)'
-                                    onPress={() => alert('Pressed!')}
+                                    onPress={() => {setModalContent(item); setModalVisible(true)}}
                                     style={{width:'100%', height: '100%', padding: 14*sc}}
                                     >
                                     <View>

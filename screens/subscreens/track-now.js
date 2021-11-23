@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, TouchableHighlight } from "react-native";
 import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
 import { ElevatedCardTypeOne } from "../../components/cards";
@@ -63,6 +63,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
 
       <View style={styles.bottomBox}>
         <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
+          <TouchableHighlight onPress={() => {navigation.navigate('Root', {screen : 'DietPlan'})}}>
           <ImageBackground
             style={styles.cardImage}
             source={require("../../assets/images/diet-plan.jpg")}
@@ -73,6 +74,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
               </Text>
             </View>
           </ImageBackground>
+          </TouchableHighlight>
         </ElevatedCardTypeOne>
 
         <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
