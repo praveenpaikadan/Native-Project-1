@@ -66,20 +66,6 @@ export default Contact = ({ navigation }) => {
     })
   }, [reloadSwich])
 
-  // var data = {
-  //   imageURI: 'https://picsum.photos/200',
-  //   name: 'Aboo Thahir',
-  //   phone: '+918289919059',
-  //   email: 'aboothahir@aboothahir.com',
-  //   whatsapp: '+918289919059',
-  //   address: 'Pranavam House, Poonthottam, Pathiriyal PO, Manjeri, Malappuram 676123',
-  //   website: 'www.google.com',
-  //   lat: 11.19638135873786, 
-  //   long: 76.16681887992492,
-  //   info: "It has survived not only five.It has survived not only five.It has survived not only five.It has survived not only five.It has survived not only five.",
-  //   infolink: 'www.google.com'
-  // }
-
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} />

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { View, Text, Modal, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TouchableHighlight, ScrollView, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, StyleSheet, Image, ImageBackground, TouchableOpacity, FlatList, TouchableHighlight, ScrollView, TouchableWithoutFeedback, ActivityIndicator} from "react-native";
 import { TabMenu } from "../components/tab-menu";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
@@ -18,10 +18,18 @@ import { ProfilePhoto } from "../components/profile-photo";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { cos } from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
-import { convDecimalTime, todayInWord } from "../utilities/helpers";
+import { convDecimalTime, today, todayInWord } from "../utilities/helpers";
 import { ElevatedCardTypeOne } from "../components/cards";
 import { ButtonType1 } from "../components/buttons";
 import Svg, { Path, Circle, Defs, RadialGradient, Stop } from "react-native-svg"
+import { getCompleteDietPlan } from "../utilities/data-center";
+import flashMessage from "../utilities/flash-message";
+import { MessageBox1 } from "../components/message-box";
+import { EmptyPaper } from "../assets/svgs/svg-graphics";
+
+const createContentsList = (contents) => {
+    return contents.map((item) => {return item.content})
+}
 
 const DietPlanModel = ({visible, dietItem, setVisible}) => {
 
@@ -127,7 +135,7 @@ const DietPlanModel = ({visible, dietItem, setVisible}) => {
             <View style={styles.line}></View>
 
             <ScrollView>
-                {dietItem.content.map((subItem, index) => {
+                {createContentsList(dietItem.contents).map((subItem, index) => {
                     return (<Text key={index} style={styles.content} >{subItem}</Text>)
                 })}
             </ScrollView>
@@ -184,8 +192,8 @@ const BMI = ({weight, height}) => {
     var col  //color
 
     if(bmi<18.5){cond = 'UNDER WEIGHT'; col = 'orange'}
-    else if(bmu>=18.5 && bmi<25 ){cond = 'HEALTHY'; col = 'green'}
-    else if(bmu>=25 && bmi<30 ){cond = 'OVER WEIGHT'; col = 'orange'}
+    else if(bmi>=18.5 && bmi<25 ){cond = 'HEALTHY'; col = 'green'}
+    else if(bmi>=25 && bmi<30 ){cond = 'OVER WEIGHT'; col = 'orange'}
     else{cond = 'OBESE'; col = 'red'}
 
     const raiseAngle = () => {
@@ -208,7 +216,6 @@ const BMI = ({weight, height}) => {
         var a = endAngle // angle
         var i = setInterval(() => {
             if(a > startAngle){
-                console.log('Hola')
                 setAngle(a)
                 a = a - 10
             }else{
@@ -249,39 +256,147 @@ const BMI = ({weight, height}) => {
     )
 }
 
+export const RecommendedDiet = ({dayDiet}) => {
 
+    const [modalVisible, setModalVisible] = React.useState(false)
+    const [modalContent, setModalContent] = React.useState(dayDiet[0])
+
+
+    return(
+        <View style={{marginTop: 10*sc, marginTop: 10*sc, flex: 1} } >
+        <DietPlanModel visible={modalVisible} dietItem={modalContent} setVisible={setModalVisible} />
+        <Text style={{...styles.boldText, paddingLeft: 12*sc, }}>Reccomended Diet: </Text>
+        <View style={{flex: 1}}>
+            <FlatList
+                data={dayDiet}
+                keyExtractor={ (item, index) => String(index)}
+                horizontal
+                style={{height: '100%'}}
+                renderItem={({ item, index, separators }) => (
+                    <ElevatedCardTypeOne styling={{
+                        margin: 10*sc,
+                        marginTop: 5*sc,
+                        width: 200*sc, 
+                        elevation: 7,
+                        backgroundColor: 'white',
+                        borderRadius: 25*sc,
+                    }}>
+                        <TouchableHighlight key={index}
+                            activeOpacity={0.6}
+                            underlayColor= 'rgba(255, 76, 0, 0.2)'
+                            onPress={() => {setModalContent(item); setModalVisible(true)}}
+                            style={{width:'100%', height: '100%', padding: 14*sc}}
+                            >
+                            <View>
+                                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10*sc,}}>
+                                    <Text style={{...styles.mealHeading, marginRight: 8*sc}}>{item.title}</Text>
+                                    <FontAwesome5
+                                        name="clock"
+                                        size={13*sc}
+                                        color={themeColors.secondary1}
+                                        style={{opacity: 0.5, marginRight:2*sc}}
+                                        />
+                                        <Text style={{...styles.mealHeading}}>{convDecimalTime(item.time)}</Text>
+                                </View>
+                                
+                                <ScrollView>
+                                    {createContentsList(item.contents).map((subItem, index) => {
+                                        return (<Text key={index} style={styles.mealItem} >{subItem}</Text>)
+                                    })}
+                                </ScrollView>
+                            </View>
+                        </TouchableHighlight>
+                        <View style = {{width: '100%', position: 'absolute', bottom: 0, height: 40*sc, backgroundColor: themeColors.primary1, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{fontFamily: globalFonts.primaryLight, color: 'white', fontSize: 12*sc}}>Tap to expand</Text>
+                        </View>
+                    </ElevatedCardTypeOne>
+                )}
+            />
+        </View>
+    </View>
+    )
+}
 export default DietPlan = ({ navigation, route }) => {
 
+  const {day, programID} = route.params
   const {dayWorkout} = React.useContext(WorkoutContext);
   const {credentials} = React.useContext(AuthContext)
-  const [modalVisible, setModalVisible] = React.useState(false)
-  
+  const [loading, setLoading] = React.useState(0)
+  const compExist = React.useRef(null)
+  const [reloadSwich, setReloadSwitch] = React.useState(true)
+  const [noData, setNoData] = React.useState(false)
+  const [target, setTarget] = React.useState([])
+  const [dayDiet, setDayDiet] = React.useState([])
+  const [water, setWater] = React.useState(0)
+
+  React.useEffect(() => {
+
+    var savedDP = null 
+    var savedWater = null
+    AsyncStorage.getItem('dietPlan')
+    .then((saved) => {
+        try{
+            if(saved && compExist){
+                savedDP = JSON.parse(saved).data
+                savedWater = JSON.parse(saved).water
+                console.log(savedDP[day-1])
+                setTarget(savedDP[day-1].target)
+                setDayDiet(savedDP[day-1].plan)
+                setWater(savedWater)
+                setLoading(1)
+              }
+        }catch{
+            null
+        }
+     
+    })
+
+    getCompleteDietPlan(programID)
+    .then((response) => {
+      if(compExist){
+        switch (response.status) {
+          case 200:
+            if(response.data){
+                var data = response.data.dietPlan
+                AsyncStorage.setItem('dietPlan', JSON.stringify({date: today(), data: data, water:response.data.water }))
+                setTarget(data[day-1].target)
+                setDayDiet(data[day-1].plan)
+                setWater(response.data.water)
+            }else{
+                setNoData(true)
+            }
+            setLoading(1)
+            break;
+          default:
+            if(savedDP){
+              flashMessage('Showing saved diet plan. Check your internet and try again obtain latest one.', 'info')
+            }else{
+              setLoading(-1)
+            }
+            break; 
+          }
+      }  
+    })
+
+    return (() => {clearInterval(compExist)})
+
+  }, [reloadSwich])
 
   var program = dayWorkout?dayWorkout.programName:'You have no active programs. Contact your trainer'
 
-  var target = [
-    {param: 'Calories',min: 1800, max: 2000, unit: "kCal"},
-    {param: 'Carbs', min: 200, max: 0, unit: "g"},
-    {param: 'Protein', min: 140, max: 0, unit: "g"},
-    {param: 'Fat', min: 40, max: 50, unit: "g"},
-  ]
+//   var target = [
+//     {param: 'Calories',min: 1800, max: 2000, unit: "kCal"},
+//     {param: 'Carbs', min: 200, max: 0, unit: "g"},
+//     {param: 'Protein', min: 140, max: 0, unit: "g"},
+//     {param: 'Fat', min: 40, max: 50, unit: "g"},
+//   ]
 
-  var dayDiet = [
-      {title: 'Wake Up', time: 6.5, content: ['Drink Warm water - 500ml']},
-      {title: 'Morning Snack', time: 7.5, content: ['Black Coffee (1 cup)', 'Black coffee(1cup)', 'Almonds(8 or 15g)','Date(2 or 15g)' ]},
-      {title: 'Breakfast', time: 8.5, content: ['Brown bread (2 or 90g )', 'peanut butter (2 table spoon or 30g)', 'Mixed berries(100g)', 'Egg whites(2)']},
-      {title: 'Lunch', time: 12.5, content: ['Brown rice(1.5cup or 150g)', 'Vegetables :1/2 cup(25g)', 'Chicken breast(120g)']},
-      {title: 'Pre workout', time: 15.5, content: ['BCCA(1 scoop or 11g)', 'Banana(100g)', 'Chicken breast(120g)']},
-      {title: 'After workout', time: 17.5, content: ['Whey protein in water (1 scoop or 30g)', 'One fruit(small Apple /half mango/orange/Pine apple small/mosambi/guava/papaya small', 'Chicken breast(120g)', 'Mutta puffs', 'Manga juice with straw']},
-      {title: 'Dinner', time: 20.5, content: ['egg Whites :2', 'Vegetable salad:1cup or 100g']},
-      {title: 'Before Sleep', time: 21.0, content: ['1/2 scoop casein (10g) in half cup skimmed milk']},
-  ]
-
-  const [modalContent, setModalContent] = React.useState(dayDiet[0])
+//   var dayDiet = [
+//       {title: 'Wake Up', time: 6.5, contents: [{content: 'Drink Warm water - 500ml', _id: 'dsfsadfv'}]}
+//     ]
 
   return (
     <View style={{width: '100%', height: '100%'}}>
-        <DietPlanModel visible={modalVisible} dietItem={modalContent} setVisible={setModalVisible} />
         <View>
             <StatusBar style="light" translucent={true} />
             <DietPlanGraphics style={{width: '100%'}}/>
@@ -469,8 +584,9 @@ export default DietPlan = ({ navigation, route }) => {
             </View>
         </View>
 
-        <View style={{flex: 1,}}>
+        {loading === 1?
 
+        (!noData?<View style={{flex: 1,}}>
             <View style={{position: 'absolute', right: 12*sc, top: 10*sc}}> 
                 <BMI height={credentials.height} weight={credentials.weight}/>
             </View>
@@ -489,78 +605,57 @@ export default DietPlan = ({ navigation, route }) => {
                     })}
                 </View>
             </View>
-
-            <View style={{marginTop: 10*sc, marginTop: 10*sc, flex: 1} } >
-                <Text style={{...styles.boldText, paddingLeft: 12*sc, }}>Reccomended Diet: </Text>
-                <View style={{flex: 1}}>
-                    <FlatList
-                        data={dayDiet}
-                        keyExtractor={ (item, index) => String(index)}
-                        horizontal
-                        style={{height: '100%'}}
-                        renderItem={({ item, index, separators }) => (
-                            <ElevatedCardTypeOne styling={{
-                                margin: 10*sc,
-                                marginTop: 5*sc,
-                                width: 200*sc, 
-                                elevation: 7,
-                                backgroundColor: 'white',
-                                borderRadius: 25*sc,
-                            }}>
-                                <TouchableHighlight key={index}
-                                    activeOpacity={0.6}
-                                    underlayColor= 'rgba(255, 76, 0, 0.2)'
-                                    onPress={() => {setModalContent(item); setModalVisible(true)}}
-                                    style={{width:'100%', height: '100%', padding: 14*sc}}
-                                    >
-                                    <View>
-                                        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10*sc,}}>
-                                            <Text style={{...styles.mealHeading, marginRight: 8*sc}}>{item.title}</Text>
-                                            <FontAwesome5
-                                                name="clock"
-                                                size={13*sc}
-                                                color={themeColors.secondary1}
-                                                style={{opacity: 0.5, marginRight:2*sc}}
-                                                />
-                                                <Text style={{...styles.mealHeading}}>{convDecimalTime(item.time)}</Text>
-                                        </View>
-                                        
-                                        <ScrollView>
-                                            {item.content.map((subItem, index) => {
-                                                return (<Text key={index} style={styles.mealItem} >{subItem}</Text>)
-                                            })}
-                                        </ScrollView>
-                                    </View>
-                                </TouchableHighlight>
-                                <View style = {{width: '100%', position: 'absolute', bottom: 0, height: 40*sc, backgroundColor: themeColors.primary1, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text style={{fontFamily: globalFonts.primaryLight, color: 'white', fontSize: 12*sc}}>Tap to expand</Text>
-                                </View>
-                            </ElevatedCardTypeOne>
-                        )}
-                    />
-                </View>
-            </View>
-
+            <RecommendedDiet dayDiet={dayDiet}/>
+        </View>:
+        
+        // if response is 200 null
+        <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>
+            <MessageBox1 
+            setReload={() => {setReloadSwitch(!reloadSwich)}} 
+            reloadbutton={true}
+            message = 'You have no dietplans assigned. Please contact trainer...'
+            ><EmptyPaper /></MessageBox1>
         </View>
+        )
+        
+        :
+        
+        
+        (loading === 0?
+            <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>
+                <ActivityIndicator style={{alignSelf: 'center', }}size={70} color={themeColors.primary1}/>
+            </View>
+            : 
+            <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>
+                <MessageBox1
+                setReload={() => {setLoading(0), setReloadSwitch(!reloadSwich)}} 
+                message = 'Something Happened. Please check your internet'
+                />
+            </View>
+        )}
 
-        <View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', height: 70*sc}}>
+
+        {!noData?<View style={{justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', height: 70*sc}}>
+                {water?
                 <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 10*sc}}>
+                    <View style={{display: 'flex', alignItems: 'center'}}>
                     <FontAwesome5
                         name="glass-whiskey"
                         size={26*sc}
                         color={themeColors.primary1}
                         style={{opacity: 0.9, marginRight:2*sc}}
                         />
-                    <Text style={{fontFamily: globalFonts.primaryMedium, opacity: 0.8}}> X {6}</Text>
-                </View>
+                    <Text style={{fontSize:9*sc}}>(250ml)</Text>
+                    </View>
+                    <Text style={{fontFamily: globalFonts.primaryMedium, opacity: 0.8}}> X {water}</Text>
+                </View>:<View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 10*sc}}></View>}
                 <ButtonType1
                     text={'VIEW YOUR COMPLETE DIET PLAN'}
                     styling={{width: 8*sc, borderBottomRightRadius: 0, borderTopRightRadius: 0, paddingLeft:10*sc}}
                     textStyling={{fontSize: 10*sc, textAlign: 'right'}}
+                    onClick={() => {navigation.navigate('Root', {screen: 'ComplateDietPlan'})}}
                 />
-        </View>
-
-
+        </View>:null}
     </View>
   );
 };

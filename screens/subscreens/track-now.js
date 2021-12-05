@@ -39,7 +39,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
           <Text style={{...styles.topBoxTagText, 
             backgroundColor: 'green',
             color: 'white', 
-            }}>{'Congradulations !!! You have completed the Program'}</Text>
+            }}>{'Congratulations !!! You have completed the Program'}</Text>
           {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}
         </View>
         <Text style={styles.topBoxMainText}>{'Completed: '+programName}</Text>
@@ -63,7 +63,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
 
       <View style={styles.bottomBox}>
         <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
-          <TouchableHighlight onPress={() => {navigation.navigate('Root', {screen : 'DietPlan'})}}>
+          <TouchableHighlight onPress={() => {navigation.navigate('Root', {screen : 'DietPlan', params: { programID: dayWorkout.programID, day: dayWorkout.day}})}}>
           <ImageBackground
             style={styles.cardImage}
             source={require("../../assets/images/diet-plan.jpg")}

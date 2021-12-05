@@ -9,7 +9,7 @@ import { ButtonType1 } from './buttons';
 export const MessageBox1 = (props) => {
     return(
         (
-            <View style={styles.messageBox}>
+            <View style={{...styles.messageBox, ...props.style}}>
                 {props.children}
                 <Text style={styles.text}>{props.message? props.message: 'Error' }</Text>
                 

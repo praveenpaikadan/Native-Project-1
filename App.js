@@ -12,6 +12,8 @@ import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
 import DietPlan from "./screens/diet-plan";
+import CompleteDietPlan from "./screens/complete-diet";
+
 
 
 
@@ -97,6 +99,7 @@ export default function App() {
     date : today(),
     workoutID: workoutData._id,
     programName: workoutData.program.programName,
+    programID: workoutData.program._id,
     complete: false,
     level: workoutData.program.level,
     dayWorkoutPlan: dayWorkoutPlan,
@@ -236,6 +239,7 @@ export default function App() {
     // await AsyncStorage.removeItem('authToken')
     // await AsyncStorage.removeItem('dayWorkout')
     // await AsyncStorage.removeItem('pendingDayWorkouts')
+    await AsyncStorage.removeItem('dietPlan')
 
     try {
       const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
@@ -253,19 +257,14 @@ export default function App() {
       
       await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp)
 
-      
-
       console.log("credentials: " +  creds_temp + "\n")
       console.log("workoutData: " +  workoutdata_temp + "\n")
       console.log("dayWorkout: " + dayWorkout_temp + "\n")
-
-
 
       // console.log("credentials: " +  credentials + "\n")
       // console.log("workoutData: " +  workoutData + "\n")
       // console.log("dayWorkout: " + dayWorkout + "\n")
 
-    
       if(!authToken){
         setLoggedIn(false)
         return
@@ -352,7 +351,6 @@ export default function App() {
             <AuthStack />
             
             
-            {/* <DietPlan /> */}
             
             <FlashMessage position="top" />
           </WorkoutContext.Provider>

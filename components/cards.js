@@ -4,7 +4,7 @@ import { sc } from '../styles/global-styles'
 
 export const ElevatedCardTypeOne = (props) =>(
     
-        <View style={{...styles.card, ...props.styling}} onPress={props.onPress} >
+        <View style={{...styles.card, ...props.styling, ...props.style}} onPress={props.onPress} >
                 { props.children }
         </View>
     )
@@ -13,7 +13,7 @@ export const ElevatedCardTypeOne = (props) =>(
 const styles = StyleSheet.create({
     card:{
         borderRadius:10*sc,
-        elevation:5*sc,
+        elevation:5,
         shadowOffset: { width:5*sc, height: 5*sc},
         shadowColor:'#333',
         shadowOpacity:0.3,

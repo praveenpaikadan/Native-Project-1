@@ -56,19 +56,17 @@ export default SignInScreen = ({navigation}) => {
               getWorkoutData()
               .then((response) =>{ 
                 if(response.data){
-
-                  // console.log('workoutData received after signIn, ', response.data)
+                  console.log('workoutData received after signIn, ', response.data)
                   resetWorkoutData(response.data)
                   makeDayWorkout(response.data, null)
+                  setIsLoading(false)
+                  var user = response.data
+                  console.log(user)
+                  flash(`Welcome ${user.name}`, 'success', 4000)
+                  setLoggedIn(true)
                 }
               })})
-
-            var user = response.data
-            console.log(user)
-            
-            flash(`Welcome ${user.name}`, 'success', 4000)
-            setLoggedIn(true)
-            break;
+              break;
           case 401:
             flash('Authorization failed. Check your credentials', 'danger', time=10000)
             break;
@@ -81,7 +79,6 @@ export default SignInScreen = ({navigation}) => {
             }
             break; 
           }
-      setIsLoading(false)
     })
     
   };

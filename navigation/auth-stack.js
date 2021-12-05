@@ -26,6 +26,7 @@ import Contact from "../screens/contact";
 import Store from "../screens/store";
 import VPlayer from "../components/video-player";
 import DietPlan from "../screens/diet-plan";
+import CompleteDiet from "../screens/complete-diet";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -52,6 +53,8 @@ const Root = () => {
       <Stack.Screen name="VideoPlayer" component={VPlayer} />
       <Stack.Screen name="Contact" component={Contact} />
       <Stack.Screen name="DietPlan" component={DietPlan} />
+      <Stack.Screen name="ComplateDietPlan" component={CompleteDiet} />
+
     </Stack.Navigator>
   );
 };

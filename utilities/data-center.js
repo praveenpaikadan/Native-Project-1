@@ -181,6 +181,16 @@ const getTrainerContact = async () => {
     }
 }
 
+const getCompleteDietPlan = async (programID) => {
+    try{
+        const response = await API.get('diet-plan/'+programID)
+        return response
+    }catch(error){
+        console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
+
 export {
     checkEmail, 
     logoutUser, 
@@ -199,4 +209,5 @@ export {
     postEditProfile,
     postProfilePhoto, 
     getTrainerContact,
+    getCompleteDietPlan
 }
