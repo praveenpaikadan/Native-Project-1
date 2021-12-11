@@ -27,6 +27,7 @@ import Store from "../screens/store";
 import VPlayer from "../components/video-player";
 import DietPlan from "../screens/diet-plan";
 import CompleteDiet from "../screens/complete-diet";
+import ResetPasswordScreen from "../screens/reset-password";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -95,6 +96,7 @@ export const AuthStack = () => {
             <Stack.Navigator headerMode="none" initialRouteName={"GetStarted"}>
               <Stack.Screen name="GetStarted" component={GetStartedScreen} />
               <Stack.Screen name="SignUp" component={CreateAccount} />
+              <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
               <Stack.Screen name="SignIn" component={SignIn} />
               <Stack.Screen name="Gender" component={GenderScreen} />
               <Stack.Screen name="HeightWeight" component={HeightWeightScreen} />

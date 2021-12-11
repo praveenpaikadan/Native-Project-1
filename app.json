@@ -4,11 +4,11 @@
     "slug": "AbooThahir",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/at-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/at-splash-screen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FF4C00"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,8 +22,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/at-icon.png",
+        "backgroundColor": "#FF4C00"
       },
       "package": "testbuild.apk"
     },

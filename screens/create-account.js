@@ -6,6 +6,7 @@ import { ButtonType1 } from "../components/buttons";
 import { formPageStyles } from "../styles/form-pages-styles";
 import { checkEmail, postNewUserData } from "../utilities/data-center";
 import flash from '../utilities/flash-message';
+import { VerificationModal } from "./modal/verify";
 
 
 export default CreateAccountScreen = ({ navigation }) => {
@@ -20,6 +21,9 @@ export default CreateAccountScreen = ({ navigation }) => {
   const [validationColor, setValidationColor] = React.useState(false)
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false)
+  
+  const [firstSubmit, setFirstSubmit] = React.useState(true)
 
   const emailValidation = (value) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -66,7 +70,23 @@ export default CreateAccountScreen = ({ navigation }) => {
       }
   }
 
-  const buttonClickHandler = () => {
+  const handleSuccessfulVerification = (code) => {
+    console.log('Verification Succesfull')
+    let userData = {name: name, email: email, password: password, code: code}
+    flash(`Hi ${name}, We need some more details to complete your registration`, 'success', time=4000)
+    navigation.navigate("Gender", {userData});
+  } 
+
+  const buttonClickHandler = (fromModal=false) => {  
+
+    if(!firstSubmit){
+      if(fromModal){
+        setModalVisible(true)
+        return
+      }else{
+        null
+      }
+    }
 
     setName(name.trim())
     setEmail(email.trim())
@@ -98,34 +118,29 @@ export default CreateAccountScreen = ({ navigation }) => {
     // once validation is over
     setValidationColor(false)
     setValidationMessage("")
-    let userData = {name: name, email: email, password: password}
     setIsLoading(true)
 
-    checkEmail({email:email})
+    checkEmail({user: name, email:email, })
     .then(res => {
-
       if(res.status == 409){
         flash(res.data.errorMessage, 'danger', time=10000)
         setValidationMessage('Try with a different Email.')
-        
       }else if(res.status == 200){
-        flash(`Hi ${name}, please give us some more details to complete your Sign Up`, 'success', time=4000)
-        navigation.navigate("Gender", {userData});
-      
-      }else{
-        if(res.data.message){
-          flash(res.data.message, 'info')
-        }
+        setFirstSubmit(false)
+        setModalVisible(true)
+      }else if(res.status === 101){
+          flash('Oops Something Happened ...Please check your Internet', 'danger', time=10000)
+          setIsLoading(false)
       }
       setIsLoading(false)
     })
 
     .catch(error =>{
       console.log(error)
-      flash('Oops Something Happened ...Please check your Internet', 'danger', time=10000)
-      setIsLoading(false)
     })
   };
+
+
 
 
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
@@ -169,7 +184,7 @@ export default CreateAccountScreen = ({ navigation }) => {
               placeholder="Full Name"
               style={styles.textInput}
               value={name}
-              onChangeText={(value) => {setName(value)}}
+              onChangeText={(value) => {setName(value); setFirstSubmit(true)}}
             />
 
             <TextInput
@@ -177,7 +192,7 @@ export default CreateAccountScreen = ({ navigation }) => {
               style={styles.textInput}
               keyboardType="email-address"
               value={email}
-              onChangeText={(value) => {setEmail(value)}}
+              onChangeText={(value) => {setEmail(value); setFirstSubmit(true)}}
             />
             
             
@@ -222,6 +237,17 @@ export default CreateAccountScreen = ({ navigation }) => {
             </Text>
           </View>}
         </View>
+
+        <VerificationModal 
+            visible={modalVisible}
+            setVisible={setModalVisible}
+            data={{email: email, }}
+            resendCode={() => buttonClickHandler()}
+            isLoading={isLoading}
+            navigation={navigation}
+            successHandler={handleSuccessfulVerification}
+            firstSubmit={firstSubmit}
+            />
       </View>
     </KeyboardHideOnTouchOutside>
   );

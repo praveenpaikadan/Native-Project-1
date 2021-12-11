@@ -11,8 +11,7 @@ import FlashMessage from "react-native-flash-message";
 import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
-import DietPlan from "./screens/diet-plan";
-import CompleteDietPlan from "./screens/complete-diet";
+import SplashScreen from "./screens/splash-screen"
 
 
 
@@ -63,6 +62,8 @@ export default function App() {
     }
   }
 
+
+// Handling workout data
   const resetWorkoutData = async (data) => {
     try{
       await AsyncStorage.setItem('workoutData', JSON.stringify(data))
@@ -127,11 +128,17 @@ export default function App() {
   }
 
   const makeDayWorkout = async(workoutData, dayWorkout) => {
+
+    if(workoutData === null) {
+      // handling new user
+    }
+
     console.log('Making Day Workout')
     var {lastDaySaved, lastDateSaved} = getLastDayDate(workoutData) 
     console.log('After calling the makeWorkout ', lastDateSaved,' ', lastDateSaved)
     console.log('lastDaySaved is .................', lastDaySaved)
     var finalDay = workoutData.program.schedule.length
+
 
     const isToday = () => {
       // console.log('wd in isToday is ', wd)    
@@ -177,8 +184,10 @@ export default function App() {
 
     resetDayWorkout(newDayWorkout)
   }
-  // Handling Pending uploads
+// .......................
 
+
+  // Handling Pending uploads
   const resetPendingUploads = async (data) => {
     if(data === null){
       await AsyncStorage.removeItem('pendingDayWorkouts')
@@ -232,6 +241,8 @@ export default function App() {
         })
       } 
   }
+// .........................
+
 
   const loadResources = async () => {
     // await AsyncStorage.removeItem('credentials')
@@ -270,11 +281,12 @@ export default function App() {
         return
       }
 
+
       uploadPendingWorkout()
       if(workoutdata_temp){
-        console.log('Exeeeeeeeeeeeecu')
         await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
       }
+
 
       if(!creds_temp || !workoutdata_temp){
         loadingstarted = true

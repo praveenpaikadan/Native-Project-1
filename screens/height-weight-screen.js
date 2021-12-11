@@ -62,10 +62,11 @@ export default HeightWeightScreen = ({ navigation, route }) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
+            
             var user = response.data
             console.log(user)
-            flash(`Hurray... ${user.name}, You have been registered, Start tracking your fitness`, 'success', time=4000)
-            // navigation.navigate("Home", {userData});
+            flash(`Hi ${user.name} !, You are in... Sign in and Start tracking your fitness`, 'success', time=4000)
+            navigation.navigate("SignIn")
             break;
           case 409:
             flash(response.data.errorMessage, 'danger', time=10000)

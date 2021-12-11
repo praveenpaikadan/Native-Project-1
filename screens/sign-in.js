@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, TextInput, Text, ActivityIndicator } from "react-native";
+import { View, TextInput, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import { KeyboardHideOnTouchOutside } from "../components/keyboard-responsive";
 import { SignInGraphics } from "../assets/svgs/svg-graphics";
 import { ButtonType1 } from "../components/buttons";
@@ -10,6 +10,7 @@ import { AuthContext } from "../components/auth-context";
 import { WorkoutContext } from "../components/workout-context";
 import { getWorkoutData, loginUser } from "../utilities/data-center";
 import flash from '../utilities/flash-message'
+
 
 export default SignInScreen = ({navigation}) => {
 
@@ -38,10 +39,10 @@ export default SignInScreen = ({navigation}) => {
 
   const buttonPressHandler = () => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (reg.test(userInfo.email) === true) {
+    if (reg.test(userInfo.email) === true || userInfo.password != '') {
       setErrorMessage(null);
     } else {
-      setErrorMessage("Inavalid Email/Password");
+      setErrorMessage("Invalid Email/Password");
       return
     }
 
@@ -68,7 +69,8 @@ export default SignInScreen = ({navigation}) => {
               })})
               break;
           case 401:
-            flash('Authorization failed. Check your credentials', 'danger', time=10000)
+            flash('Authentication failed. Check your credentials', 'danger', time=10000)
+            setIsLoading(false)
             break;
           case 101:
             flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
@@ -121,8 +123,14 @@ export default SignInScreen = ({navigation}) => {
           </View>
 
           <View style={styles.footContainer}>
-            <Text style={{}}>Forgot your Password ?</Text>
-          </View>
+            <Text style={styles.footText1}>Forgot Password? </Text>
+            <Text
+              style={styles.footText2}
+              onPress={() => navigation.navigate("ResetPassword")}
+            >
+              Reset Password
+            </Text>
+            </View>
         </View>
       </View>
     </KeyboardHideOnTouchOutside>

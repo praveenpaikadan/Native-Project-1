@@ -3,9 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { WhiteLogo1 } from '../assets/svgs/svg-logos';
 import { globalStyles, themeColors } from '../styles/global-styles';
 
-export default SplashScreen = () => (
+export default SplashScreen = (props) => (
     <View style={styles.splashContainer}>
         <WhiteLogo1 />
+        {props.children}
     </View>
 );
 

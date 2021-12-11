@@ -2,12 +2,30 @@ import axios from 'axios'
 import API from './api'
 
 
-const checkEmail = async (data) => {
+const checkEmail = async (data) => { 
     try{
         const response = await API.post('checkemail', data)
         return response
     }catch(error){
-        return error.response
+        return error.response?error.response:{status: 101}
+    }
+}
+
+const verifyEmail = async (data) => {
+    try{
+        const response = await API.post('verifyemail', data)
+        return response
+    }catch(error){
+        return error.data?error.data:{status: 101}
+    }
+}
+
+const resetPassword = async (data) => {
+    try{
+        const response = await API.post('resetpwd', data)
+        return response
+    }catch(error){
+        return error.data?error.data:{status: 101}
     }
 }
 
@@ -16,7 +34,7 @@ const postNewUserData = async (data) => {
         const response = await API.post('signup', data)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -26,7 +44,7 @@ const loginUser = async (data) => {
         const response = await API.post('login', data)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -36,18 +54,17 @@ const logoutUser = async () => {
         const response = await API.get('logout')
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
 
 const getAPICredentials = async () => {
     try{
-        console.log("entered getAPICredentials")
         const response = await API.get('user/data')
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -57,7 +74,7 @@ const getAPIAllLocal = async () => {
         const response = await API.get('user/updatelocal')
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -67,7 +84,7 @@ const getAPIAvailablePrograms = async () => {
         const response = await API.get('subscription/availableprograms')
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -77,18 +94,17 @@ const getAPIMedia = async (filename) => {
         const response = await API.get(`media/${filename}`)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
 
 const testSubscribe = async (subscriptionDatails) => {
-    
     try{
         const response = await API.post('subscription/new', subscriptionDatails )
         return response
     }catch(error){
-        console.log(error)
+        // console.log(error)
         return error.response?error.response:{status: 101}
     }
 }
@@ -98,7 +114,7 @@ const getWorkoutData = async (id) => {
         const response = await API.get('workoutdata')
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -108,7 +124,7 @@ const getExercise = async (id) => {
         const response = await API.get('workoutdata/exercise/'+id)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -120,7 +136,7 @@ const postDayWorkout = async (data) => {
         const response = await API.post('workoutdata/push', {dayWorkoutData: data})
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 } 
@@ -131,7 +147,7 @@ const postDiscardWorkout = async (data) => {
         const response = await API.post('workoutdata/delete-day', {data}) // data => {workoutId: <value>, day: <value>}
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 } 
@@ -144,7 +160,7 @@ const postBulkDayWorkout = async (data) => {
         const response = await API.post('workoutdata/bulk', {bulkDayWorkoutData: data})
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 } 
@@ -155,7 +171,7 @@ const postEditProfile = async (data) => {
         const response = await API.post('user/editprofile', data)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 } 
@@ -165,7 +181,7 @@ const postProfilePhoto = async (data) => {
         const response = await API.post('user/profilephoto', data)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 } 
@@ -176,7 +192,7 @@ const getTrainerContact = async () => {
         const response = await API.get('general/contact')
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
@@ -186,13 +202,14 @@ const getCompleteDietPlan = async (programID) => {
         const response = await API.get('diet-plan/'+programID)
         return response
     }catch(error){
-        console.log(error.response)
+        // console.log(error.response)
         return error.response?error.response:{status: 101}
     }
 }
 
 export {
     checkEmail, 
+    verifyEmail,
     logoutUser, 
     postNewUserData, 
     loginUser, 
@@ -209,5 +226,6 @@ export {
     postEditProfile,
     postProfilePhoto, 
     getTrainerContact,
-    getCompleteDietPlan
+    getCompleteDietPlan,
+    resetPassword
 }

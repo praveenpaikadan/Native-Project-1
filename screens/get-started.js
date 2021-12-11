@@ -1,37 +1,55 @@
-import * as React from "react";
-import { StyleSheet, View, Text, ImageBackground } from "react-native";
+import React, {useState} from "react";
+import { StyleSheet, View, Text, ImageBackground, ActivityIndicator } from "react-native";
 import { OrangeLogo1 } from "../assets/svgs/svg-logos";
 import { themeColors, sc } from "../styles/global-styles";
 import { ButtonType1 } from "../components/buttons";
 import { AntDesign } from "@expo/vector-icons";
+import SplashScreen from "./splash-screen";
 
-export default GetStartedScreen = ({ navigation }) => (
-  <ImageBackground
-    source={require("../assets/images/get-started.jpg")}
-    style={{}}
-  >
-    <View style={styles.container}>
-      <View style={styles.headingContainer}>
-        <Text style={styles.subHeading}>Invest In Your Health</Text>
-        <Text style={styles.mainHeading}>Personal Trainer</Text>
-      </View>
-      <View style={styles.logoAndButtonContainer}>
-        <OrangeLogo1 style={styles.logo} />
+export default GetStartedScreen = ({ navigation }) => {
 
-        <ButtonType1
-          text={"GET STARTED"}
-          styling={styles.button}
-          onClick={() => navigation.push("SignUp")}
-        />
+  const [loading, setLoading] = useState(true)
+
+
+  return(
+    <ImageBackground
+      source={require("../assets/images/get-started.jpg")}
+      style={{}}
+      onLoadEnd={() => {setLoading(false)}}
+    >
+      {
+      loading?
+      <View style={{backgroundColor:  themeColors.primary1, width: '100%', height: '100%'}}>
+        <SplashScreen>
+          <ActivityIndicator style={{marginTop: 50*sc}} color={themeColors.secondary2}/>
+        </SplashScreen >
       </View>
-      <View style={styles.socialContainer}>
-        <AntDesign name="instagram" size={36} color="#434343" />
-        <AntDesign name="facebook-square" size={36} color="#434343" />
-        <AntDesign name="youtube" size={36} color="#434343" />
+      :
+  
+      <View style={styles.container}>
+        <View style={styles.headingContainer}>
+          <Text style={styles.subHeading}>Invest In Your Health</Text>
+          <Text style={styles.mainHeading}>Personal Trainer</Text>
+        </View>
+        <View style={styles.logoAndButtonContainer}>
+          <OrangeLogo1 style={styles.logo} />
+  
+          <ButtonType1
+            text={"GET STARTED"}
+            styling={styles.button}
+            onClick={() => navigation.push("SignUp")}
+          />
+        </View>
+        <View style={styles.socialContainer}>
+          <AntDesign name="instagram" size={36} color="#434343" />
+          <AntDesign name="facebook-square" size={36} color="#434343" />
+          <AntDesign name="youtube" size={36} color="#434343" />
+        </View>
       </View>
-    </View>
-  </ImageBackground>
-);
+      }
+    </ImageBackground>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
