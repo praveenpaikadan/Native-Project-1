@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, Image, ImageBackground, ActivityIndicator } from "react-native";
 import { TabMenu } from "../components/tab-menu";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
@@ -14,11 +14,16 @@ import ProfileBox from "../components/profilebox";
 import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "./modal/my-workouts";
 
+
 export default HomePage = ({ navigation, route }) => {
 
   const {dayWorkout, programOver, setProgramOver} = React.useContext(WorkoutContext);
+  const [loading, setLoading] = React.useState(true)
 
-  useEffect (() => {}, [dayWorkout])
+  useEffect (() => {
+
+
+  }, [dayWorkout])
 
   // Tab Menu management: 
 
@@ -34,6 +39,11 @@ export default HomePage = ({ navigation, route }) => {
   const workoutCloseHandler = () => {
     setactive({ home: true, calendar: false, store: false, workout: false });
   };
+
+  // return (
+  // <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+  //   <ActivityIndicator color={themeColors.primary1} size={'large'} />
+  //   </View>)
 
 
   return (

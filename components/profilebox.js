@@ -11,7 +11,13 @@ export default ProfileBox = () => {
 
     const {credentials} = React.useContext(AuthContext);
     const {workoutData} = React.useContext(WorkoutContext);
-    var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
+    if(workoutData){
+      var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
+    }else{
+      var workoutsTracked = 0
+      var caloriesBurned = 0
+    }
+    
   
     const data = {
       name: credentials.name,
@@ -21,10 +27,12 @@ export default ProfileBox = () => {
     };
 
     return (
-        <ImageBackground
-        source={require("../assets/images/dead-lift.jpg")}
-        style={styles.profileWrapper}
-      >
+      //   <ImageBackground
+      //   source={require("../assets/images/dead-lift.jpg")}
+      //   style={styles.profileWrapper}
+      // >
+      <View style={styles.profileWrapper}>
+
         <View style={styles.profileContainer}>
  
   
@@ -57,7 +65,8 @@ export default ProfileBox = () => {
             </View>
           </View>
         </View>
-      </ImageBackground>
+        </View>
+      // </ImageBackground>
     )
 } 
 

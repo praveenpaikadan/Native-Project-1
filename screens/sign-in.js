@@ -52,28 +52,29 @@ export default SignInScreen = ({navigation}) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
-            resetCredentials(response.data)
+            var user = response.data
+            resetCredentials(user)
             .then(() => {
               getWorkoutData()
               .then((response) =>{ 
                 if(response.data){
                   console.log('workoutData received after signIn, ', response.data)
                   resetWorkoutData(response.data)
-                  makeDayWorkout(response.data, null)
-                  setIsLoading(false)
-                  var user = response.data
-                  console.log(user)
-                  flash(`Welcome ${user.name}`, 'success', 4000)
-                  setLoggedIn(true)
+                  .then(() => {
+                    makeDayWorkout(response.data, null)
+                    .then(() => {
+                      flash(`Welcome ${user.name}`, 'success', 4000)
+                    })
+                  })
                 }
               })})
               break;
           case 401:
-            flash('Authentication failed. Check your credentials', 'danger', time=10000)
+            flash('Authentication failed. Check your credentials', 'danger', 10000)
             setIsLoading(false)
             break;
           case 101:
-            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', 10000)
             break;
           default:
             if(response.data.message){

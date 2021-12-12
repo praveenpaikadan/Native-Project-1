@@ -11,9 +11,6 @@ import FlashMessage from "react-native-flash-message";
 import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
-import SplashScreen from "./screens/splash-screen"
-
-
 
 
 //Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
@@ -28,7 +25,6 @@ export default function App() {
   // states that stores loacal data. All are loaded when app starts. 
   // The navigation flow happens according to the availablility of this data.
   // The app decides to show the signIn screen or signup screen when authtoken is 'null' based on this 
-  const [loggedIn, setLoggedIn] = useState(false) 
   const [credentials, setCredentials] = useState(null)
   const [workoutData, setWorkoutData] = useState(null)
   const [dayWorkout, setDayWorkout] = useState(null)
@@ -42,7 +38,11 @@ export default function App() {
 
   const resetToken =  async (data) => {
     try{
-      await AsyncStorage.setItem('authToken', JSON.stringify(data))
+      if(data === null){
+        await AsyncStorage.removeItem('authToken')  
+      }else{
+        await AsyncStorage.setItem('authToken', JSON.stringify(data))
+      }
       setCredentials(data)
       return data
     }catch(error){
@@ -53,7 +53,11 @@ export default function App() {
 
   const resetCredentials = async (data) => {
     try{
-      await AsyncStorage.setItem('credentials', JSON.stringify(data))
+      if(data === null){
+        await AsyncStorage.removeItem('credentials')
+      }else{
+        await AsyncStorage.setItem('credentials', JSON.stringify(data))
+      }
       setCredentials(data)
       return data
     }catch(error){
@@ -66,7 +70,11 @@ export default function App() {
 // Handling workout data
   const resetWorkoutData = async (data) => {
     try{
-      await AsyncStorage.setItem('workoutData', JSON.stringify(data))
+      if(data === null){
+        await AsyncStorage.removeItem('workoutData')
+      }else{
+        await AsyncStorage.setItem('workoutData', JSON.stringify(data))
+      }
       setWorkoutData(data)
       return data
     }catch(error){
@@ -77,7 +85,11 @@ export default function App() {
 
   const resetDayWorkout = async (data) => {
     try{
-      await AsyncStorage.setItem('dayWorkout', JSON.stringify(data))
+      if(data === null){
+        await AsyncStorage.removeItem('dayWorkout')
+      }else{
+        await AsyncStorage.setItem('dayWorkout', JSON.stringify(data))
+      }
       setDayWorkout(data)
       return data
     }catch(error){
@@ -130,7 +142,8 @@ export default function App() {
   const makeDayWorkout = async(workoutData, dayWorkout) => {
 
     if(workoutData === null) {
-      // handling new user
+      await resetDayWorkout(null)
+      return
     }
 
     console.log('Making Day Workout')
@@ -182,10 +195,21 @@ export default function App() {
       }
     }
 
-    resetDayWorkout(newDayWorkout)
+    await resetDayWorkout(newDayWorkout)
   }
 // .......................
 
+
+// Handling log out
+
+  const logOutLocal = async () => {
+    await resetCredentials(null)
+    resetWorkoutData(null)
+    resetDayWorkout(null)
+    resetToken(null)
+    AsyncStorage.removeItem('pendingDayWorkouts')
+    AsyncStorage.removeItem('dietPlan')
+  }
 
   // Handling Pending uploads
   const resetPendingUploads = async (data) => {
@@ -272,32 +296,22 @@ export default function App() {
       console.log("workoutData: " +  workoutdata_temp + "\n")
       console.log("dayWorkout: " + dayWorkout_temp + "\n")
 
-      // console.log("credentials: " +  credentials + "\n")
-      // console.log("workoutData: " +  workoutData + "\n")
-      // console.log("dayWorkout: " + dayWorkout + "\n")
-
       if(!authToken){
-        setLoggedIn(false)
-        return
+        resetCredentials(null)
       }
 
 
       uploadPendingWorkout()
+
       if(workoutdata_temp){
         await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
-      }
-
-
-      if(!creds_temp || !workoutdata_temp){
+      }else{
         loadingstarted = true
         var response = await getAPIAllLocal()
         switch (response.status) {
           case 200:
-            // console.log(response.data)
-            await resetCredentials(response.data.credentials)
             await resetWorkoutData(response.data.workoutData)
             await makeDayWorkout(response.data.workoutData, null)
-            setLoggedIn(true)
             break;
           case 401:
             flash('Authorization failed. Please sign in again', 'danger', time=10000)
@@ -311,9 +325,7 @@ export default function App() {
             }
             break; 
           }
-      }else{
         console.log('Setting logged in basis of  local')
-        setLoggedIn(true)
       }
 
       // To be optimized
@@ -325,7 +337,6 @@ export default function App() {
             case 200:
               resetCredentials(response.data.credentials)
               resetWorkoutData(response.data.workoutData)
-              setLoggedIn(true)
               console.log("Usual update over and success")
               break;
             case 401:
@@ -356,7 +367,7 @@ export default function App() {
   if (appReady) {
     return (
         <AuthContext.Provider 
-          value={{  uploadPendingWorkout, credentials, resetCredentials, loggedIn, setLoggedIn, token}}>
+          value={{  uploadPendingWorkout, credentials, resetCredentials, token, logOutLocal}}>
           <WorkoutContext.Provider
             value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending, programOver, setProgramOver }}
           >

@@ -84,13 +84,13 @@ const Banner = ({date, item, programName}) => {
     <DateBanner date = {date}/>
     {!item?
     <View style={{flex: 1,  justifyContent: 'center', alignItems: 'center'}}>   
-      <Text style={{fontSize: 30*sc, fontFamily: globalFonts.primaryRegular, opacity: 0.8, textAlign: 'center', transform: [{translateY: 60*sc}], opacity: 0.1, width: 300*sc}}>No workouts done on this day !!!</Text>
+      <Text style={{fontSize: 30*sc, fontFamily: globalFonts.primaryRegular, opacity: 0.8, textAlign: 'center', transform: [{translateY: 30*sc}], opacity: 0.1, width: 300*sc}}>No workouts done on this day !!!</Text>
       <LottieView
           autoPlay={true}
           style={{
-            width: 300,
-            height: 300,
-            transform: [{translateY: -20*sc}]
+            width: 200,
+            height: 200,
+            transform: [{translateY: 0*sc}]
             // backgroundColor: '#eee',
           }}
           source={require('../assets/lottie/lazyCat.json')}
@@ -110,13 +110,19 @@ export const AgendaCalendar = () => {
   var items = {}
   var marked = {}
 
-  workoutData.history.forEach((dayDetail) => {
-    var date = dmyToYmd(dayDetail.dateCompleted)
-    items[date] = dayDetail
-    marked[date] = {marked: true}
-  })
+  var programName
+
+  if(workoutData){
+    workoutData.history.forEach((dayDetail) => {
+      var date = dmyToYmd(dayDetail.dateCompleted)
+      items[date] = dayDetail
+      marked[date] = {marked: true}
+    })
+    programName=workoutData.program.programName
+  }
 
 
+  
   // const [day, setDay] = useState(today.getDate())
   // const [month, setMonth] = useState(today.getDate())
   // const [year, setYear] = useState(today.getDate())
@@ -156,13 +162,13 @@ export const AgendaCalendar = () => {
   // Specify how each item should be rendered in agenda
   // renderItem={(item, firstItemInDay) => {return (<View></View>);}}
   // Specify how each date should be rendered. day can be undefined if the item is not first in that day
-  renderDay={(day, item) => {return (<WorkoutCardCover selectedDate={selectedDate} item={item} programName={workoutData.program.programName} />);}}
+  renderDay={(day, item) => {return (<WorkoutCardCover selectedDate={selectedDate} item={item} programName={programName} />);}}
   // Specify how empty date content with no items should be rendered
   // renderEmptyDate={() => {return (<View />);}}
   // Specify how agenda knob should look like
   renderKnob={() => {return (<DownKnob text = {downText}/>);}}
   // Specify what should be rendered instead of ActivityIndicator
-  renderEmptyData = {() => {return (<Banner date={selectedDate} item={items[selectedDate]} programName={workoutData.program.programName}/>);}}
+  renderEmptyData = {() => {return (<Banner date={selectedDate} item={items[selectedDate]} programName={programName}/>);}}
   // Specify your item comparison function for increased performance
   // rowHasChanged={(r1, r2) => {return r1.text !== r2.text}}
   // Hide knob button. Default = false
