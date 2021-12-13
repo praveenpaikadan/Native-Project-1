@@ -15,9 +15,10 @@ import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "./modal/my-workouts";
 
 
+
 export default HomePage = ({ navigation, route }) => {
 
-  const {dayWorkout, programOver, setProgramOver} = React.useContext(WorkoutContext);
+  const {dayWorkout, programOver, setProgramOver, workoutDataLoaded} = React.useContext(WorkoutContext);
   const [loading, setLoading] = React.useState(true)
 
   useEffect (() => {
@@ -53,35 +54,35 @@ export default HomePage = ({ navigation, route }) => {
       <View style={styles.contentContainer}>
         <ProfileBox />
 
-        <View style={styles.dataContainer}>
-        
-            {![null, [], '', undefined].includes(dayWorkout)
-            ? 
-            (
-            <TrackNowSubScreen
-              navigation={navigation}
-              programEnded = {dayWorkout.finalDay && dayWorkout.complete}
-              programName = {dayWorkout.programName}
-              program={
-                dayWorkout.programName
-                + ": Day " +
-                dayWorkout.day
-              }
-              onClick={() =>
-                navigation.navigate("Root", { screen: "TrackNow" })
-              }
-            />
-          ) 
-          : 
-          (
-            <ProgramList
-              navigation={navigation}
-            />
-          )
-          }
-        </View>
-      </View>
+        {
+        workoutDataLoaded === 1?
 
+                <View style={styles.dataContainer}>
+                    {![null, [], '', undefined].includes(dayWorkout)
+                    ? 
+                    (
+                    <TrackNowSubScreen
+                      navigation={navigation}
+                      programEnded = {dayWorkout.finalDay && dayWorkout.complete}
+                      programName = {dayWorkout.programName}
+                      program={dayWorkout.programName+ ": Day " +dayWorkout.day}
+                      onClick={() =>navigation.navigate("Root", { screen: "TrackNow" })}
+                    />
+                  ) 
+                  : 
+                  (
+                    <ProgramList navigation={navigation}/>
+                  )
+                  }
+                </View>
+
+        :<View style={{...styles.dataContainer, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator color={themeColors.primary1} size={40*sc}/>
+          <Text style={{fontFamily: globalFonts.primaryRegular, opacity: 0.4, marginTop: 10*sc}}>   Loading your workout...</Text>
+          </View>
+
+        }
+      </View>
       <TabMenu active={active} setactive={setactive}/>
       <BodyCalendar active={active} setactive={setactive} visible={active.calendar} closeMenu={calendarCloseHandler} />
       <MyWorkouts active={active} setactive={setactive} visible={active.workout} closeMenu={workoutCloseHandler} />

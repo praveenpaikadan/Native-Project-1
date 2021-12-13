@@ -17,6 +17,8 @@ export default MyWorkouts = ({ visible, closeMenu, active, setactive }) => {
     closeMenu();
     navigation.navigate("WorkoutHistory");
   };
+
+  
   return (
     <Modal transparent={true} visible={visible}>
       <View style={{ ...styles.overlay }}>

@@ -8,7 +8,7 @@ import { AuthContext } from "./components/auth-context";
 import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FlashMessage from "react-native-flash-message";
-import { getAPIAllLocal, postBulkDayWorkout } from "./utilities/data-center";
+import { getAPIAllLocal, getWorkoutData, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
 
@@ -20,8 +20,8 @@ global.authToken
 export default function App() {
 
   // for showing loading screen
-  const [appReady, setAppReady] = useState(false);
-  
+  const [appReady, setAppReady] = useState(0);
+  const [workoutDataLoaded, setWorkoutDataLoaded] = useState(0)
   // states that stores loacal data. All are loaded when app starts. 
   // The navigation flow happens according to the availablility of this data.
   // The app decides to show the signIn screen or signup screen when authtoken is 'null' based on this 
@@ -32,9 +32,6 @@ export default function App() {
   const [programOver, setProgramOver] = useState(false)
 
   // const [pendingUploads, setPendingUploads] = useState(null)  // Boolean state to store if pendingData?
-
-
-  var loadingstarted = false
 
   const resetToken =  async (data) => {
     try{
@@ -70,6 +67,7 @@ export default function App() {
 // Handling workout data
   const resetWorkoutData = async (data) => {
     try{
+      console.log('resetWorkoutData reached')
       if(data === null){
         await AsyncStorage.removeItem('workoutData')
       }else{
@@ -267,6 +265,32 @@ export default function App() {
   }
 // .........................
 
+// Handling workout setting of workout data
+
+  const downloadAndSetWorkoutData = async () => {
+    var response = await getWorkoutData()
+    switch (response.status) {
+      case 200:
+        if(workoutData)
+        console.log('............................got downloaded data')
+        await resetWorkoutData(response.data)
+        await makeDayWorkout(response.data, null)
+        return true
+      case 401:
+        flash('Authorization failed. Please sign in again', 'danger', time=10000)
+        return false
+      case 101:
+        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+        return false
+      default:
+        if(response.data.message){
+          flash(response.data.message, 'info')
+        }
+        return false
+      }
+  }
+
+// .........................................
 
   const loadResources = async () => {
     // await AsyncStorage.removeItem('credentials')
@@ -274,7 +298,7 @@ export default function App() {
     // await AsyncStorage.removeItem('authToken')
     // await AsyncStorage.removeItem('dayWorkout')
     // await AsyncStorage.removeItem('pendingDayWorkouts')
-    await AsyncStorage.removeItem('dietPlan')
+    // await AsyncStorage.removeItem('dietPlan')
 
     try {
       const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
@@ -291,67 +315,29 @@ export default function App() {
       ])
       
       await setObtainedLocalData(creds_temp, workoutdata_temp, token_temp)
-
       console.log("credentials: " +  creds_temp + "\n")
       console.log("workoutData: " +  workoutdata_temp + "\n")
       console.log("dayWorkout: " + dayWorkout_temp + "\n")
 
       if(!authToken){
         resetCredentials(null)
+        return
       }
-
 
       uploadPendingWorkout()
 
+      // This process happens only if the data is stored locally. Else this process of setting up workout data and dayWorkout is done by the sign in component
       if(workoutdata_temp){
         await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
-      }else{
-        loadingstarted = true
-        var response = await getAPIAllLocal()
-        switch (response.status) {
-          case 200:
-            await resetWorkoutData(response.data.workoutData)
-            await makeDayWorkout(response.data.workoutData, null)
-            break;
-          case 401:
-            flash('Authorization failed. Please sign in again', 'danger', time=10000)
-            break;
-          case 101:
-            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
-            break;
-          default:
-            if(response.data.message){
-              flash(response.data.message, 'info')
-            }
-            break; 
-          }
-        console.log('Setting logged in basis of  local')
-      }
-
-      // To be optimized
-      if(loadingstarted === false){
-        console.log("Running usual update")
-        getAPIAllLocal()
-        .then((response) => {
-          switch (response.status) {
-            case 200:
-              resetCredentials(response.data.credentials)
-              resetWorkoutData(response.data.workoutData)
-              console.log("Usual update over and success")
-              break;
-            case 401:
-              flash('Authorization failed. Please sign in again', 'danger', time=10000)
-              break;
-            case 101:
-              flash('Failed to communicate with server...', 'danger', time=10000)
-              break;
-            default:
-              if(response.data.message){
-                flash(response.data.message, 'info')
-              }
-              break; 
-            }
-        })
+        setWorkoutDataLoaded(1)
+        await downloadAndSetWorkoutData()
+      }else{  // If workout data = null, wait until the server confirms that.
+        var result = await downloadAndSetWorkoutData() 
+        if(result){
+          setWorkoutDataLoaded(1)
+        }else{
+          setWorkoutDataLoaded(-1)
+        }  
       }
 
     }catch(e){
@@ -360,22 +346,36 @@ export default function App() {
     }
   }
   
-  // return <BodyCalendar/>
   
-  
-
   if (appReady) {
     return (
         <AuthContext.Provider 
-          value={{  uploadPendingWorkout, credentials, resetCredentials, token, logOutLocal}}>
+          value={{  
+            uploadPendingWorkout, 
+            credentials, 
+            resetCredentials, 
+            token, 
+            logOutLocal
+            }}>
           <WorkoutContext.Provider
-            value={{ workoutData, resetWorkoutData, dayWorkout, resetDayWorkout, makeDayWorkout, addToPending, removeFromPending, programOver, setProgramOver }}
-          >
+            value={{ 
+              workoutData, 
+              resetWorkoutData, 
+              dayWorkout, 
+              resetDayWorkout, 
+              makeDayWorkout, 
+              addToPending, 
+              removeFromPending, 
+              programOver, 
+              setProgramOver, 
+              workoutDataLoaded, 
+              setWorkoutDataLoaded,
+              downloadAndSetWorkoutData
+            }}>
+
             <AuthStack />
-            
-            
-            
             <FlashMessage position="top" />
+
           </WorkoutContext.Provider>
         </AuthContext.Provider>
     );

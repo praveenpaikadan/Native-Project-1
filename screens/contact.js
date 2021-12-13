@@ -8,6 +8,7 @@ import * as Linking from 'expo-linking';
 import { getTrainerContact } from "../utilities/data-center";
 import { getImageUrl } from "../utilities/helpers";
 import { MessageBox1 } from "../components/message-box";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Item = ({icon, text, link}) => {
   const styles= {
@@ -51,19 +52,40 @@ export default Contact = ({ navigation }) => {
   const [reloadSwich, setReloadSwitch] = React.useState(true)
 
   React.useEffect(() => {
-    getTrainerContact()
-    .then((response) => {
-      switch (response.status) {
-        case 200:
-          console.log(response.data)
-          setData(response.data)
-          setLoading(1)
-          break;
-        default:
-          setLoading(-1)
-          break; 
-        }
+
+    const setContact = async () => {
+      var localContact = await AsyncStorage.getItem('trainerContact')
+      if(localContact){
+        localContact = JSON.parse(localContact)
+        setData(localContact)
+        setLoading(1)
+        return localContact
+      }else{
+        return null
+      }
+    } 
+
+    setContact()
+    .then((localContact) => {
+      getTrainerContact()
+      .then((response) => {
+        switch (response.status) {
+          case 200:
+            if(JSON.stringify(response.data) !== JSON.stringify(localContact)){
+              setData(response.data)
+              AsyncStorage.setItem('trainerContact', JSON.stringify(response.data))
+              setLoading(1)
+            }
+            break;
+          default:
+            if(!localContact){
+              setLoading(-1)
+            }
+            break; 
+          }
+      })
     })
+    
   }, [reloadSwich])
 
   return (

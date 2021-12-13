@@ -15,7 +15,7 @@ import flash from '../utilities/flash-message'
 export default SignInScreen = ({navigation}) => {
 
   const {setLoggedIn, resetCredentials, uploadPendingWorkout} = React.useContext(AuthContext)
-  const {resetWorkoutData, makeDayWorkout} = React.useContext(WorkoutContext)
+  const {resetWorkoutData, makeDayWorkout, downloadAndSetWorkoutData, setWorkoutDataLoaded} = React.useContext(WorkoutContext)
   const [errorMessage, setErrorMessage] = React.useState("");
   const [userInfo, setUserInfo] = React.useState({
     email: "",
@@ -48,27 +48,17 @@ export default SignInScreen = ({navigation}) => {
 
     setIsLoading(true)
     loginUser(userInfo)
-    .then((response) => {
-        console.log(response.status, response.data)
+    .then(async (response) => {
         switch (response.status) {
           case 200:
-            var user = response.data
-            resetCredentials(user)
-            .then(() => {
-              getWorkoutData()
-              .then((response) =>{ 
-                if(response.data){
-                  console.log('workoutData received after signIn, ', response.data)
-                  resetWorkoutData(response.data)
-                  .then(() => {
-                    makeDayWorkout(response.data, null)
-                    .then(() => {
-                      flash(`Welcome ${user.name}`, 'success', 4000)
-                    })
-                  })
-                }
-              })})
-              break;
+            await resetCredentials(response.data)
+            var result = await downloadAndSetWorkoutData()
+            if(result){
+              setWorkoutDataLoaded(1)
+            }else{
+              setWorkoutDataLoaded(-1)
+            }
+            break;
           case 401:
             flash('Authentication failed. Check your credentials', 'danger', 10000)
             setIsLoading(false)
@@ -78,6 +68,7 @@ export default SignInScreen = ({navigation}) => {
             break;
           default:
             if(response.data.message){
+              setIsLoading(false)
               flash(response.data.message, 'info')
             }
             break; 
