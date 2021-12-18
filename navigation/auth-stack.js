@@ -28,6 +28,7 @@ import VPlayer from "../components/video-player";
 import DietPlan from "../screens/diet-plan";
 import CompleteDiet from "../screens/complete-diet";
 import ResetPasswordScreen from "../screens/reset-password";
+import PaymentPage from '../screens/payment-page';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -55,7 +56,7 @@ const Root = () => {
       <Stack.Screen name="Contact" component={Contact} />
       <Stack.Screen name="DietPlan" component={DietPlan} />
       <Stack.Screen name="ComplateDietPlan" component={CompleteDiet} />
-
+      <Stack.Screen name="PaymentPage" component={PaymentPage} />
     </Stack.Navigator>
   );
 };

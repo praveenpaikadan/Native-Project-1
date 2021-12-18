@@ -11,6 +11,7 @@ import FlashMessage from "react-native-flash-message";
 import { getAPIAllLocal, getWorkoutData, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
+import PaymantPage from "./screens/payment-page";
 
 
 //Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
@@ -346,6 +347,7 @@ export default function App() {
     }
   }
   
+  // return <PaymantPage />
   
   if (appReady) {
     return (

@@ -35,6 +35,9 @@ export default BuyNow = ({ navigation, route }) => {
     
     // TBD => Payment handling goes here
 
+    console.log(selectedSubscription)
+    navigation.navigate('PaymentPage', {data: selectedSubscription})
+    return
     var response = await testSubscribe(selectedSubscription)
     switch (response.status) {
       case 200:
