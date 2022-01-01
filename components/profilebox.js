@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   
     rowItemValue: {
       // flex:1,
-      fontSize: 28 * sc,
+      fontSize: 22 * sc,
       fontFamily: globalFonts.primaryMedium,
       color: themeColors.secondary1,
       opacity: 0.7,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   
     rowItemTag: {
       fontFamily: globalFonts.primaryLight,
-      fontSize: 12 * sc,
+      fontSize: 10 * sc,
       padding: 3 * sc,
     },
   

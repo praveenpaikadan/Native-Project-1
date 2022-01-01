@@ -6,13 +6,22 @@ import { WebView } from 'react-native-webview';
 import { themeColors, sc, globalFonts } from '../styles/global-styles';
 import { BASE_URL } from '../utilities/api';
 
-export default function PaymentPage({data}) {
+export default function PaymentPage({navigation, route}) {
 
-  console.log(data)
+  var data = route.params.data
+  var type = route.params.type // new: for fresh, renew: for renewel
 
+  var payload = {} 
+  for(let i in data){
+    if(i !== "description"){
+      payload[i] = data[i]
+    }
+  }
 
-  
-  var payload = JSON.stringify({data})
+  payload.type = type
+  const [token, settoken] = useState(null)
+
+  var payload = JSON.stringify(payload)
 
   const Spinner = () => (
     <View style={styles.activityContainer}>
@@ -21,34 +30,34 @@ export default function PaymentPage({data}) {
     </View> 
   )
 
+  useState(() => {
+    AsyncStorage.getItem('authToken')
+    .then((token) => {
+      settoken(token)
+      setLoading(false)
+    })
+  }, [])
+ 
+  const [loading, setLoading] = useState(true)
 
-    const [loading, setLoading] = useState(true)
-    const [token, setToken] = useState(null)
+  if(loading){
+    return <Spinner />
+  }
 
-    useEffect(() => {
-         AsyncStorage.getItem('authToken')
-        .then((token) => {
-        console.log("............ ", token)
-          setToken(token)
-          
-        })
-        .catch(() => {})
-    }, [])
-
-    if(!token){
-      return <Spinner/>
-    }
-    
   return (
-    <View style={{width: '100%', height: '100%', position: 'relative'}}>
 
+    <View style={{width: '100%', height: '100%'}}>
         <WebView 
         style={styles.container}
         source={{ uri: BASE_URL + '/payment/payment-page', headers: {'x-access-token' : token, 'x-access-ver': payload}}}
         onMessage={(message) => {console.log(message)}}
-        onLoadEnd={() => {setLoading(false)}}
+        onLoadEnd={() => {console.log('loading end');setLoading(false)}}
+        scalesPageToFit={true}
+        scrollEnabled={false}
+        javaScriptEnabled={true}
+        
         />    
-        {loading?<Spinner />:null}
+        {/* {loading?<Spinner />:null} */}
   </View>
   );
 }

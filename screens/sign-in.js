@@ -60,10 +60,11 @@ export default SignInScreen = ({navigation}) => {
             }
             break;
           case 401:
-            flash('Authentication failed. Check your credentials', 'danger', 10000)
             setIsLoading(false)
+            flash('Authentication failed. Check your credentials', 'danger', 10000)
             break;
           case 101:
+            setIsLoading(false)
             flash('Oops Something Happened ...Please check your Internet and try again', 'danger', 10000)
             break;
           default:
@@ -106,8 +107,8 @@ export default SignInScreen = ({navigation}) => {
             />
             <ButtonType1
               styling={{ ...styles.submitButton }}
-              arrow={isLoading ? false : true}
-              disabled={isLoading ? true : false}
+              arrow={!isLoading}
+              disabled={isLoading}
               text={"SIGN IN"}
               isLoading={isLoading}
               onClick={buttonPressHandler}

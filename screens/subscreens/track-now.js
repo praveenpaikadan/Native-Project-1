@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     width: 160 * sc,
   },
   buttonTextStyling: {
-    fontSize: 20 * sc,
+    fontSize: 15 * sc,
   },
   card: {
     height: 200 * sc,
@@ -181,13 +181,14 @@ const styles = StyleSheet.create({
   cardBannerText: {
     fontFamily: globalFonts.primaryBold,
     color: themeColors.primary2,
-    fontSize: 36 * sc,
+    fontSize: 30 * sc,
     textShadowColor: "rgba(255, 51, 0, 0.4)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 50,
   },
 
   pickAnotherProgramText:{
+    fontSize: 13*sc,
     opacity: 0.6,
     fontFamily: globalFonts.primaryRegular,
     marginTop: 10*sc,

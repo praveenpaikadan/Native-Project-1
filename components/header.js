@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerText: {
-    fontSize: 30 * sc,
+    fontSize: 26 * sc,
     fontFamily: globalFonts.primaryMedium,
     color: themeColors.secondary2,
   },

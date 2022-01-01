@@ -723,6 +723,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
 },
   mealHeading: {
+    fontSize: 14*sc,
       fontFamily: globalFonts.primaryRegular,
       opacity: 0.7,
   },

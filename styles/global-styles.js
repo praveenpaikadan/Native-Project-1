@@ -1,10 +1,19 @@
 import { StyleSheet } from "react-native";
-import { Dimensions } from "react-native";
+import { Dimensions, PixelRatio } from "react-native";
 
 export const windowWidth = Dimensions.get("window").width;
 export const windowHeight = Dimensions.get("window").height;
+const pixelRatio = PixelRatio.get()
+// const pixelRatio = 3
 
-export const sc = windowWidth / 360;
+const getScalingFactor = () => {
+  let sc = windowWidth / 360
+  sc = sc * 6.5/(9.5-pixelRatio)
+  return sc
+}
+
+export const sc = getScalingFactor() ;
+
 
 export const themeColors = {
   primary1: "#FF4C00", //Orange

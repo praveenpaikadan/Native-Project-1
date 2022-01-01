@@ -82,7 +82,7 @@ export default ProgramDetails = ({ navigation, route }) => {
         </ImageBackground>
       </View>
       <ScrollView style={styles.descriptionContainer}>
-        <Text style={styles.content}>{data.goal}</Text>
+        <Text style={styles.content}>{data.productDescription}</Text>
       </ScrollView>
     </View>
   );
