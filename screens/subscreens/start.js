@@ -4,35 +4,82 @@ import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ButtonType1 } from "../../components/buttons";
 import { ElevatedCardTypeOne } from "../../components/cards";
 import { WorkoutContext } from "../../components/workout-context";
+import { AuthContext } from "../../components/auth-context";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import Reminder from "../../components/reminder";
+import { postInitiateWorkout } from "../../utilities/data-center";
+import flashMessage from "../../utilities/flash-message";
 
-export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
+export default StartSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
-  const {dayWorkout} = React.useContext(WorkoutContext)
+  const {dayWorkout, downloadAndSetWorkoutData} = React.useContext(WorkoutContext)
+  const {credentials} = React.useContext(AuthContext)
+  var programDetails = dayWorkout.programDetails
   var completed = dayWorkout.complete
   // console.log(completed)
 
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const handleStartTracking = () => {
+    setIsLoading(true)
+    postInitiateWorkout({workoutID: dayWorkout.workoutID })
+    .then((response) => {
+      if(response.data.status === 1){
+        downloadAndSetWorkoutData()
+        .then((response) => {
+          if(!response){
+            flashMessage('Something Happened. Please Check your internet and try again ...')
+            setIsLoading(false)    
+          }
+        })
+        .catch(() => {
+            flashMessage('Something Happened. Please Check your internet and try again ...')
+            setIsLoading(false)
+        })
+      }else{
+        flashMessage('Something Happened. Please Check your internet and try again ...')
+        setIsLoading(false)
+      }
+      
+    })
+  }
 
   return (
     <View style={styles.container}>
       {!programEnded?
       <View style={styles.topBox}>
-        <Reminder navigation={navigation}/>
         <View>
           <Text style={{...styles.topBoxTagText, 
             backgroundColor: completed?'green':themeColors.tertiary3,
             color: !completed?'black':'white', 
-            }}>{!completed?'Next Workout':'You completed today\'s workout'}</Text>
+            }}>Start tracking your fitness</Text>
           {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}
         </View>
-        <Text style={styles.topBoxMainText}>{program}</Text>
+        <Text style={styles.topBoxMainText}>{programDetails.programName}</Text>
+        <Text style={styles.messageText}>Hi {credentials.name}! Your program extends {programDetails.durationWeeks} weeks.
+         The training period officially starts from the day you start tracking your fitness by pressing the button below. </Text>
+         <Text style={styles.messageText}>
+           You can go to the diet plan page for your customized diet plan. Please contact your trainer if you are not assigned a diet plan. 
+         </Text>
+
+         <Text style={styles.messageText}>
+           Swipe from right to left to access different pages including contact trainer page. 
+         </Text>
+
+          {!(credentials.currentWorkout.planType === "Complete" || credentials.currentWorkout.planType === "complete")? 
+            <Text style={styles.messageText}>
+              You have chosen {credentials.currentWorkout.planType} plan type. So you will be prompted on {credentials.currentWorkout.planType} basis to renew subscription
+          </Text>
+          :null}
+
+
         <ButtonType1
-          text={!completed?"TRACK NOW": 'VIEW WORKOUT'}
+          text={!completed?"START TRACKING NOW": 'VIEW WORKOUT'}
+          isLoading={isLoading}
+          activityIndicatorSize={20*sc}
           arrow={!completed?20 * sc:false}
-          styling={!completed?styles.trackNowButton:{width:210*sc, alignSelf: 'center'}}
+          styling={{alignSelf: 'center'}}
           textStyling={styles.buttonTextStyling}
-          onClick={onClick}
+          onClick={() => {if(!isLoading){handleStartTracking()}}}
         />
       </View>
       :
@@ -64,7 +111,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
       }
 
       <View style={styles.bottomBox}>
-        <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
+        <ElevatedCardTypeOne styling={styles.card}>
           <TouchableHighlight onPress={() => {navigation.navigate('Root', {screen : 'DietPlan', params: { programID: dayWorkout.programID, day: dayWorkout.day}})}}>
           <ImageBackground
             style={styles.cardImage}
@@ -79,7 +126,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
           </TouchableHighlight>
         </ElevatedCardTypeOne>
 
-        <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
+        <ElevatedCardTypeOne styling={styles.card}>
           <ImageBackground
             style={styles.cardImage}
             source={require("../../assets/images/recipes.jpg")}
@@ -146,6 +193,16 @@ const styles = StyleSheet.create({
     marginBottom: 10 * sc,
   },
 
+  messageText:{
+    alignSelf: "center",
+    fontFamily: globalFonts.primaryLight,
+    fontSize: 12 * sc,
+    paddingHorizontal: 8 * sc,
+    opacity: 0.8,
+    textAlign: "center",
+    marginBottom: 10 * sc,
+  },
+
   trackNowButton: {
     // height:40*sc,
     alignSelf: "center",
@@ -155,7 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 15 * sc,
   },
   card: {
-    maxHeight: 200 * sc,
+    // height: 200 * sc,
     // width: 150 * sc,
     marginVertical: 10*sc,
     width: '40%',
@@ -163,15 +220,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  smallcard: {
-    maxHeight: 200 * sc,
-    // width: 150 * sc,
-    marginVertical: 10*sc,
-    width: '40%',
-    overflow: "hidden",
-    justifyContent: "center",
-  },
-  
   cardImage: {
     width: "100%",
     height: "100%",

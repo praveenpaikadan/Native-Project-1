@@ -207,9 +207,19 @@ const getCompleteDietPlan = async (programID) => {
     }
 }
 
-const createOrder = async (data) => {
+// const createOrder = async (data) => {
+//     try{
+//         const response = await API.post('payment/create-order', data)
+//         return response
+//     }catch(error){
+//         // console.log(error.response)
+//         return error.response?error.response:{status: 101}
+//     }
+// }
+
+const postInitiateWorkout = async (data) => {
     try{
-        const response = await API.post('payment/create-order', data)
+        const response = await API.post('workoutdata/initiate', data)
         return response
     }catch(error){
         // console.log(error.response)
@@ -238,5 +248,6 @@ export {
     getTrainerContact,
     getCompleteDietPlan,
     resetPassword,
-    createOrder
+    postInitiateWorkout
+    // createOrder
 }

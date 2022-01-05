@@ -38,28 +38,6 @@ export default BuyNow = ({ navigation, route }) => {
     console.log(selectedSubscription)
     navigation.navigate('PaymentPage', {data: selectedSubscription, type: 'new'})
     return
-    var response = await testSubscribe(selectedSubscription)
-    switch (response.status) {
-      case 200:
-        console.log(response.data)
-
-        // TBD => payment confirmation here
-        resetWorkoutData(response.data)
-        navigation.navigate("Home")
-        break;
-      case 401:
-        flash('Authorization failed. Please sign in again', 'danger', time=10000)
-        // TBD => Login redirect here
-        break;
-      case 101:
-        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
-        break;
-      default:
-        if(response.data.message){
-          flash(response.data.message, 'info')
-        }
-        break; 
-      }
   }
 
   const backHandler = () => {

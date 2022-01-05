@@ -13,6 +13,7 @@ import { WorkoutContext } from "../components/workout-context";
 import ProfileBox from "../components/profilebox";
 import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "./modal/my-workouts";
+import StartSubScreen from "./subscreens/start"
 
 
 
@@ -58,9 +59,19 @@ export default HomePage = ({ navigation, route }) => {
         workoutDataLoaded === 1?
 
                 <View style={styles.dataContainer}>
-                    {![null, [], '', undefined].includes(dayWorkout)
-                    ? 
-                    (
+                  {![null, [], '', undefined].includes(dayWorkout)
+                  ? 
+                  (
+                    !dayWorkout.started
+                    ?
+                    <StartSubScreen 
+                      navigation={navigation}
+                      programEnded = {dayWorkout.finalDay && dayWorkout.complete}
+                      programName = {dayWorkout.programName}
+                      program={dayWorkout.programName+ ": Day " +dayWorkout.day}
+                      onClick={() => navigation.navigate("Root", { screen: "TrackNow" })}
+                    />
+                    :
                     <TrackNowSubScreen
                       navigation={navigation}
                       programEnded = {dayWorkout.finalDay && dayWorkout.complete}
