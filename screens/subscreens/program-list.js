@@ -84,7 +84,7 @@ const List = ({data, setReload, navigation}) => {
                 styles={styles.cardsContainer}
                 bgImage={item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null}
                 heading={item.programName}
-                shortInfo={item.programName}
+                shortInfo={item.category}
                 level={item.level}
                 period={`${item.daysPerWeek} days X ${item.durationWeeks} weeks`}
               />

@@ -1,4 +1,4 @@
-import * as React from "react";
+ import * as React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";

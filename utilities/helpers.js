@@ -129,6 +129,22 @@ export const formatIntervel = (secs) => {
     }
 }
 
+export const convertMongooseDateString = (date) => {
+    const MONTHS =  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    if(date){
+        var dateObj = new Date(date)
+        var date = dateObj.getDate()
+        var month = dateObj. getMonth()
+        var year = dateObj. getFullYear()
+        var day = dateObj.getDay()
+        var returnVal = DAYS[day] + " " + date+ " "+MONTHS[month] + " "+year
+        return returnVal  
+    }else{
+        return null
+    }
+    
+}
 export const getImageUrl  = (filename, level) => {
     if(level == 'open'){
         return BASE_URL+'/media/'+ filename

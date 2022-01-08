@@ -227,6 +227,16 @@ const postInitiateWorkout = async (data) => {
     }
 }
 
+const getCompleteWorkoutHistory = async (data) => {
+    try{
+        const response = await API.get('workoutdata/complete-history')
+        return response
+    }catch(error){
+        // console.log(error.response)
+        return error.response?error.response:{status: 101}
+    }
+}
+
 export {
     checkEmail, 
     verifyEmail,
@@ -248,6 +258,7 @@ export {
     getTrainerContact,
     getCompleteDietPlan,
     resetPassword,
-    postInitiateWorkout
+    postInitiateWorkout,
+    getCompleteWorkoutHistory
     // createOrder
 }

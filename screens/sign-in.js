@@ -38,13 +38,15 @@ export default SignInScreen = ({navigation}) => {
   };
 
   const buttonPressHandler = () => {
+
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (reg.test(userInfo.email) === true || userInfo.password != '') {
+    if (reg.test(userInfo.email) === true && userInfo.password != '') {
       setErrorMessage(null);
     } else {
       setErrorMessage("Invalid Email/Password");
       return
     }
+
 
     setIsLoading(true)
     loginUser(userInfo)

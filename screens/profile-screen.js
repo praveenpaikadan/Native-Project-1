@@ -36,7 +36,7 @@ export default ProfileScreen = ({ navigation }) => {
 
   const { credentials, resetCredentials } = React.useContext(AuthContext)
   const { workoutData } = React.useContext(WorkoutContext)
-  var {workoutsTracked, caloriesBurned} = calculateCalories(workoutData.history, workoutData.calsPerRepList)
+  var {workoutsTracked, caloriesBurned} = workoutData?calculateCalories(workoutData.history, workoutData.calsPerRepList):{workoutsTracked: 0,caloriesBurned:0}
 
   const calcAge = (dob) => {
     var today = new Date()

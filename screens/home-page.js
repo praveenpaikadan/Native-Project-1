@@ -14,6 +14,7 @@ import ProfileBox from "../components/profilebox";
 import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "./modal/my-workouts";
 import StartSubScreen from "./subscreens/start"
+import ReminderBox from "../components/reminder"
 
 
 
@@ -21,7 +22,8 @@ export default HomePage = ({ navigation, route }) => {
 
   const {dayWorkout, programOver, setProgramOver, workoutDataLoaded} = React.useContext(WorkoutContext);
   const [loading, setLoading] = React.useState(true)
-
+  
+  const {credentials} = React.useContext(AuthContext)
   useEffect (() => {
 
 
@@ -42,11 +44,6 @@ export default HomePage = ({ navigation, route }) => {
     setactive({ home: true, calendar: false, store: false, workout: false });
   };
 
-  // return (
-  // <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
-  //   <ActivityIndicator color={themeColors.primary1} size={'large'} />
-  //   </View>)
-
 
   return (
     <View style={styles.container}>
@@ -54,7 +51,6 @@ export default HomePage = ({ navigation, route }) => {
       <Header onPressMenu={() => navigation.openDrawer()} />
       <View style={styles.contentContainer}>
         <ProfileBox />
-
         {
         workoutDataLoaded === 1?
 

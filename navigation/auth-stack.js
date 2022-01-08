@@ -29,6 +29,7 @@ import DietPlan from "../screens/diet-plan";
 import CompleteDiet from "../screens/complete-diet";
 import ResetPasswordScreen from "../screens/reset-password";
 import PaymentPage from '../screens/payment-page';
+import PreviousWorkoutHistory from "../screens/previous-workout-history";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -57,6 +58,7 @@ const Root = () => {
       <Stack.Screen name="DietPlan" component={DietPlan} />
       <Stack.Screen name="ComplateDietPlan" component={CompleteDiet} />
       <Stack.Screen name="PaymentPage" component={PaymentPage} />
+      <Stack.Screen name="PreviousWorkoutHistory" component={PreviousWorkoutHistory} />
     </Stack.Navigator>
   );
 };

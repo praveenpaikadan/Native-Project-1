@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { themeColors, sc, globalFonts } from "../styles/global-styles";
 import { Header } from "../components/header";
 import { HistoryList } from "./subscreens/history-list";
@@ -7,10 +7,25 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { AuthContext } from "../components/auth-context";
 
-export default WorkoutPlan = () => {
+export default WorkoutPlan = ({navigation, route}) => {
+  if(route.params){
+    var {data} = route.params
+  }
+
   const [total, setTotal] = React.useState(0)
-  const navigation = useNavigation();
+  const {credentials} = React.useContext(AuthContext)
+
+  var paymentPayload = {}
+  paymentPayload.programID = credentials.currentWorkout.programID
+  paymentPayload.receiptID = credentials.currentWorkout.receiptID
+
+  // to pass to history list
+  const goToRenewPaymentPage = () => {
+    navigation.navigate('PaymentPage', {data: paymentPayload, type: 'renew'})
+  } 
+
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} />
@@ -20,16 +35,23 @@ export default WorkoutPlan = () => {
         onPressMenu={() => navigation.openDrawer()}
       />
       <View style={styles.headingContainer}>
-        <View style={styles.heading}>
-          <FontAwesome5 name="dumbbell" {... menuIconStyling} />
-          <Text style={styles.headingText}>WORKOUT PLAN</Text>
+
+        <View style={styles.headingLeftBox}>
+
+          <View style={{marginLeft: 10*sc}}>
+            <Text style={styles.headingText}>WORKOUT PLAN</Text>
+            <Text style={styles.totalWorkouts}>TOTAL WORKOUTS TRACKED: {total}  </Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.totalWorkouts}>TOTAL WORKOUTS TRACKED: {total}  </Text>
-        </View>
+
+        <TouchableOpacity style={styles.headingRightBox} onPress={() => {navigation.navigate('PreviousWorkoutHistory')}}>
+          <FontAwesome5 name="history" {... menuIconStyling} />
+        </TouchableOpacity>
+
       </View>
+
       <View style={styles.listContainer}>
-        <HistoryList setTotal={setTotal}/>
+        <HistoryList data={data} setTotal={setTotal} goToRenewPaymentPage={goToRenewPaymentPage}/>
         <Feather name="chevrons-down" {...chevronIconStyling} />
       </View>
     </View>
@@ -38,7 +60,7 @@ export default WorkoutPlan = () => {
 
 const menuIconStyling = {
   color: themeColors.secondary2,
-  size: 25 * sc,
+  size: 22 * sc,
 };
 
 const chevronIconStyling = {
@@ -57,28 +79,39 @@ const styles = StyleSheet.create({
 
   headingContainer: {
     backgroundColor: themeColors.tertiary1,
+    flexDirection: 'row',
     width: "100%",
     paddingVertical: 10 * sc,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
+
   },
 
-  heading: {
-    flexDirection: "row",
+  headingRightBox:{
+    marginRight: 12*sc,
+    padding: 5*sc
+  },
+
+  headingLeftBox:{
+    marginLeft:10*sc,
+    flexDirection:'row'
+  },
+
+  headingLeftIcon: {
+    justifyContent:'center'
   },
 
   headingText: {
     fontFamily: globalFonts.primaryBold,
     color: themeColors.secondary2,
-    fontSize: 22 * sc,
-    marginLeft: 10 * sc,
+    fontSize: 16 * sc,
     letterSpacing: 1.2 * sc,
   },
 
   totalWorkouts: {
     fontFamily: globalFonts.primaryRegular,
     color: themeColors.secondary2,
-    fontSize: 12 * sc,
+    fontSize: 10 * sc,
     marginTop: 5 * sc,
     letterSpacing: 0.5 * sc,
   },

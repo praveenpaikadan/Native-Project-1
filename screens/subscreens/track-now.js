@@ -6,24 +6,58 @@ import { ElevatedCardTypeOne } from "../../components/cards";
 import { WorkoutContext } from "../../components/workout-context";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Reminder from "../../components/reminder";
+import { AuthContext } from "../../components/auth-context";
 
 export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
   const {dayWorkout} = React.useContext(WorkoutContext)
+  const {credentials} = React.useContext(AuthContext)
   var completed = dayWorkout.complete
-  // console.log(completed)
+  const [message, setMessage] = React.useState(null)
+  const [dangerMessage, setDangerMessage] = React.useState(false)
+  const [pointerText, setPointerText] = React.useState('Next Workout')
+
+  React.useEffect(() => {
+    let totalDays = dayWorkout.programDetails.durationWeeks * dayWorkout.programDetails.daysPerWeek
+    if(credentials.currentWorkout.unlockedDays >= totalDays){
+      setMessage(null)  
+      return
+    } 
+    if(credentials.currentWorkout.unlockedDays - credentials.currentWorkout.reminder  < dayWorkout.day){
+      setMessage('Your subscription will expire soon. To renew your subscription, tap here.')
+    }if(credentials.currentWorkout.unlockedDays === dayWorkout.day){
+      if(!completed){
+        setMessage('Your subscription will expire this day. To renew your subscription, tap here.')
+      }else{
+        setMessage('Your subscription is overdue. Please renew by tapping here')  
+        setDangerMessage(true)
+      }
+    }if(credentials.currentWorkout.unlockedDays < dayWorkout.day){
+      setDangerMessage(true)
+      setMessage('Your subscription is overdue. Please renew by tapping here')    
+    }
+  }, [dayWorkout.complete])
+
+  
+  var paymentPayload = {}
+  paymentPayload.programID = credentials.currentWorkout.programID
+  paymentPayload.receiptID = credentials.currentWorkout.receiptID
+
+  const reminderPressHandler = () => {
+    navigation.navigate('PaymentPage', {data: paymentPayload, type: 'renew'})
+  }
 
 
   return (
     <View style={styles.container}>
       {!programEnded?
       <View style={styles.topBox}>
-        <Reminder navigation={navigation}/>
+        {message?<Reminder message={message} pressHandler={reminderPressHandler} danger={dangerMessage} />:null}
         <View>
           <Text style={{...styles.topBoxTagText, 
-            backgroundColor: completed?'green':themeColors.tertiary3,
+            backgroundColor: completed?themeColors.primary1:themeColors.tertiary3,
             color: !completed?'black':'white', 
-            }}>{!completed?'Next Workout':'You completed today\'s workout'}</Text>
+            }}>{!completed?pointerText:'You completed today\'s workout'}</Text>
           {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}
         </View>
         <Text style={styles.topBoxMainText}>{program}</Text>
@@ -39,7 +73,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
       <View style={styles.topBox}>
         <View>
           <Text style={{...styles.topBoxTagText, 
-            backgroundColor: 'green',
+            backgroundColor: themeColors.primary1,
             color: 'white', 
             }}>{'Congratulations !!! You have completed the Program'}</Text>
           {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}

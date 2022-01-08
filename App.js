@@ -197,9 +197,8 @@ export default function App() {
     if(newDayWorkout && workoutData){
       if(workoutData.startDate){
         newDayWorkout.started = true
-      }else{
-        newDayWorkout.programDetails = {daysPerWeek: workoutData.program.daysPerWeek, durationWeeks: workoutData.program.durationWeeks, programName: workoutData.program.programName}
       }
+      newDayWorkout.programDetails = {daysPerWeek: workoutData.program.daysPerWeek, durationWeeks: workoutData.program.durationWeeks, programName: workoutData.program.programName}
     }
 
     await resetDayWorkout(newDayWorkout)
