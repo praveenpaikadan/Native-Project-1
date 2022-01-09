@@ -9,13 +9,13 @@ import { AuthContext } from './auth-context'
 
 export default VPlayer = ({ navigation, route }) => {
 
-  var { link } = route.params
+  var { link, notFullScreen } = route.params
   var {token } = useContext(AuthContext)
   var click = 0
   const [inFullscreen2, setInFullsreen2] = useState(false)
   const refVideo2 = useRef(null)
-  const [width, setWidth] = React.useState(Dimensions.get('window').width)
-  const [height, setHeight] = React.useState(Dimensions.get('window').height)
+  const [width, setWidth] = React.useState(notFullScreen?360:Dimensions.get('window').width)
+  const [height, setHeight] = React.useState(notFullScreen?200:Dimensions.get('window').height)
   
   React.useEffect(() => {
 
@@ -48,7 +48,6 @@ export default VPlayer = ({ navigation, route }) => {
   }
 
   React.useEffect(() => {
-
     BackHandler.addEventListener('hardwareBackPress', handlebackButtonClick);
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handlebackButtonClick);
@@ -83,7 +82,6 @@ export default VPlayer = ({ navigation, route }) => {
           videoBackgroundColor: 'black',
           height: height,
           width: width,
-          
         }}
 
       />

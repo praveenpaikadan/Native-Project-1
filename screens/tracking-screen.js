@@ -47,8 +47,8 @@ export default TrackingScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.subHeadingContainer}>
-          <Text style={{...styles.subHeading, maxWidth: 210*sc}}>{`Goal: ${'\n'}` + targetBodyPart}</Text>
-          <Text style={{...styles.subHeading, textAlign:'right'}}>{`Level: ${'\n'}` + level}</Text>
+          <Text style={{...styles.subHeading, maxWidth: 210*sc}}>{`Goal ${'\n'}` + targetBodyPart}</Text>
+          <Text style={{...styles.subHeading, textAlign:'right'}}>{`Level ${'\n'}` + level}</Text>
         </View>
 
         <View style={styles.detailsContainer}>
@@ -57,6 +57,7 @@ export default TrackingScreen = ({ navigation }) => {
             <View style={styles.numberContainer}>
               <Text style={styles.details}>
                 {totalExercises}
+                
               </Text>
             </View>
           </View>
@@ -74,7 +75,7 @@ export default TrackingScreen = ({ navigation }) => {
               <Text style={styles.duration}>
                 {totalTime}
               </Text>
-              <Text style={styles.durationUnit}>HR MIN</Text>
+              <Text style={styles.durationUnit}>MIN</Text>
             </View>
           </View>
         </View>
@@ -121,8 +122,9 @@ const styles = StyleSheet.create({
 
   headingContainer: {
     flexDirection: "row",
-    marginVertical: 10 * sc,
+    marginVertical: 5 * sc,
     padding: 13 * sc,
+    paddingBottom: 4*sc,
     alignItems: "center",
   },
 
@@ -137,14 +139,14 @@ const styles = StyleSheet.create({
   subHeadingContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20 * sc,
+    marginBottom: 8 * sc,
     paddingHorizontal: 35 * sc,
   },
 
   subHeading: {
     fontFamily: globalFonts.primaryMedium,
     color: themeColors.tertiary1,
-    fontSize: 14.5 * sc,
+    fontSize: 12 * sc,
   },
 
   detailsContainer: {
@@ -177,11 +179,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: globalFonts.primaryRegular,
     color: themeColors.tertiary1,
-    fontSize: 10 * sc,
+    fontSize: 9 * sc,
     marginBottom: 5 * sc,
   },
 
   numberContainer: {
+    flexGrow: 1,
     padding: 8 * sc,
     paddingHorizontal: 18 * sc,
     borderRadius: 10 * sc,
@@ -190,7 +193,7 @@ const styles = StyleSheet.create({
 
   details: {
     fontFamily: globalFonts.primaryBold,
-    fontSize: 25 * sc,
+    fontSize: 20 * sc,
     color: themeColors.primary1,
   },
 
@@ -213,12 +216,12 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    marginHorizontal: 30 * sc,
+    alignSelf:'center',
     marginTop: 15 * sc,
   },
 
   buttonText: {
-    fontSize: 25 * sc,
+    fontSize: 15 * sc,
   },
 
   listContainer: {

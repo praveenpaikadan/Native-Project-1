@@ -19,7 +19,6 @@ import ReminderBox from "../components/reminder"
 
 
 export default HomePage = ({ navigation, route }) => {
-
   const {dayWorkout, programOver, setProgramOver, workoutDataLoaded} = React.useContext(WorkoutContext);
   const [loading, setLoading] = React.useState(true)
   

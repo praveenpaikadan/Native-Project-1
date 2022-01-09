@@ -30,7 +30,7 @@ import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { WorkoutCompleteModal } from "./modal/workout-complete";
 import { RepInput } from "../components/set-reps-time";
-import { formatIntervel, format_target, today } from "../utilities/helpers";
+import { formatIntervel, format_target, today, makeMediaUrl } from "../utilities/helpers";
 import { postDayWorkout, postDiscardWorkout } from "../utilities/data-center";
 import flash from "../utilities/flash-message";
 import { Alert } from "./modal/alert";
@@ -113,17 +113,19 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   const exerciseIndex = index
   const type = item.repetitionType? (item.repetitionType === 'reps'? 0: (item.repetitionType==='seconds'?1:2)): null
 
+  var image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
+  var image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
   return(
   <View style={styles.scrollView}>
     <View style={styles.excersiceCardContainer}>
-      <ExerciseCard
+    <ExerciseCard
+        targetSets={item.target.length > 0?"Target sets: " + String(item.target.length):null}
         activeOpacity={1}
-        id={index + 1}
+        onPress={() => {}}
+        id={index+1}
         exerciseName={item.exerciseName}
-        image1={require("../assets/images/Dumbbell-Step-Ups-1.jpg")}
-        image2={require("../assets/images/Dumbbell-Step-Ups-2.jpg")}
-        exerciseNameStyling={styles.exerciseName}
-        targetSets={`TARGET SETS: ${item.target.length}`}
+        image1={image1}
+        image2={image2}
       />
     </View>
 
@@ -350,8 +352,6 @@ export default ExerciseScreen = ({ navigation, route }) => {
           setSaving(0)
           navigation.navigate('Home')
     })
-
-    
   }
 
 

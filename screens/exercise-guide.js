@@ -18,6 +18,8 @@ import { WorkoutContext } from "../components/workout-context";
 import { AuthContext } from "../components/auth-context";
 import { getExercise } from "../utilities/data-center";
 import { makeMediaUrl } from "../utilities/helpers";
+import VideoPlayer from "../components/video-player";
+import VimeoWebPage from "../components/vimeo-web-player";
 
 const einstructions = data.exercise.eId1.instructions;
 
@@ -53,7 +55,6 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
   }, [])
 
 
-
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} />
@@ -62,15 +63,20 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
         onPress={() => navigation.pop()}
         onPressMenu={() => navigation.openDrawer()}
       />
+
       <View style={styles.contentContainer}>
         <View style={styles.headingContainer}>
-          <Text style={styles.mainHeading}>
-            {
-              exercise.exerciseName
-            }
-          </Text>
           <View style={styles.cardContainer}>
-            <ElevatedCardTypeOne styling={styles.card}>
+            <VimeoWebPage />
+          {/* {!loading?
+            fetched.video[0]?
+            <View style={{alignItems:'center', backgroundColor: 'yellow'}} >
+              <VideoPlayer navigation={navigation} route={{params: {link: makeMediaUrl(fetched.video[0].filename, true), notFullScreen: true, width: 360*sc}}}/>
+            </View>
+            :null:
+          null}   */}
+          
+          {/* <ElevatedCardTypeOne styling={styles.card}>
               <Image
                 source={require("../assets/images/fat-loss.jpg")}
                 style={styles.image}
@@ -81,22 +87,35 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
                 source={require("../assets/images/muscle-gain.jpg")}
                 style={styles.image}
               />
-            </ElevatedCardTypeOne>
+            </ElevatedCardTypeOne> */}
           </View>
+
         </View>
+
+        <Text style={styles.mainHeading}>
+            {
+              exercise.exerciseName
+            }
+          </Text>
 
         <View style={styles.line}></View>
 
+{/*
+        {!loading?
+        fetched.video[0]?
 
-        {!loading?fetched.video[0]?<ButtonType1
-          play={32 * sc}
+        <ButtonType1
+          play={20 * sc}
           text={"Watch Now"}
           arrow={false}
           styling={styles.button}
           textStyling={styles.buttonText}
           onClick={() => {navigation.navigate('VideoPlayer', {link: makeMediaUrl(fetched.video[0].filename, secured=true)})}}
-        />:null:null}
+        />
 
+        :null:
+        null}
+*/}
         <View style={styles.subHeadingContainer}>
           <Text style={styles.subHeading}>Step by step instructions:</Text>
         </View>
@@ -149,6 +168,7 @@ const styles = StyleSheet.create({
   },
 
   mainHeading: {
+    alignSelf:'center',
     fontFamily: globalFonts.primaryBold,
     fontSize: 20 * sc, //font size
     opacity: 0.8,
@@ -162,8 +182,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     backgroundColor: themeColors.tertiary2,
-    paddingVertical: 5 * sc,
-    paddingHorizontal: 5 * sc,
+    // paddingVertical: 5 * sc,
     borderRadius: 10 * sc,
   },
 
@@ -192,7 +211,6 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: 250 * sc,
     alignSelf: "center",
     ...Platform.select({
       android: {
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontSize: 25,
+    fontSize: 13,
   },
 
   subHeadingContainer: {

@@ -57,6 +57,7 @@ export default PreviousWorkoutHistory = ({navigation}) => {
     const [loading, setLoading] = React.useState(0)
     const [data, setData] = React.useState([])
     const [reloadSwich, setReloadSwitch] = React.useState(true)
+    const componentRef = React.useRef(null)
 
     const mergeData = (data) => {
         var mergedHistory = []
@@ -79,8 +80,10 @@ export default PreviousWorkoutHistory = ({navigation}) => {
         var localHistory = await AsyncStorage.getItem('completeWorkoutsHistory')
         if(localHistory){
           localHistory = JSON.parse(localHistory)
-          setData(localHistory)
-          setLoading(1)
+          if(componentRef){
+            setData(localHistory)
+            setLoading(1)
+            }
           return localHistory
         }else{
           return null
@@ -94,9 +97,11 @@ export default PreviousWorkoutHistory = ({navigation}) => {
           switch (response.status) {
             case 200:
               if(JSON.stringify(response.data) !== JSON.stringify(localHistory)){
-                setData(response.data)
                 AsyncStorage.setItem('completeWorkoutsHistory', JSON.stringify(response.data))
-                setLoading(1)
+                if(componentRef){
+                    setData(response.data)
+                    setLoading(1)
+                }
               }
               break;
             default:
@@ -113,7 +118,7 @@ export default PreviousWorkoutHistory = ({navigation}) => {
     var total = 0
   
     return (
-      <View style={styles.container}>
+      <View ref={componentRef} style={styles.container}>
         <StatusBar translucent={true} />
         <Header backButton={true} onPress={() => {navigation.goBack()}} onPressMenu={() => navigation.openDrawer()} />
         <View style={styles.headingContainer}>

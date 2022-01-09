@@ -12,6 +12,7 @@ import { getAPIAllLocal, getWorkoutData, postBulkDayWorkout } from "./utilities/
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
 import PaymantPage from "./screens/payment-page";
+import VimeoWebPage from "./components/vimeo-web-player";
 
 
 //Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
@@ -307,6 +308,7 @@ export default function App() {
     // await AsyncStorage.removeItem('dayWorkout')
     // await AsyncStorage.removeItem('pendingDayWorkouts')
     // await AsyncStorage.removeItem('dietPlan')
+    await AsyncStorage.removeItem('completeWorkoutsHistory')
 
     try {
       const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([
@@ -338,7 +340,7 @@ export default function App() {
       if(workoutdata_temp){
         await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
         setWorkoutDataLoaded(1)
-        await downloadAndSetWorkoutData()
+        downloadAndSetWorkoutData()
       }else{  // If workout data = null, wait until the server confirms that.
         var result = await downloadAndSetWorkoutData() 
         if(result){
@@ -357,6 +359,7 @@ export default function App() {
   // return <PaymantPage />
   
   if (appReady) {
+
     return (
         <AuthContext.Provider 
           value={{  

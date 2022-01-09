@@ -8,8 +8,11 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { AuthContext } from "../components/auth-context";
+import { convertMongooseDateString } from "../utilities/helpers";
 
 export default WorkoutPlan = ({navigation, route}) => {
+
+  // case when previous program workouts have to be displayed.
   if(route.params){
     var {data} = route.params
   }
@@ -39,7 +42,9 @@ export default WorkoutPlan = ({navigation, route}) => {
         <View style={styles.headingLeftBox}>
 
           <View style={{marginLeft: 10*sc}}>
-            <Text style={styles.headingText}>WORKOUT PLAN</Text>
+            <Text style={styles.headingText}>{!data?'WORKOUT PLAN':'WORKOUT HISTORY'}</Text>
+            {data?<Text style={styles.totalWorkouts}>PROGRAM: {data.program?data.program.programName:'N/A'}</Text>:null}
+            {data?<Text style={styles.totalWorkouts}>START DATE: {data.startDate?convertMongooseDateString(data.startDate):'N/A'}</Text>:null}
             <Text style={styles.totalWorkouts}>TOTAL WORKOUTS TRACKED: {total}  </Text>
           </View>
         </View>

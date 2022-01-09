@@ -17,7 +17,6 @@ export const HistoryList = (props) => {
     // ...This call wil be initiated  from the complete-workout-history page.
 
     var {workoutData} = React.useContext(WorkoutContext)
-
     const {credentials} = React.useContext(AuthContext)
     const List = workoutData?[...workoutData.history]:[]
     const listOfDays = List.map((item, index) => item.day)
@@ -81,8 +80,9 @@ export const HistoryList = (props) => {
     }
 
     // If there is default value passed on for previous workouts
+    var defaultData = undefined
     if(props.data){
-        var defaultData = props.data.history
+        defaultData = props.data.history
         for(let i = 0; i < defaultData.length; i++){
             var scheduleItem = props.data.program.schedule.find((item) => item.day === defaultData[i]['day'])
             if(scheduleItem!== undefined){
@@ -100,11 +100,17 @@ export const HistoryList = (props) => {
 
     useEffect(() => {
         var total = 0
-        for(var i=0; i<List.length; i++){
-            total = total + List[i].workout.length
+        if(props.data){
+            for(var i=0; i<props.data.history.length; i++){
+                total = total + props.data.history[i].workout.length
+            }
+        }else{
+            for(var i=0; i<List.length; i++){
+                total = total + List[i].workout.length
+            }
         }
         props.setTotal(total)
-    }, [workoutData])
+    }, [List, defaultData])
 
 
     const [focus, setFocus] = React.useState(-1)

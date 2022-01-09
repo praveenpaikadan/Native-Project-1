@@ -11,8 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ElevatedCardTypeOne } from "../../components/cards";
 import { MaterialIcons } from "@expo/vector-icons";
+import { makeMediaUrl } from "../../utilities/helpers";
 
 export const ExerciseCard = (props) => {
+
+  const [image1, setImage1] = React.useState(false) // do we have a succesful image load now?
+  const [image2, setImage2] = React.useState(false) // do we have a succesful image load now?
+
   return (
     <TouchableOpacity
       onPress={props.onPress}
@@ -40,9 +45,31 @@ export const ExerciseCard = (props) => {
             <Text style={cardStyles.targetSets}>{props.targetSets}</Text>
           </View>
 
-          <Image source={props.image1} style={cardStyles.image} />
-          <Image source={props.image2} style={cardStyles.image} />
+          <Image 
+            source={props.image1} 
+            style={{...cardStyles.image, display:image1?'flex':'none'}}
+            onLoad={() => {setImage1(true)}}
+          />
+          {/*placeholder*/}
+          <Image 
+            style={{...cardStyles.image, display:image1?'none':'flex'}}
+            source={require("../../assets/images/exercise-place-holder1.png")}
+          />
+            
+          <Image 
+            source={props.image2} 
+            style={{...cardStyles.image, display:image2?'flex':'none'}}
+            onLoad={() => {setImage2(true)}}
+          />
+
+          {/*placeholder*/}
+          <Image 
+            style={{...cardStyles.image, display:image2?'none':'flex'}}
+            source={require("../../assets/images/exercise-place-holder2.png")}
+          />
+
         </View>
+        {props.children}
       </ElevatedCardTypeOne>
     </TouchableOpacity>
   );
@@ -56,7 +83,7 @@ const cardStyles = StyleSheet.create({
   },
   card: {
     width: 340 * sc,
-    height: 100 * sc,
+    paddingVertical: 5*sc,
     marginVertical: 5 * sc,
     backgroundColor: themeColors.primary2,
     justifyContent: "center",
@@ -65,6 +92,7 @@ const cardStyles = StyleSheet.create({
   exerciseContainer: {
     flexDirection: "row",
     alignItems: "center",
+    // backgroundColor: 'pink'
   },
 
   idContainer: {
@@ -85,7 +113,7 @@ const cardStyles = StyleSheet.create({
 
   targetSets: {
     fontFamily: globalFonts.primaryRegular,
-    fontSize: 10 * sc,
+    fontSize: 12 * sc,
     color: themeColors.tertiary1,
     marginHorizontal: 10 * sc,
     marginTop: 3 * sc,
@@ -111,9 +139,20 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
       showsVerticalScrollIndicator={false}
       data={data}
       keyExtractor={(item, index) => item._id}
-      renderItem={({item, index}) => (
+      renderItem={({item, index}) => {
+        // getting image urls if exists
+        var image1 = null
+        var image2 = null
+   
+        image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
+        image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
+        
+        // ========
+
+        return(
         <View style={{alignSelf: 'center'}} key={index}>
           <ExerciseCard
+            targetSets={item.target.length > 0?"Target sets: " + String(item.target.length):null}
             activeOpacity={activeOpacity}
             onPress={() =>
               navigation.navigate("Exercise", { exerciseIndex: index })
@@ -121,10 +160,9 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
             // onPress={() => onPress(index)}
             id={index+1}
             exerciseName={item.exerciseName}
-            image1={require("../../assets/images/Dumbbell-Step-Ups-1.jpg")}
-            image2={require("../../assets/images/Dumbbell-Step-Ups-2.jpg")}
-          />
-
+            image1={image1}
+            image2={image2}
+          >
           {item.restInSec?
             <View style={styles.timerContainer}>
               <MaterialIcons name="timer" {...timerIconStyling} />
@@ -133,8 +171,9 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
                 <Text style={styles.timerText}>{item.restInSec<=120?item.restInSec+' secs':Math.round(item.restInSec/60)+' mins'}</Text>
               </View>
             </View>:null}
+            </ExerciseCard>
         </View>
-      )}
+      )}}
 
     />
   );
@@ -147,19 +186,20 @@ const timerIconStyling = {
 
 const styles = StyleSheet.create({
   timerContainer: {
+    paddingVertical: 2*sc,
+    width:'100%',
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: themeColors.tertiary1,
     paddingHorizontal: 4 * sc,
-    paddingVertical: 2 * sc,
-    marginVertical: 10 * sc,
-    marginHorizontal: 80 * sc,
+    marginTop: 10 * sc,
   },
 
   timerHeadingText: {
     fontFamily: globalFonts.primaryRegular,
     fontSize: 12 * sc,
+    marginHorizontal:5*sc,
     color: themeColors.secondary2,
   },
   timerText: {
