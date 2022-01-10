@@ -34,6 +34,7 @@ import { formatIntervel, format_target, today, makeMediaUrl } from "../utilities
 import { postDayWorkout, postDiscardWorkout } from "../utilities/data-center";
 import flash from "../utilities/flash-message";
 import { Alert } from "./modal/alert";
+import PreviousStatsModel from "./modal/previous-stats"
 
 // We got a single source of truth to set 'sets', ie. dayworkout. proceed from that.
 
@@ -46,6 +47,8 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   const [isFocussed, setIsFocussed] = useState(0);
   const Line = () => <View style={styles.line}></View>;
 
+  const [prevStatsModelVisible, setPrevStatsModelVisible] = useState(false)
+  const [loadStatsModel, setLoadStatsModel] = useState(false)
   // console.log('dayWorkout -> workout at Exercise component with index ' , index, ' is ', dayWorkout.workout[index])
 
   const scrollRef = useRef();
@@ -109,6 +112,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
     resetDayWorkout(orgDayWorkout)    
   }
 
+
   const repetitionType = item.repetitionType 
   const exerciseIndex = index
   const type = item.repetitionType? (item.repetitionType === 'reps'? 0: (item.repetitionType==='seconds'?1:2)): null
@@ -118,6 +122,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   return(
   <View style={styles.scrollView}>
     <View style={styles.excersiceCardContainer}>
+    {loadStatsModel?<PreviousStatsModel visible={prevStatsModelVisible} exercise={{...item, programName: dayWorkout.programName, workoutID: dayWorkout.workoutID}} setVisible={setPrevStatsModelVisible} />:null}
     <ExerciseCard
         targetSets={item.target.length > 0?"Target sets: " + String(item.target.length):null}
         activeOpacity={1}
@@ -230,7 +235,15 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
         </TouchableOpacity>
 
         <View style={styles.hLine}></View>
-        <Text style={styles.footerButtonText}>PREVIOUS STATS</Text>
+        <TouchableOpacity
+          onPress={() =>{
+              setLoadStatsModel(true)
+              setPrevStatsModelVisible(true)
+            }
+          }
+        >
+          <Text style={styles.footerButtonText}>PREVIOUS STATS</Text>
+        </TouchableOpacity>
       </View>
     </View>
   </View>

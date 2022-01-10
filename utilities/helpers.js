@@ -150,3 +150,11 @@ export const getImageUrl  = (filename, level) => {
         return BASE_URL+'/media/'+ filename
     }
 }
+
+export const convertdd_mm_yyyyStringToTime = (inpDate) => {
+    // input dd-mm-yyy
+    let a = inpDate.split("-")
+    let b = a[1]+"/"+a[0]+"/"+a[2]
+    let dateObj = new Date(b)
+    return dateObj.getTime()
+}
