@@ -205,7 +205,9 @@ export default PreviousStatsModel = ({visible, exercise, setVisible}) => {
                       }
                       break; 
                     }
-                    setSubLoadingError()
+                    if(!statsFromPreviousPrograms){
+                        setSubLoadingError()
+                    }
                     setSubLoading(false)
                 })
               })

@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontSize: 15 * sc,
+    fontSize: 12 * sc,
   },
 
   listContainer: {

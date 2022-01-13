@@ -52,7 +52,7 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
             <View style={styles.row}>
               <ButtonType1
                 styling={styles.button1}
-                text={"CONTINUE EDITING"}
+                text={"Continue Editing"}
                 arrow={false}
                 textStyling={styles.buttonText1}
                 onClick={() => continueEditingHandler()}
@@ -60,7 +60,7 @@ else if(saving === -1){displayText = 'Saved your data. But cannot save to server
               />
               {<ButtonType1
                 styling={styles.button1}
-                text={"DISCARD WORKOUT"}
+                text={"Discard Workout"}
                 isLoading={discarding === 2}
                 arrow={false}
                 textStyling={styles.buttonText1}
@@ -107,12 +107,14 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
+
   },
 
   modalContainer: {
     width: "90%",
     backgroundColor: themeColors.secondary2,
     paddingBottom: 20 * sc,
+    borderRadius: 15*sc
   },
 
   headingContainer: {
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
     color: themeColors.tertiary1,
     marginVertical: 10 * sc,
     letterSpacing: 0.5 * sc,
-    fontSize: 16 * sc,
+    fontSize: 12 * sc,
     lineHeight: 23 * sc,
     paddingHorizontal: 5*sc,
   },
@@ -158,12 +160,12 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    marginHorizontal: 45 * sc,
+    alignSelf: 'center',
     marginVertical: 10 * sc,
   },
 
   buttonText: {
-    fontSize: 15 * sc,
+    fontSize: 14 * sc,
   },
   button1: {
     marginHorizontal: 2 * sc,

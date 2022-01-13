@@ -221,7 +221,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
                 arrow={false}
                 text={"MARK WORKOUT COMPLETE"}
                 styling={{marginVertical:20*sc}}
-                textStyling={{fontSize: 14*sc}}
+                textStyling={{fontSize: 12*sc}}
                 onClick={() => {setShowWorkoutComplete()}}
               />}
               
@@ -343,13 +343,13 @@ export default ExerciseScreen = ({ navigation, route }) => {
         console.log(response.status, response.data)
         switch (response.status) {
           case 200:
-            flash(`Succesfully removed today's workout data`, 'success', 4000)
+            flash(`Succesfully deleted today's workout`, 'success', 4000)
             removeFromPending(reqBody)
             setDiscarding(1)
             break;
           case 101:
             setDiscarding(-1)
-            flash('Oops Something Happened!! Not able to delete workout data from database. Will try later ..', 'danger', 10000)
+            flash('Oops Something Happened!! Not able to sync workout data... please check your intenet', 'danger', 10000)
             addToPending(reqBody)
             break;
           default:
@@ -585,14 +585,14 @@ const styles = StyleSheet.create({
 
   setText: {
     fontFamily: globalFonts.primaryBold,
-    fontSize: 18 * sc,
+    fontSize: 14 * sc,
     color: themeColors.tertiary1,
     marginLeft: 10 * sc,
   },
 
   setText1: {
     fontFamily: globalFonts.primaryBold,
-    fontSize: 18 * sc,
+    fontSize: 14 * sc,
     color: themeColors.tertiary1,
   },
 

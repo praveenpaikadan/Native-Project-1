@@ -105,7 +105,7 @@ export default PreviousWorkoutHistory = ({navigation}) => {
               }
               break;
             default:
-              if(!localHistory){
+              if(!localHistory &&  componentRef){
                 setLoading(-1)
               }
               break; 

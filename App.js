@@ -308,7 +308,9 @@ export default function App() {
     // await AsyncStorage.removeItem('dayWorkout')
     // await AsyncStorage.removeItem('pendingDayWorkouts')
     // await AsyncStorage.removeItem('dietPlan')
-    // await AsyncStorage.removeItem('completeWorkoutsHistory')
+    await AsyncStorage.removeItem('completeWorkoutsHistory')
+    await AsyncStorage.removeItem('exerciseStore')
+
 
     try {
       const [creds_temp, workoutdata_temp, token_temp,  dayWorkout_temp, font, ] = await Promise.all([

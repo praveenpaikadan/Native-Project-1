@@ -20,39 +20,164 @@ import { getExercise } from "../utilities/data-center";
 import { makeMediaUrl } from "../utilities/helpers";
 import VideoPlayer from "../components/video-player";
 import VimeoWebPage from "../components/vimeo-web-player";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import flashMessage from "../utilities/flash-message";
+import { Spinner1 } from "../components/loading-spinner";
+import { MessageBox1 } from "../components/message-box";
 
-const einstructions = data.exercise.eId1.instructions;
+
+const ImageCard = (props) => {
+
+  const [image1, setImage1] = useState(false)
+  const [image2, setImage2] = useState(false)
+
+  const cardStyles = StyleSheet.create({
+
+    
+  cardContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    backgroundColor: themeColors.tertiary2,
+    paddingVertical: 10 * sc,
+    borderRadius: 10 * sc,
+
+  },
+
+  card: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 160 * sc,
+    height: 140 * sc,
+    backgroundColor: themeColors.secondary2,
+    borderRadius: 10 * sc,
+    marginVertical: 10 * sc,
+    marginHorizontal: 5*sc,
+    overflow: "hidden",
+  },
+
+  line: {
+    height: 5 * sc,
+    width: "100%",
+    backgroundColor: themeColors.primary1,
+    marginTop: 5 * sc,
+    marginBottom: 10 * sc,
+  },
+
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  
+
+  });
+
+  return(
+    <View style={{...styles.cardContainer, display:image1 && image2?'flex':'none'}} >
+        <ElevatedCardTypeOne styling={cardStyles.card}>
+          <Image 
+            source={props.image1} 
+            style={{...cardStyles.image, display:image1 && image2?'flex':'none'}}
+            onLoad={() => {setImage1(true)}}
+          />
+          {/*placeholder*/}
+          {/* <Image 
+            style={{...cardStyles.image, display:image1?'none':'flex'}}
+            source={require("../../assets/images/exercise-place-holder1.png")}
+          /> */}
+          </ElevatedCardTypeOne>
+          
+          <ElevatedCardTypeOne styling={cardStyles.card}>
+          <Image 
+            source={props.image2} 
+            style={{...cardStyles.image, display:image1 && image2?'flex':'none'}}
+            onLoad={() => {setImage2(true)}}
+          />
+
+          {/*placeholder*/}
+          {/* <Image 
+            style={{...cardStyles.image, display:image2?'none':'flex'}}
+            source={require("../../assets/images/exercise-place-holder2.png")}
+          /> */}
+      </ElevatedCardTypeOne>
+
+    </View>
+  )
+}
+
 
 export default ExerciseGuideScreen = ({ navigation, route }) => {
   const {exercise} = route.params 
   const [loading, setLoading] = useState(true)
-  const [fetched, setFetched] = useState({})
+  const [fetched, setFetched] = useState(null)
   const { setLoggedIn } = useContext(AuthContext)
+  const [reloadSwitch, setReloadSwitch] = useState(true)
 
-  const getExerciseDatafromServer = async () => {
+  const getExerciseFromLocal = async (exercise) => {
+    var response = await AsyncStorage.getItem('exerciseStore')
+    if(response){
+      var exercise = JSON.parse(response).find(item => item._id === exercise.exerciseID)
+      if(exercise){
+        return exercise
+      }
+    }
+    return null
+  }
+
+  const saveToLocalExerciseStore = (exercise) => {
+    AsyncStorage.getItem('exerciseStore')
+    .then(res => {
+      if(res){
+        var localExArray = JSON.parse(res)
+        var index = localExArray.findIndex(item => item._id === exercise._id)
+        if(index !== -1){
+          localExArray[index] = exercise
+        }else{
+          localExArray.push(exercise)
+        }
+      }else{
+        var localExArray = [exercise]
+      }
+      AsyncStorage.setItem('exerciseStore', JSON.stringify(localExArray))
+    })
+  }
+
+
+  const getExerciseDatafromServer = async (exercise) => {
     var response = await getExercise(exercise.exerciseID)
     switch (response.status) {
       case 200:
-        setFetched(response.data)
-        setLoading(false)
-        break;
-      case 401:
-        flash('Authorization failed. Please sign in again', 'danger', time=10000)
-        break;
-      case 101:
-        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
-        break;
+        return response
       default:
-        if(response.data.message){
-          flash(response.data.message, 'info')
-        }
-        break; 
+        return null
       }
   }
+
+
   useEffect( () => {
-    getExerciseDatafromServer()
-    .then()
-  }, [])
+    getExerciseFromLocal(exercise)
+    .then((localEx) => {
+      setFetched(localEx)
+      setLoading(localEx?false:true)
+      getExerciseDatafromServer(exercise)
+      .then((response) => {
+        if(response){
+          setFetched(response.data)
+          setLoading(false)
+          saveToLocalExerciseStore(response.data)
+        }else{
+          if(localEx){
+            flashMessage('Showing cached exercise instructions. Please check internet..','info', 300)
+          }
+          setLoading(false)
+        }
+      }
+    ) 
+  })
+    
+  }, [reloadSwitch])
+
 
 
   return (
@@ -67,7 +192,8 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
       <View style={styles.contentContainer}>
         <View style={styles.headingContainer}>
           <View style={styles.cardContainer}>
-            <VimeoWebPage />
+            
+          
           {/* {!loading?
             fetched.video[0]?
             <View style={{alignItems:'center', backgroundColor: 'yellow'}} >
@@ -76,18 +202,26 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
             :null:
           null}   */}
           
-          {/* <ElevatedCardTypeOne styling={styles.card}>
-              <Image
-                source={require("../assets/images/fat-loss.jpg")}
-                style={styles.image}
-              />
-            </ElevatedCardTypeOne>
-            <ElevatedCardTypeOne styling={styles.card}>
-              <Image
-                source={require("../assets/images/muscle-gain.jpg")}
-                style={styles.image}
-              />
-            </ElevatedCardTypeOne> */}
+          {!loading && fetched?
+
+            (fetched.videoEmbedString?
+            
+            <VimeoWebPage embedString={fetched.videoEmbedString}/>
+            
+            :
+
+      
+            <ImageCard 
+              image1={{uri: fetched.imageUrl1?fetched.imageUrl1: makeMediaUrl(fetched.images && fetched.images[0]?fetched.images[0].filename:'', true)}}
+              image2={{uri: fetched.imageUrl2?fetched.imageUrl2: makeMediaUrl(fetched.images && fetched.images[1]?fetched.images[1].filename:'', true)}}
+            />
+
+            )
+
+          :null}
+
+          
+
           </View>
 
         </View>
@@ -116,13 +250,19 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
         :null:
         null}
 */}
+
         <View style={styles.subHeadingContainer}>
           <Text style={styles.subHeading}>Step by step instructions:</Text>
         </View>
 
         <View style={styles.instructionsContainer}>
 
-          {!loading?
+          {/* {false? */}
+
+        {!loading?
+
+
+          (fetched?
           <ScrollView>
             <View style={styles.instructionsScrollContainer}>
               {console.log(fetched.equipments[0])}
@@ -143,7 +283,16 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
                 );
               })}
             </View>
-          </ScrollView>:<ActivityIndicator size={sc*76} color={themeColors.primary2} />}
+          </ScrollView>
+          :<MessageBox1 setReload={() => {setReloadSwitch(!reloadSwitch)}} message={'Pleae check your internet..'}/>)
+          
+          :
+          <View style={{flex:1,justifyContent:'center', marginBottom: 30*sc}}><Spinner1 /></View>
+          
+          
+          }
+        
+        
         </View>
       </View>
     </View>

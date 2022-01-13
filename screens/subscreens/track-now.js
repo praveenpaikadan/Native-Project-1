@@ -64,7 +64,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
         <ButtonType1
           text={!completed?"TRACK NOW": 'VIEW WORKOUT'}
           arrow={!completed?20 * sc:false}
-          styling={!completed?styles.trackNowButton:{width:210*sc, alignSelf: 'center'}}
+          styling={styles.trackNowButton}
           textStyling={styles.buttonTextStyling}
           onClick={onClick}
         />
@@ -82,7 +82,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
         <ButtonType1
           text={'VIEW WORKOUT HISTORY'}
           arrow={!completed?20 * sc:false}
-          styling={{width:280*sc, alignSelf: 'center'}}
+          styling={styles.trackNowButton}
           textStyling={styles.buttonTextStyling}
           onClick={() => {navigation.navigate('Root', { screen: "WorkoutHistory" })}}
         />
@@ -183,10 +183,9 @@ const styles = StyleSheet.create({
   trackNowButton: {
     // height:40*sc,
     alignSelf: "center",
-    width: 160 * sc,
   },
   buttonTextStyling: {
-    fontSize: 15 * sc,
+    fontSize: 12 * sc,
   },
   card: {
     maxHeight: 200 * sc,

@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
   
     inputHeading: {
-      fontSize: sc*15,
+      fontSize: sc*12,
       opacity: 0.6,
       fontFamily: globalFonts.primaryMedium,
       color: themeColors.tertiary1,
@@ -147,23 +147,24 @@ const styles = StyleSheet.create({
   
     unit: {
       fontFamily: globalFonts.primaryLight,
-      fontSize: 12 * sc,
+      fontSize: 10 * sc,
       color: themeColors.tertiary1,
       marginVertical: 1 * sc,
     },
 
     
-  buttonContainer: {
-    alignItems: "center",
-  },
+  // buttonContainer: {
+  //   alignItems: "center",
+
+  // },
 
   button: {
-    paddingHorizontal: 50 * sc,
+    alignSelf:'center',
     marginVertical: 5 * sc,
   },
 
   buttonText: {
-    fontSize: 20 * sc,
+    fontSize: 15 * sc,
   },
 
   });
