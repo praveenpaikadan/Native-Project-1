@@ -1,48 +1,45 @@
 
-import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Text, Animated, Dimensions, Modal } from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import { StyleSheet, View, Text, Animated, Dimensions, Modal, BackHandler } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { themeColors, sc, globalFonts } from '../styles/global-styles';
 import { ButtonType1 } from './buttons';
 import { Spinner1 } from './loading-spinner';
+import { StatusBar } from 'expo-status-bar';
 
-export default function VimeoWebPage({embedString}) {
+export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
 
-  const [dynamicHeight, setDynamicHeight] = useState(0)
+  const screenWidth = Dimensions.get('window').width
+  const screenHeight = Dimensions.get('window').height
+  
+  // const [dynamicHeight, setDynamicHeight] = useState(screenWidth)
+  const [dynamicHeight, setDynamicHeight] = useState(250)
+  const [dynamicWidth, setDynamicWidth] = useState(screenHeight)
+  const [backgroundColor, setBackgroundColor] = useState('white')
+  // console.log({screenWidth: screenWidth, screenHeight: screenHeight})
+
+  useEffect(() => {
+    const backAction = () => {
+      if(fullScreen){
+        setFullScreen(false)
+        return true
+      }else{
+        return false
+      }
+      
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
 
 
-//   var html = `<!DOCTYPE html>
-//   <html lang="en">
-//   <head>
-//   <meta charset="UTF-8">
-//     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-//     <title>Personal Trainer</title>
-//   </head>
-//   <style>
-//   iframe {
-//     display:block;
-//     width:100%;
-//     max-height: ${300*sc}px;
-// }
+  })
 
-//   </style>
-//   <body style="margin:0; padding:0;">
-
-//     <script>
-//       var body = document.getElementsByTagName("body")[0];
-//       function outputsize() {
-//         window.ReactNativeWebView.postMessage(String(body.offsetHeight))
-//       }
-//       outputsize()
-//       new ResizeObserver(outputsize).observe(body)
-//     </script>
-
-//     ${embedString}
-    
-//   </body>
-//   </html>`
 
 
   var html = `<!DOCTYPE html>
@@ -55,39 +52,37 @@ export default function VimeoWebPage({embedString}) {
   </head>
   <style>
 
-  iframe {
-    display:block;
-    width:100%;
-}
+  iframe{
+    width: 100%;
+  }
 
   </style>
-  <body style="margin:0; padding:0;">
+  <body style="margin:0; padding:0; background-color: black;">
+    <div>
+    ${embedString}
+    <div>
 
     <script>
-      var body = document.getElementsByTagName("body")[0];
+      var body = document.getElementsByTagName("div")[0];
       function outputsize() {
-        window.ReactNativeWebView.postMessage(String(body.offsetHeight))
+        window.ReactNativeWebView.postMessage(JSON.stringify({height: body.offsetHeight, width: body.offsetWidth}))
       }
       outputsize()
-      new ResizeObserver(outputsize).observe(body)
-    </script>
+      new ResizeObserver(outputsize).observe(body);
 
-    ${embedString}
+    </script>
     
   </body>
   </html>`
 
-  const goFullScreen = () => {
 
-  }
-
-  const getScaleFactor = (dynamicHeight) => {
-    let xScale = Dimensions.get('window').height/Dimensions.get('window').width
-    let yScale = Dimensions.get('window').width/dynamicHeight
-    return 1
-
-    console.log(dynamicHeight, xScale, yScale)
-    return xScale<yScale?xScale:yScale
+  const handleDivSizeChange = (data) => {
+    setBackgroundColor('black')
+    if(data.height > screenWidth && fullScreen){
+      setDynamicWidth(data.width*screenWidth/data.height)
+    }else{
+      setDynamicHeight(data.height)
+    }
   }
 
   const Spinner = () => (
@@ -97,82 +92,96 @@ export default function VimeoWebPage({embedString}) {
     </View> 
   )
 
+
+
+  const nonFsStyle = {
+    outer: {width: '100%', height: dynamicHeight + 35*sc, backgroundColor: backgroundColor},
+    inner: {width: '100%', height: dynamicHeight, backgroundColor: backgroundColor},
+    subInner: {width: '100%', height: dynamicHeight, backgroundColor: backgroundColor}
+  }
+
+  const fsStyle = {
+    outer: {top: 0, left: 0, width: screenWidth, height: screenHeight},
+    inner: {backgroundColor: backgroundColor, height: '100%', justifyContent:'center', alignItems:'center'},
+    subInner: {
+      backgroundColor: backgroundColor,
+      width: dynamicWidth>screenHeight? screenHeight: dynamicWidth,
+      height: dynamicHeight>screenWidth? screenWidth: dynamicHeight,
+      transform:[{rotateZ:'-90deg'}],
+    }
+  }
+
+  const goFullScreen = () => {
+    setFullScreen(true)
+  }
+
   const [loading, setLoading] = useState(true)
+  const [exitButtonVisible, setExitButtonVisible] = useState(false)
+
+  const timerRef = useRef(null);
+  const handleExitButtonVisible = () => {
+    console.log('taped')
+    setExitButtonVisible(!exitButtonVisible)
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setExitButtonVisible(false)
+    }, 3000)
+  }
+
+  const ExitFSButton = () => {
+    var height = 30*sc
+    
+    return(
+    <View style={{position:'absolute', opacity: 0.6, left: 0, top: screenHeight/2, transform: [{translateY: -height/2}, {rotateZ: '-90deg'}]}} >
+
+      <ButtonType1 
+        text={'Exit Full Screen'}
+        textStyling={{fontSize: 10*sc}}
+        styling={{height: height, minWidth: 0}}
+        subContainerStyling={{padding: 10*sc, paddingTop: 10*sc, paddingBottom: 10*sc, alignSelf: 'center'}}
+        arrow={false}
+        onClick={() => {setFullScreen(false)}}
+      />
+    </View>
+  )}
+
 
   return (
-  //   <View style={{width: '100%', height: dynamicHeight + 36*sc}}>
-  //     <View style={{width: '100%', height: dynamicHeight}}>
-  //         <WebView 
-  //             source={{ html:html}}
-  //             bounces={false}
-  //             onMessage={(message) => {
-  //               console.log(message.nativeEvent.data)
-  //               // setDynamicHeight(Number(message.nativeEvent.data) < 300?Number(message.nativeEvent.data):300)
-
-  //               setDynamicHeight(Number(message.nativeEvent.data))
-  //             }}
-  //             onLoadEnd={() => {setLoading(false)}}
-  //             scalesPageToFit={true}
-  //             scrollEnabled={false}
-  //             javaScriptEnabled={true}
-  //             onNavigationStateChange={() => console.log('navigation state change')}
-  //         />    
-  //         {loading && dynamicHeight > 40*sc?<Spinner />:null}
-  //   </View>
-  //   <ButtonType1 
-  //     text={"Go Fullscreen"}
-  //     styling={{width:'100%', borderRadius:0}}
-  //     textStyling={{fontSize: 10*sc}}
-  //     arrow={false}
-  //     small={20*sc}
-  //     subContainerStyling={{paddingBottom:8*sc,paddingTop:8*sc}}
-  //     onPress={() => {goFullScreen()}}
-  //     />
-  // </View>
-
-
-// ==============================
-
-    <Modal transparent={true}>
-      <View style={{backgroundColor: 'yellow', height: '100%', justifyContent:'center', alignItems:'center'}}>
-      <View style={{
-      height: Dimensions.get('window').width * getScaleFactor(dynamicHeight) , 
-      width: dynamicHeight * getScaleFactor(dynamicHeight),
-      // transform:[{rotateZ:'-90deg'}, {scale: getScaleFactor(dynamicHeight)}],
-      transform:[{rotateZ:'-90deg'}],
+    <View style={!fullScreen?nonFsStyle.outer: fsStyle.outer}>
       
-      
-      }}>
+      <View style={!fullScreen?nonFsStyle.inner:fsStyle.inner}>
+      <View style={!fullScreen?nonFsStyle.subInner:fsStyle.subInner}>
           <WebView 
+              onTouchEnd={() => {handleExitButtonVisible()}}
               source={{ html:html}}
               bounces={false}
               onMessage={(message) => {
-                console.log(message.nativeEvent.data)
-                // setDynamicHeight(Number(message.nativeEvent.data) < 300?Number(message.nativeEvent.data):300)
-                if(Number(message.nativeEvent.data)> dynamicHeight){
-                  setDynamicHeight(Number(message.nativeEvent.data))
-                }
+                console.log(message)
+                var data = JSON.parse(message.nativeEvent.data)
+                console.log(data)
+                handleDivSizeChange(data)
               }}
               onLoadEnd={() => {setLoading(false)}}
               scalesPageToFit={true}
               scrollEnabled={false}
               javaScriptEnabled={true}
               onNavigationStateChange={() => console.log('navigation state change')}
-          />    
-          {loading && dynamicHeight > 40*sc?<Spinner />:null}
-    </View>
-    {/* <ButtonType1 
-      text={"Go Fullscreen"}
-      styling={{width:'100%', borderRadius:0}}
-      textStyling={{fontSize: 10*sc}}
-      arrow={false}
-      small={20*sc}
-      subContainerStyling={{paddingBottom:8*sc,paddingTop:8*sc}}
-      onPress={() => {goFullScreen()}}
-      /> */}
-      </View>
-  </Modal>
+          />   
 
+          {loading && dynamicHeight > 40*sc?<Spinner />:null}
+        </View>
+        {fullScreen && exitButtonVisible?<ExitFSButton />: null}
+      </View>
+      <ButtonType1 
+        text={"Go Fullscreen"}
+        styling={{width:'100%', borderRadius:0}}
+        textStyling={{fontSize: 10*sc}}
+        arrow={false}
+        small={20*sc}
+        subContainerStyling={{paddingBottom:8*sc,paddingTop:8*sc}}
+        onClick={() => {goFullScreen()}}
+      />
+  </View>
   );
 }
 

@@ -113,6 +113,7 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
   const [fetched, setFetched] = useState(null)
   const { setLoggedIn } = useContext(AuthContext)
   const [reloadSwitch, setReloadSwitch] = useState(true)
+  const [fullScreen, setFullScreen] = useState(false)
 
   const getExerciseFromLocal = async (exercise) => {
     var response = await AsyncStorage.getItem('exerciseStore')
@@ -182,12 +183,14 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent={true} />
+      <StatusBar translucent={true} hidden={fullScreen?true:false}/>
+      {!fullScreen?
       <Header
         backButton={true}
         onPress={() => navigation.pop()}
         onPressMenu={() => navigation.openDrawer()}
       />
+      :null}
 
       <View style={styles.contentContainer}>
         <View style={styles.headingContainer}>
@@ -206,7 +209,7 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
 
             (fetched.videoEmbedString?
             
-            <VimeoWebPage embedString={fetched.videoEmbedString}/>
+            <VimeoWebPage embedString={fetched.videoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen}/>
             
             :
 
