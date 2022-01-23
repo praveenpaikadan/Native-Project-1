@@ -19,6 +19,9 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
   const [backgroundColor, setBackgroundColor] = useState('white')
   // console.log({screenWidth: screenWidth, screenHeight: screenHeight})
 
+  const webViewRef = useRef();
+
+ 
   useEffect(() => {
     const backAction = () => {
       if(fullScreen){
@@ -52,11 +55,28 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
   </head>
   <style>
 
+  *{
+    box-sizing: border-box;
+  }
+
+  .messageText{
+    display:block;
+    color: white;
+    margin: auto;
+    font-size: 12px;
+    width:100%;
+    font-weight: 100;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
   iframe{
     width: 100%;
   }
-
   </style>
+
   <body style="margin:0; padding:0; background-color: black;">
     <div>
     ${embedString}
@@ -70,13 +90,32 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
       outputsize()
       new ResizeObserver(outputsize).observe(body);
 
+      function isInternetConnected(){
+        return navigator.onLine; 
+      }
+
+      function checkAndHandleInternetConnectivity() {
+        if(!isInternetConnected()){
+          // body.innerHTML = ${"<h1 class=${'messageText'}>No network. Tap to try again</h1>"};
+          body.innerHTML = '<h1 class="messageText">No network. Tap to try again</h1>';
+          body.addEventListener("click", () => {
+            window.ReactNativeWebView.postMessage(JSON.stringify({rerender: 1}))
+          });
+        }
+      }
+
+      checkAndHandleInternetConnectivity()
+
     </script>
-    
+
   </body>
   </html>`
 
 
   const handleDivSizeChange = (data) => {
+    if(!webViewRef){
+      return
+    }
     setBackgroundColor('black')
     if(data.height > screenWidth && fullScreen){
       setDynamicWidth(data.width*screenWidth/data.height)
@@ -93,9 +132,8 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
   )
 
 
-
   const nonFsStyle = {
-    outer: {width: '100%', height: dynamicHeight + 35*sc, backgroundColor: backgroundColor},
+    outer: {width: '100%', height: dynamicHeight + 27*sc, backgroundColor: backgroundColor},
     inner: {width: '100%', height: dynamicHeight, backgroundColor: backgroundColor},
     subInner: {width: '100%', height: dynamicHeight, backgroundColor: backgroundColor}
   }
@@ -148,18 +186,22 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
 
   return (
     <View style={!fullScreen?nonFsStyle.outer: fsStyle.outer}>
-      
       <View style={!fullScreen?nonFsStyle.inner:fsStyle.inner}>
       <View style={!fullScreen?nonFsStyle.subInner:fsStyle.subInner}>
           <WebView 
+              ref={(ref) => webViewRef.current = ref}
               onTouchEnd={() => {handleExitButtonVisible()}}
               source={{ html:html}}
               bounces={false}
               onMessage={(message) => {
-                console.log(message)
                 var data = JSON.parse(message.nativeEvent.data)
                 console.log(data)
-                handleDivSizeChange(data)
+                if(data.rerender === 1){
+                  webViewRef.current.reload();
+                }
+                if(data.height !== undefined && data.width !== undefined){
+                  handleDivSizeChange(data)
+                }
               }}
               onLoadEnd={() => {setLoading(false)}}
               scalesPageToFit={true}
@@ -178,7 +220,7 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
         textStyling={{fontSize: 10*sc}}
         arrow={false}
         small={20*sc}
-        subContainerStyling={{paddingBottom:8*sc,paddingTop:8*sc}}
+        subContainerStyling={{paddingBottom:4*sc,paddingTop:4*sc}}
         onClick={() => {goFullScreen()}}
       />
   </View>

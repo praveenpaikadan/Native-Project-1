@@ -41,7 +41,7 @@ export const ButtonType1 = ({
           alignItems: "center",
           justifyContent: "center",
           padding: 10 * sc,
-          // paddingBottom: 12 * sc,
+          paddingBottom: 12 * sc,
           paddingTop: 12 * sc,
           ...subContainerStyling
         }}

@@ -117,8 +117,10 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   const exerciseIndex = index
   const type = item.repetitionType? (item.repetitionType === 'reps'? 0: (item.repetitionType==='seconds'?1:2)): null
 
-  var image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
-  var image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
+  // var image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
+  // var image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
+
+  console.log(item)
   return(
   <View style={styles.scrollView}>
     <View style={styles.excersiceCardContainer}>
@@ -126,11 +128,12 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
     <ExerciseCard
         targetSets={item.target.length > 0?"Target sets: " + String(item.target.length):null}
         activeOpacity={1}
-        onPress={() => {}}
+        onPress={() =>
+          navigation.navigate("ExerciseGuide", { exercise: item })
+        }
         id={index+1}
         exerciseName={item.exerciseName}
-        image1={image1}
-        image2={image2}
+        coverImage={{uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}}
       />
     </View>
 
@@ -150,6 +153,9 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
           <Text style={styles.timerText}> {formatIntervel(item.restInSec)}</Text>
         </View>
       </View>
+    </View>
+    <View style={styles.timerContainer}>
+      <Text style={styles.timerHeader}>{item.restAfterInMins?`${item.restAfterInMins} MINUTES REST AFTER THIS EXERCISE`:""}</Text>
     </View>
     <Line />
     

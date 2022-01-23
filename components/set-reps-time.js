@@ -20,7 +20,7 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
         }
       }else{
         if (!['0', '--', 0, ''].includes(field1)){
-          dataChangeHandler(field1)
+          dataChangeHandler(type!==1?field1: field1*60)   // converting entered mins to second
         }else{
           ToastAndroid.show(`Enter ${type===0?'reps':'minutes'} ...`, ToastAndroid.BOTTOM);
         }
@@ -39,8 +39,11 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
         if(type == 2 && !!dv){
           dv1 = dv.split('X')[0]
           dv2 = dv.split('X')[1]?dv.split('X')[1]:0
-        }else{
+        }else if (type === 0){
           dv1 = dv
+          dv2= 0
+        }else{
+          dv1 = Number(dv)/60
           dv2= 0
         }
         setField1(String(dv1))

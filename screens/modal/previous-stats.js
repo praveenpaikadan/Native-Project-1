@@ -118,7 +118,7 @@ export default PreviousStatsModel = ({visible, exercise, setVisible}) => {
                     let dateCompleted = history[dayIndex].dateCompleted
                     let day = history[dayIndex].day
                     for(let exerciseIndex = 0; exerciseIndex<workout.length; exerciseIndex ++){
-                        if(workout[exerciseIndex].exercisID === exercise.exercisID){
+                        if(workout[exerciseIndex].exerciseID === exercise.exerciseID){
                             returnArray.push({
                                 id: workout[exerciseIndex]._id,
                                 day: day, 
@@ -145,7 +145,7 @@ export default PreviousStatsModel = ({visible, exercise, setVisible}) => {
     const toggleSwitch = (value) => {
         setSwitchOn(value)
         const addPreviousToList = (localHistory) => {
-            
+
             var newEntries = []
             for(let i=0; i<localHistory.length; i++){
                 if(exercise.workoutID !== localHistory[i]._id){

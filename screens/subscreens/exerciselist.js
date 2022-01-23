@@ -11,12 +11,11 @@ import { useNavigation } from "@react-navigation/native";
 import { globalFonts, sc, themeColors } from "../../styles/global-styles";
 import { ElevatedCardTypeOne } from "../../components/cards";
 import { MaterialIcons } from "@expo/vector-icons";
-import { makeMediaUrl } from "../../utilities/helpers";
+import { getFullMediaUrlIfRelative, makeMediaUrl } from "../../utilities/helpers";
 
 export const ExerciseCard = (props) => {
 
-  const [image1, setImage1] = React.useState(false) // do we have a succesful image load now?
-  const [image2, setImage2] = React.useState(false) // do we have a succesful image load now?
+  const [coverImage, setCoverImage] = React.useState(0) // do we have a succesful image load now?
 
   return (
     <TouchableOpacity
@@ -29,7 +28,7 @@ export const ExerciseCard = (props) => {
           <View style={cardStyles.idContainer}>
             <Text style={cardStyles.idContent}>{props.id}</Text>
           </View>
-          <View>
+          <View style={cardStyles.detailsContainer}>
             <Text
               style={{
                 fontFamily: globalFonts.primaryBold,
@@ -43,30 +42,32 @@ export const ExerciseCard = (props) => {
               {props.exerciseName}
             </Text>
             <Text style={cardStyles.targetSets}>{props.targetSets}</Text>
-          </View>
+          </View> 
 
-          <Image 
+          {/* <Image 
             source={props.image1} 
             style={{...cardStyles.image, display:image1?'flex':'none'}}
             onLoad={() => {setImage1(true)}}
-          />
+          /> */}
           {/*placeholder*/}
-          <Image 
+          {/* <Image 
             style={{...cardStyles.image, display:image1?'none':'flex'}}
             source={require("../../assets/images/exercise-place-holder1.png")}
-          />
-            
-          <Image 
-            source={props.image2} 
-            style={{...cardStyles.image, display:image2?'flex':'none'}}
-            onLoad={() => {setImage2(true)}}
-          />
+          /> */}
 
-          {/*placeholder*/}
-          <Image 
-            style={{...cardStyles.image, display:image2?'none':'flex'}}
-            source={require("../../assets/images/exercise-place-holder2.png")}
-          />
+          <View style={cardStyles.imageContainer}>
+            <Image 
+              source={props.coverImage} 
+              style={{...cardStyles.image, display:coverImage?'flex':'none'}}
+              onLoad={() => {setCoverImage(1)}}
+            />
+
+            {/*placeholder*/}
+            <Image 
+              style={{...cardStyles.image, display:coverImage?'none':'flex'}}
+              source={require("../../assets/images/exercise-place-holder2.png")}
+            />
+          </View>
 
         </View>
         {props.children}
@@ -120,9 +121,9 @@ const cardStyles = StyleSheet.create({
   },
 
   image: {
-    width: 75 * sc,
+    width: '100%',
     height: 55 * sc,
-    marginRight: 5 * sc,
+    marginRight: 10 * sc,
     borderRadius: 10 * sc,
   },
 
@@ -130,6 +131,17 @@ const cardStyles = StyleSheet.create({
     position: "absolute",
     justifyContent: "center",
   },
+
+  detailsContainer : {
+    flex:1
+  },
+
+  imageContainer:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: 100*sc,
+  }
 });
 
 export const ExerciseList = ({ data, activeOpacity, onPress }) => {
@@ -141,12 +153,14 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
       keyExtractor={(item, index) => item._id}
       renderItem={({item, index}) => {
         // getting image urls if exists
-        var image1 = null
-        var image2 = null
+        // var image1 = null
+        // var image2 = null
    
-        image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
-        image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
+        // image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
+        // image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
         
+        var coverImage = null
+        coverImage = {uri: getFullMediaUrlIfRelative(makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true))}
         // ========
 
         return(
@@ -160,17 +174,20 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
             // onPress={() => onPress(index)}
             id={index+1}
             exerciseName={item.exerciseName}
-            image1={image1}
-            image2={image2}
+            coverImage={coverImage}
+            // image2={image2}
           >
           {item.restInSec?
             <View style={styles.timerContainer}>
               <MaterialIcons name="timer" {...timerIconStyling} />
-              <Text style={styles.timerHeadingText}>REST BETWEEN SETS: </Text>
+              <Text style={styles.timerHeadingText}>REST AFTER THIS EXERCISE: </Text>
               <View style={styles.timeContainer}>
-                <Text style={styles.timerText}>{item.restInSec<=120?item.restInSec+' secs':Math.round(item.restInSec/60)+' mins'}</Text>
+                <Text style={styles.timerText}>{item.restAfterInMins+ ' MINUTES'}</Text>
               </View>
             </View>:null}
+            {/* <View>
+            <Text style={styles.restAfter}>{item.restAfterInMins} minutes rest before moving on</Text> 
+            </View> */}
             </ExerciseCard>
         </View>
       )}}
@@ -181,7 +198,7 @@ export const ExerciseList = ({ data, activeOpacity, onPress }) => {
 
 const timerIconStyling = {
   color: themeColors.primary1,
-  size: 20 * sc,
+  size: 15 * sc,
 };
 
 const styles = StyleSheet.create({
@@ -198,13 +215,13 @@ const styles = StyleSheet.create({
 
   timerHeadingText: {
     fontFamily: globalFonts.primaryRegular,
-    fontSize: 12 * sc,
+    fontSize: 10 * sc,
     marginHorizontal:5*sc,
     color: themeColors.secondary2,
   },
   timerText: {
     fontFamily: globalFonts.primaryRegular,
-    fontSize: 12 * sc,
+    fontSize: 10 * sc,
     color: themeColors.tertiary1,
   },
 
@@ -213,4 +230,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3 * sc,
     paddingVertical: 1 * sc,
   },
+
+  restAfter: {
+    fontFamily: globalFonts.primaryLight,
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 12*sc,
+    marginTop: 6*sc,
+    // borderWidth: 1*sc,
+    // borderBottomRightRadius: 10*sc,
+    // borderBottomLeftRadius: 10*sc,
+    // borderColor: themeColors.tertiary3,
+
+  }
 });

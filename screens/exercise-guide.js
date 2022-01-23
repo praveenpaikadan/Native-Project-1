@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
-  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { ButtonType1 } from "../components/buttons";
 import data from "../assets/data/data.json";
@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import flashMessage from "../utilities/flash-message";
 import { Spinner1 } from "../components/loading-spinner";
 import { MessageBox1 } from "../components/message-box";
+import { ImageGallery1 } from "../components/image-gallery";
 
 
 const ImageCard = (props) => {
@@ -115,6 +116,9 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
   const [reloadSwitch, setReloadSwitch] = useState(true)
   const [fullScreen, setFullScreen] = useState(false)
 
+  const [activeTab, setActiveTab] = React.useState(null)
+
+
   const getExerciseFromLocal = async (exercise) => {
     var response = await AsyncStorage.getItem('exerciseStore')
     if(response){
@@ -157,29 +161,65 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
 
 
   useEffect( () => {
-    getExerciseFromLocal(exercise)
-    .then((localEx) => {
-      setFetched(localEx)
-      setLoading(localEx?false:true)
-      getExerciseDatafromServer(exercise)
-      .then((response) => {
-        if(response){
-          setFetched(response.data)
-          setLoading(false)
-          saveToLocalExerciseStore(response.data)
-        }else{
-          if(localEx){
-            flashMessage('Showing cached exercise instructions. Please check internet..','info', 300)
+    let componentExists = true
+    var loadItems = () => {
+      getExerciseFromLocal(exercise)
+      .then((localEx) => {
+        if(componentExists){
+          setFetched(localEx)
+          setLoading(localEx?false:true)
+          if(localEx && localEx.videoEmbedString){
+            setActiveTab('video')
+          }else if(localEx && localEx.explainatoryImages){
+            setActiveTab('images')
           }
-          setLoading(false)
         }
+        getExerciseDatafromServer(exercise)
+        .then((response) => {
+          if(response){
+            if(componentExists){
+              setFetched(response.data)
+              setLoading(false)
+              saveToLocalExerciseStore(response.data)
+              if(response.data && response.data.videoEmbedString){
+                setActiveTab('video')
+              }else if(response.data && response.data.explainatoryImages){
+                setActiveTab('images')
+              }
+            }
+          }else{
+            if(localEx){
+              if(componentExists){
+                flashMessage('Showing cached exercise instructions. Please check internet..','info', 300)  
+              }
+            }
+            if(componentExists){
+              setLoading(false)
+            }
+          }
       }
     ) 
   })
+  } 
+  loadItems()
+  return () => {componentExists = false}
     
   }, [reloadSwitch])
 
-
+  if(loading){
+    return( 
+    <View style={styles.container}>
+      <StatusBar translucent={true} hidden={fullScreen?true:false}/>
+      <Header
+        backButton={true}
+        onPress={() => navigation.pop()}
+        onPressMenu={() => navigation.openDrawer()}
+      />
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Spinner1 />
+      </View>
+    </View>)
+  }
 
   return (
     <View style={styles.container}>
@@ -191,12 +231,35 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
         onPressMenu={() => navigation.openDrawer()}
       />
       :null}
+      
 
       <View style={styles.contentContainer}>
+
+        {/* if day video exists ============ */}
+      {fetched.videoEmbedString && fetched.explainatoryImages&& !fullScreen?
+      <View style={styles.topTabsContainer}>
+        <TouchableOpacity 
+        onPress={() => {setActiveTab('video')}}
+        style={{...styles.tabWrapper, borderRightColor: themeColors.primary1, borderRightWidth: 0.25}}>
+          <Text style={{...styles.tabText, color: activeTab === 'video'?themeColors.primary1:themeColors.tertiary1}}>
+            Video Instructions
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+        onPress={() => {setActiveTab('images')}}
+        style={{...styles.tabWrapper, borderLeftColor: themeColors.primary1, borderLeftWidth: 0.25}}>
+        <Text style={{...styles.tabText,color: activeTab === 'images'?themeColors.primary1:themeColors.tertiary1}}>
+            Images
+          </Text>
+        </TouchableOpacity>
+      </View>
+      :null}
+
+      {/* ======== if day video exists */}
+
         <View style={styles.headingContainer}>
           <View style={styles.cardContainer}>
             
-          
           {/* {!loading?
             fetched.video[0]?
             <View style={{alignItems:'center', backgroundColor: 'yellow'}} >
@@ -205,25 +268,19 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
             :null:
           null}   */}
           
-          {!loading && fetched?
-
-            (fetched.videoEmbedString?
-            
+  
+          {activeTab==='video'?
             <VimeoWebPage embedString={fetched.videoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen}/>
-            
             :
+            ( activeTab === 'images'?
+            <ImageGallery1
+              urlArray={fetched.explainatoryImages.split(',')}
+              // width={'auto'}
+              height={150*sc}
+            />: 
+            null)
+          } 
 
-      
-            <ImageCard 
-              image1={{uri: fetched.imageUrl1?fetched.imageUrl1: makeMediaUrl(fetched.images && fetched.images[0]?fetched.images[0].filename:'', true)}}
-              image2={{uri: fetched.imageUrl2?fetched.imageUrl2: makeMediaUrl(fetched.images && fetched.images[1]?fetched.images[1].filename:'', true)}}
-            />
-
-            )
-
-          :null}
-
-          
 
           </View>
 
@@ -287,7 +344,7 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
               })}
             </View>
           </ScrollView>
-          :<MessageBox1 setReload={() => {setReloadSwitch(!reloadSwitch)}} message={'Pleae check your internet..'}/>)
+          :<MessageBox1 setReload={() => {setReloadSwitch(!reloadSwitch)}} message={'Please check your internet..'}/>)
           
           :
           <View style={{flex:1,justifyContent:'center', marginBottom: 30*sc}}><Spinner1 /></View>
@@ -328,6 +385,25 @@ const styles = StyleSheet.create({
     paddingVertical: 5 * sc,
   },
 
+  topTabsContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+
+  tabWrapper:{
+    flex: 1,
+    backgroundColor: themeColors.tertiary2,
+  },
+
+  tabText:{
+    padding: 5*sc,
+    textAlign: 'center',
+    fontFamily: globalFonts.primaryLight,
+    color: themeColors.secondary1,
+    fontSize: 12*sc,
+    
+  },
+
   cardContainer: {
     width: "100%",
     flexDirection: "row",
@@ -335,7 +411,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     backgroundColor: themeColors.tertiary2,
     // paddingVertical: 5 * sc,
-    borderRadius: 10 * sc,
+    // borderRadius: 10 * sc,
   },
 
   card: {

@@ -10,6 +10,7 @@ import { today, dmyToYmd } from '../utilities/helpers';
 import { WorkoutCard } from '../components/workout-card';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ButtonType1 } from './buttons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // All date s used in this component is of the form yyyy/mm/dd. use the function dmyToYmd() to convert if dates are in dd/mm/yyy format. 
 const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER']
@@ -105,7 +106,6 @@ const Banner = ({date, item, programName}) => {
 
 
 export const AgendaCalendar = () => {
-  const { workoutData} = useContext(WorkoutContext)
 
   var items = {}
   var marked = {}
@@ -121,7 +121,7 @@ export const AgendaCalendar = () => {
     programName=workoutData.program.programName
   }
 
-
+  const [workoutData, setWorkoutData] = useState(null)
   
   // const [day, setDay] = useState(today.getDate())
   // const [month, setMonth] = useState(today.getDate())
@@ -130,13 +130,21 @@ export const AgendaCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(today(true))
   
   useEffect(() => {
+    const getWorkoutData = async() => {
+      var data = await AsyncStorage.getItem('workoutData')
+      return data 
+    }
+    getWorkoutData()
+    .then((data) => {
+      setWorkoutData(data)
+    })
     setTimeout(() => {setDownText(false)}, 1000)
-  })
+  }, [])
 
   
   return(
-    <Agenda
-    initialNumToRender={1}
+  <Agenda
+  initialNumToRender={1}
   // The list of items that have to be displayed in agenda. If you want to render item as empty date
   // the value of date key has to be an empty array []. If there exists no value for date key it is
   // considered that the date in question is not yet loaded
@@ -162,13 +170,18 @@ export const AgendaCalendar = () => {
   // Specify how each item should be rendered in agenda
   // renderItem={(item, firstItemInDay) => {return (<View></View>);}}
   // Specify how each date should be rendered. day can be undefined if the item is not first in that day
-  renderDay={(day, item) => {return (<WorkoutCardCover selectedDate={selectedDate} item={item} programName={programName} />);}}
+  // renderDay={(day, item) => {return (<WorkoutCardCover selectedDate={selectedDate} item={item} programName={programName} />);}}
+  renderDay={(day, item) => {return null;}}
+ 
+ 
   // Specify how empty date content with no items should be rendered
   // renderEmptyDate={() => {return (<View />);}}
   // Specify how agenda knob should look like
   renderKnob={() => {return (<DownKnob text = {downText}/>);}}
   // Specify what should be rendered instead of ActivityIndicator
-  renderEmptyData = {() => {return (<Banner date={selectedDate} item={items[selectedDate]} programName={programName}/>);}}
+  renderEmptyData = {() => {return null;}}
+  
+  // renderEmptyData = {() => {return (<Banner date={selectedDate} item={items[selectedDate]} programName={programName}/>);}}
   // Specify your item comparison function for increased performance
   // rowHasChanged={(r1, r2) => {return r1.text !== r2.text}}
   // Hide knob button. Default = false

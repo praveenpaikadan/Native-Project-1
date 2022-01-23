@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { themeColors, sc, globalFonts } from "../styles/global-styles";
 import { ButtonType1 } from "../components/buttons";
 import { Header } from "../components/header";
@@ -9,6 +9,8 @@ import { Feather } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import { today } from "../utilities/helpers";
+import { color } from "react-native-reanimated";
+import VimeoWebPage from "../components/vimeo-web-player";
 
 
 export default TrackingScreen = ({ navigation }) => {
@@ -26,14 +28,44 @@ export default TrackingScreen = ({ navigation }) => {
   var targetBodyPart = dayWorkoutPlan.targetBodyPart
   var completed = dayWorkout.complete
 
+
+  const [activeTab, setActiveTab] = React.useState(dayWorkoutPlan.dayIntroVideoEmbedString?'video':'summary')
+  const [fullScreen, setFullScreen] = React.useState(false)
+
   return (
     <View style={styles.container}>
-      <StatusBar translucent={true} style="light" />
+      <StatusBar translucent={true} style="light" hidden={fullScreen}/>
+      {!fullScreen?
       <Header
         backButton={true}
         onPress={() => navigation.goBack()}
         onPressMenu={() => navigation.openDrawer()}
-      />
+      />:null}
+
+      {/* if day video exists ============ */}
+      {dayWorkoutPlan.dayIntroVideoEmbedString && !fullScreen?
+      <View style={styles.topTabsContainer}>
+        <TouchableOpacity 
+        onPress={() => {setActiveTab('video')}}
+        style={{...styles.tabWrapper, borderRightColor: themeColors.primary1, borderRightWidth: 0.25}}>
+          <Text style={{...styles.tabText, color: activeTab === 'video'?themeColors.primary1:themeColors.tertiary1}}>
+            Intro to the day
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+        onPress={() => {setActiveTab('summary')}}
+        style={{...styles.tabWrapper, borderLeftColor: themeColors.primary1, borderLeftWidth: 0.25}}>
+        <Text style={{...styles.tabText,color: activeTab === 'summary'?themeColors.primary1:themeColors.tertiary1}}>
+            Workout Summary
+          </Text>
+        </TouchableOpacity>
+      </View>
+      :null}
+      {/* ======== if day video exists */}
+
+      {/* Video or summary ? ========= */}
+
+      {activeTab === 'summary'?
       <View style={styles.trackingContainer}>
         <View style={styles.headingContainer}>
           <FontAwesome5 name="dumbbell" {...dumbbellIconStyling} />
@@ -79,8 +111,15 @@ export default TrackingScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
+        <View style={styles.line}></View>
       </View>
-      <View style={styles.line}></View>
+      :
+      <VimeoWebPage embedString={dayWorkoutPlan.dayIntroVideoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen}/>
+      }
+
+      {/* ======= video or summary */}
+
+      
 
       <ButtonType1
         styling={styles.button}
@@ -114,6 +153,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+  },
+
+  topTabsContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+
+  tabWrapper:{
+    flex: 1,
+    backgroundColor: themeColors.tertiary2,
+  },
+
+  tabText:{
+    padding: 5*sc,
+    textAlign: 'center',
+    fontFamily: globalFonts.primaryLight,
+    color: themeColors.secondary1,
+    fontSize: 12*sc,
+    
   },
 
   trackingContainer: {

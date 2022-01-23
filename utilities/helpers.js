@@ -2,11 +2,12 @@ import { floor } from "react-native-reanimated"
 import { BASE_URL } from "./api"
 
 
-const repInNum = ( rep) => {
-    if(rep){
+const repInNum = (rep) => {
+    if(rep && typeof(rep) === 'string'){
         if(rep.includes('X')){
             try{
                 // additional modifications in calories calculation formula for kg X reps goes here
+                console.log('...............', rep)
                 return Number(rep.split('X')[1])
             }catch{
                 return 0
@@ -72,7 +73,7 @@ export const format_target = (value, type) => {
     try{
         if (type === 'seconds') {
             if (Number(value) > 120){
-                return Math.round(Number(value)) + ' mins'
+                return Math.round(Number(value)/60) + ' mins'
             }else{
                 return value + ' secs' 
             }
@@ -157,4 +158,12 @@ export const convertdd_mm_yyyyStringToTime = (inpDate) => {
     let b = a[1]+"/"+a[0]+"/"+a[2]
     let dateObj = new Date(b)
     return dateObj.getTime()
+}
+
+export const getFullMediaUrlIfRelative = (potRelUrl) => {
+    if(potRelUrl.substring(0, 7) === `/media/` ){
+        return BASE_URL + potRelUrl
+    }else{
+        return potRelUrl
+    }
 }

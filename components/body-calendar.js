@@ -18,7 +18,6 @@ export default BodyCalendar = ({ visible, closeMenu, active, setactive }) => {
     <Modal transparent={true} visible={visible} animationType="fade">
       <View style={{ ...styles.overlay }}>
         <View style={styles.container}>
-
           <View style={styles.line}></View>
           <View style={styles.headingContainer}>
             <View style={styles.headingContent}>
