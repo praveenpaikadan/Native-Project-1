@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontFamily: globalFonts.primaryLight,
     padding: 4 * sc,
-    borderRadius: 5 * sc,
+    borderRadius: 2 * sc,
     backgroundColor: themeColors.tertiary3,
   },
 

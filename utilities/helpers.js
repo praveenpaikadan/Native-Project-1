@@ -94,6 +94,14 @@ export const today = (ymd) => {
     d = d.length ==1?'0'+d:d
     var m = String(a.getMonth()+1)
     var y = String(a.getFullYear())
+
+    if(d.length === 1){
+        d = '0' + d
+    }
+
+    if(m.length === 1){
+        m = '0' + m
+    }
     if(ymd){
         console.log('ymd date is ', y+ '-' + m + '-' + d )
         return  [y,m,d].join('-')
@@ -114,6 +122,15 @@ export const dmyToYmd = (dmy) => {
     var d = arr[0].length === 1? '0' + arr[0]: arr[0]
     var m = arr[1]
     var y = arr[2]
+
+    if(d.length === 1){
+        d = '0' + d
+    }
+
+    if(m.length === 1){
+        m = '0' + m
+    }
+
     return [y,m,d].join('-')
 }
 

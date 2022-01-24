@@ -236,7 +236,7 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
       <View style={styles.contentContainer}>
 
         {/* if day video exists ============ */}
-      {fetched.videoEmbedString && fetched.explainatoryImages&& !fullScreen?
+      {fetched &&  fetched.videoEmbedString && fetched.explainatoryImages&& !fullScreen?
       <View style={styles.topTabsContainer}>
         <TouchableOpacity 
         onPress={() => {setActiveTab('video')}}
@@ -269,10 +269,10 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
           null}   */}
           
   
-          {activeTab==='video'?
+          {fetched &&  activeTab==='video'?
             <VimeoWebPage embedString={fetched.videoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen}/>
             :
-            ( activeTab === 'images'?
+            ( fetched && activeTab === 'images'?
             <ImageGallery1
               urlArray={fetched.explainatoryImages.split(',')}
               // width={'auto'}
@@ -280,7 +280,6 @@ export default ExerciseGuideScreen = ({ navigation, route }) => {
             />: 
             null)
           } 
-
 
           </View>
 

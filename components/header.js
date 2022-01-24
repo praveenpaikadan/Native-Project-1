@@ -16,18 +16,24 @@ export const Header = ({
   backButtonText,
   onPressMenu,
   title
-}) => (
+}) => {
+
+  const [backDisabled, setBackDisabled] = React.useState(false);
+
+  return (
   <View style={styles.headerContainer}>
-    <TouchableOpacity onPress={onPress} style={styles.backButtonContainer}>
-      {backButton ? (
+    {backButton ? (
+    <TouchableOpacity disabled={backDisabled} onPress={() => {setBackDisabled(true);onPress()}} style={styles.backButtonContainer}>
+      
         <FontAwesome5
           name="chevron-left"
           size={25}
           color={themeColors.secondary2}
         />
-      ) : null}
+      
       {backButtonText ? <Text style={styles.backButtonText}>LIST</Text> : null}
     </TouchableOpacity>
+    ) : null}
     <View style={styles.textContainer}>
       <Text style={styles.headerText}>{title?title:'Personal Trainer'}</Text>
     </View>
@@ -37,7 +43,7 @@ export const Header = ({
       </TouchableOpacity>
     </View>
   </View>
-);
+)};
 
 const styles = StyleSheet.create({
   headerContainer: {

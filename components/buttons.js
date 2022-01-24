@@ -30,7 +30,7 @@ export const ButtonType1 = ({
         justifyContent: "center",
         backgroundColor: !invertColor?themeColors.primary1: themeColors.secondary2,
         opacity: disabled?0.5:1,
-        borderRadius: 10 * sc,
+        borderRadius: 5 * sc,
         minWidth: !small?150 * sc:small,
         ...styling,
       }}
@@ -41,8 +41,8 @@ export const ButtonType1 = ({
           alignItems: "center",
           justifyContent: "center",
           padding: 10 * sc,
-          paddingBottom: 12 * sc,
-          paddingTop: 12 * sc,
+          paddingBottom: 8 * sc,
+          paddingTop: 8 * sc,
           ...subContainerStyling
         }}
       >

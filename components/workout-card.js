@@ -41,6 +41,73 @@ export const WorkoutCard = (props) => {
 
     // To display workout days that are locked
 
+    if(props.noCardLook){
+        return(
+            <View style={{...cardStyles.cardConatiner, width: '100%'}}>
+                <View styling={!focus?cardStyles.card:cardStyles.focusedCard}>
+                    
+                    <View style={cardStyles.historyContainer}>
+            
+                        {!tick?
+                        <View style={cardStyles.iconContainer}>
+                            <View style={{transform:[{scale: 0.85}]}}>
+                                <View style={cardStyles.monthContainer}>
+                                    <View style={cardStyles.dot}></View>
+                                    <Text style={cardStyles.month}>{props.month}</Text>
+                                    <View style={cardStyles.dot}></View>
+                                </View>
+                                <View style={cardStyles.dateContainer}>
+                                    <Text style={cardStyles.date}>{props.date}</Text>
+                                    <Text style={cardStyles.year}>{props.year}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        :
+                        (!dot
+                            ?
+                            <View style={cardStyles.iconContainer}>
+                                <Ionicons name="checkmark-done-circle-sharp" size={40*sc} color={themeColors.primary1} />
+                            </View>
+                            :
+                            <View style={cardStyles.iconContainer}>
+                                <Ionicons name="timer-outline" size={50*sc} color={themeColors.primary1} />
+                            </View>
+                        )
+                        }
+                        <View style={cardStyles.textContainer}>
+                            <Text style={cardStyles.program}>{props.programName}: Day {props.day} - {props.muscles}</Text>
+                            <Text style={cardStyles.calories}>{`${dot?'Equivalent Calories: ':'Calories burnt:'}` } {props.data.calsBurned}Kcal</Text>
+                            <Text style={cardStyles.calories}>{'Total Exercises:' } {props.data.workoutsTracked}</Text>
+                        </View>
+                    </View>
+    
+                    {focus?
+                    
+                    <View style={{paddingHorizontal: 10*sc}}>
+                        <Text style={{paddingHorizontal: 10*sc, paddingVertical: 10*sc, fontFamily: globalFonts.primaryRegular}}>Details of workout : </Text>
+                        <View style={cardStyles.line}></View>
+                        {data.workout.map((exercise, index) => {
+                            var sets = exercise.reps.filter(item =>item !== '0').map((rep, index) => <Text key={String(index)} style={cardStyles.tableText}>{`${dot?'Target Set ':'Set '}`+ (index+1) + ' : '+format_target(rep, exercise.repetitionType)}</Text>)
+                            return(
+                        <View key={String(index)}>
+                        <View style={{flexDirection: 'row', paddingHorizontal: 5*sc, paddingVertical:2*sc}}>
+                            <View style={{flex:1}}><Text style={cardStyles.tableText}>{exercise.exerciseNumber}</Text></View>
+                            <View style={{flex:7}}><Text style={cardStyles.tableText}>{exercise.exerciseName}</Text></View>
+                            <View style={{flex:12}}>{sets[0]?sets:<Text style={cardStyles.tableText}>Skipped</Text>}</View>
+                        </View>
+                        <View style={cardStyles.line}></View>
+                        </View>
+                    )})}</View>
+    
+                    :
+                    null}
+                    
+                </View>      
+            </View>
+            
+        );
+    }
+
     if(props.locked){
         return(
         <View style={cardStyles.cardConatiner}>

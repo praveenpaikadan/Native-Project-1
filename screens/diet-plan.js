@@ -279,7 +279,7 @@ export const RecommendedDiet = ({dayDiet}) => {
                         width: 200*sc, 
                         elevation: 7,
                         backgroundColor: 'white',
-                        borderRadius: 25*sc,
+                        borderRadius: 8*sc,
                     }}>
                         <TouchableHighlight key={index}
                             activeOpacity={0.6}
@@ -396,7 +396,7 @@ export default DietPlan = ({ navigation, route }) => {
 //     ]
 
   return (
-    <View style={{width: '100%', height: '100%'}}>
+    <View ref={compExist} style={{width: '100%', height: '100%'}}>
         <View>
             <StatusBar style="light" translucent={true} />
             <DietPlanGraphics style={{width: '100%'}}/>

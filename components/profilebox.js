@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       margin: 10 * sc,
       alignSelf: "center",
-      borderRadius: 15 * sc,
+      borderRadius: 5* sc,
       overflow: "hidden",
     },
   
