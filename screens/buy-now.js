@@ -16,11 +16,13 @@ import { SubHeader } from "../components/subheader";
 import { formPageStyles } from "../styles/form-pages-styles";
 import { testSubscribe } from "../utilities/data-center";
 import { WorkoutContext } from "../components/workout-context";
+import { getFullMediaUrlIfRelative } from "../utilities/helpers";
 
 export default BuyNow = ({ navigation, route }) => {
 
   const { resetWorkoutData } = React.useContext(WorkoutContext)
-  const {data, bgImage} = route.params
+  const {data} = route.params
+  var bgImage = getFullMediaUrlIfRelative(data.coverImage)
 
   const [selected, setSelected] = React.useState(-1) 
   
@@ -48,7 +50,7 @@ export default BuyNow = ({ navigation, route }) => {
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
       <ImageBackground
-        source={bgImage}
+        source={{uri:bgImage}}
         style={styles.container}
       >
         <View style={styles.overlay}>
@@ -59,7 +61,6 @@ export default BuyNow = ({ navigation, route }) => {
           />
 
           <View style={styles.contentContainer}>
-            <Text style={heading}>Personal Trainer</Text>
             <Text style={styles.about}>
               Choose the type of plan you want to proceed with. If you need a different plan contact your trainer
             </Text>

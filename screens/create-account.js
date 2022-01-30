@@ -7,6 +7,7 @@ import { formPageStyles } from "../styles/form-pages-styles";
 import { checkEmail, postNewUserData } from "../utilities/data-center";
 import flash from '../utilities/flash-message';
 import { VerificationModal } from "./modal/verify";
+import { sc } from "../styles/global-styles";
 
 
 export default CreateAccountScreen = ({ navigation }) => {
@@ -221,6 +222,8 @@ export default CreateAccountScreen = ({ navigation }) => {
             <ButtonType1
               styling={styles.submitButton}
               text={"SIGN UP"}
+              textStyling={{fontSize: 20*sc}}
+              arrow={20*sc}
               disabled={isLoading ? true : false}
               isLoading={isLoading}
               onClick={buttonClickHandler}

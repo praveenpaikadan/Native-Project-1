@@ -28,8 +28,9 @@ export const formPageStyles = StyleSheet.create({
     fontFamily: globalFonts.primaryRegular,
     letterSpacing: 2 * sc,
     marginBottom: 5 * sc,
-    fontSize: 34 * sc, //font size
+    fontSize: 28 * sc, //font size
     color: themeColors.secondary2,
+    width: '60%',
   },
   subHeading: {
     fontFamily: globalFonts.primaryRegular,

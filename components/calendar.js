@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import { globalFonts, sc, themeColors } from '../styles/global-styles';
 import LottieView from 'lottie-react-native';
-import { today, dmyToYmd } from '../utilities/helpers';
+import { today, dmyToYmd, calculateCalories } from '../utilities/helpers';
 import { WorkoutCard } from '../components/workout-card';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -58,17 +58,17 @@ const WorkoutCardCover = ({selectedDate, item, programName}) => {
     <ScrollView style={{flex: 1}}>
     <View style={{flex: 1, alignItems: 'center',  marginBottom: 20*sc}}> 
         <WorkoutCard
-        day={item.day}
-        date={dA[2]}
-        month={'--'}
-        year={dA[1]}
-        programName={programName}
-        muscles={'TBD-Target'}
-        calories='TBD-calories' 
-        focus={true}
-        data={item}
-        tick={true}
-        noCardLook={true}
+          day={item.day}
+          date={dA[2]}
+          month={'--'}
+          year={dA[1]}
+          programName={programName}
+          muscles={item.targetBodyPart}
+          calories='TBD-calories' 
+          focus={true}
+          data={item}
+          tick={true}
+          noCardLook={true}
       /> 
     </View>
     </ScrollView>
@@ -132,9 +132,16 @@ export const AgendaCalendar = () => {
         if(response.history){
           response.history.forEach((dayDetail) => {
             var date = dmyToYmd(dayDetail.dateCompleted)
+            programName = response.program.programName
+            var stats = calculateCalories([dayDetail], response.calsPerRepList)  // calculateCalories will take array of history and reference list for calcualting calories.
+            dayDetail['calsBurned'] = stats['caloriesBurned']
+            dayDetail['workoutsTracked'] = stats['workoutsTracked']
+            var scheduleItem = response.program.schedule.find((item) => item.day === dayDetail['day'])
+              if(scheduleItem!== undefined){
+                dayDetail['targetBodyPart'] = scheduleItem.targetBodyPart
+            }  
             tempItem[date] = dayDetail
             tempMarked[date] = {marked: true}
-            programName = response.program.programName
           })
         }
       }

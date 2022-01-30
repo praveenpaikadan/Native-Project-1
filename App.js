@@ -106,7 +106,9 @@ export default function App() {
 
   const dayWorkoutShape = (workoutData, currentDay) => {
     var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
-    var exerciseList = dayWorkoutPlan.exercises
+
+    console.log("................................", dayWorkoutPlan)
+    var exerciseList = dayWorkoutPlan? dayWorkoutPlan.exercises : []
     return{
     day : currentDay,
     date : today(),
@@ -116,7 +118,8 @@ export default function App() {
     complete: false,
     level: workoutData.program.level,
     dayWorkoutPlan: dayWorkoutPlan,
-    finalDay: currentDay === workoutData.program.schedule.length,
+    // finalDay: currentDay === workoutData.program.schedule.length,
+    finalDay: currentDay === workoutData.program.durationWeeks * workoutData.program.daysPerWeek ,
     workout: exerciseList.map((exercise, index) => {
       return {
           exerciseNumber: index+1,
@@ -150,8 +153,7 @@ export default function App() {
     var {lastDaySaved, lastDateSaved} = getLastDayDate(workoutData) 
     console.log('After calling the makeWorkout ', lastDateSaved,' ', lastDateSaved)
     console.log('lastDaySaved is .................', lastDaySaved)
-    var finalDay = workoutData.program.schedule.length
-
+    var finalDay = workoutData.program.schedule.length 
 
     const isToday = () => {
       // console.log('wd in isToday is ', wd)    
@@ -180,7 +182,7 @@ export default function App() {
         console.log('Day workout is null making new - New day after the last saved for day ', lastDaySaved+1)
         newDayWorkout = dayWorkoutShape(workoutData, lastDaySaved+1)
       }
-   
+
     }else{
       if(dayWorkout.complete === true && dayWorkout.dateCompleted !== today()){
         if(finalDay > lastDaySaved){
@@ -208,7 +210,6 @@ export default function App() {
 
 
 // Handling log out
-
   const logOutLocal = async () => {
     await resetCredentials(null)
     resetWorkoutData(null)

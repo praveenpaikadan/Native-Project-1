@@ -22,14 +22,17 @@ import { getAPIAvailablePrograms } from '../../utilities/data-center';
 import { MessageBox1 } from "../../components/message-box";
 import { EmptyPaper } from "../../assets/svgs/svg-graphics";
 import { BASE_URL } from "../../utilities/api"
+import { getFullMediaUrlIfRelative } from "../../utilities/helpers";
 
 const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
-  var source = bgImage?{uri: bgImage, headers: {'X-Access-Token' : "authToken"}}:require('../../assets/images/dead-lift.jpg')
+  // var source = bgImage?{uri: bgImage, headers: {'X-Access-Token' : "authToken"}}:require('../../assets/images/dead-lift.jpg')
+  var source = bgImage
   return (
     <ElevatedCardTypeOne styling={cardStyles.card}>
-      <ImageBackground style={cardStyles.cardImage} source={source}>
+      <ImageBackground style={cardStyles.cardImage} source={{uri:source}}>
         <View style={cardStyles.cardOverlay}>
           <Text style={cardStyles.mainText}>{heading}</Text>
+
           <View style={cardStyles.detailsContainer}>
             <View style={cardStyles.detailsItemContainer}>
               <FontAwesome5 name="fire" {...cardIconStyling} />
@@ -43,7 +46,7 @@ const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
               <FontAwesome5 name="calendar" {...cardIconStyling} />
               <Text style={cardStyles.subText}>{period}</Text>
             </View>
-          </View>
+          </View> 
         </View>
       </ImageBackground>
     </ElevatedCardTypeOne>
@@ -79,10 +82,14 @@ const List = ({data, setReload, navigation}) => {
           keyExtractor={(item, index) => index.toString()}
           refreshControl={<RefreshControl onRefresh={() => setReload()} />}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => {item.bgImage = item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null; navigation.navigate('ProgramDetails', {data: item})}}>
+            <TouchableOpacity onPress={() => {
+              console.log(item.coverImage)
+              // item.bgImage = item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null; 
+              navigation.navigate('ProgramDetails', {data: item})}}>
               <ProgramCard
                 styles={styles.cardsContainer}
-                bgImage={item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null}
+                // bgImage={item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null}
+                bgImage={ getFullMediaUrlIfRelative(item.coverImage) }
                 heading={item.programName}
                 shortInfo={item.category}
                 level={item.level}
@@ -179,19 +186,21 @@ const cardIconStyling = {
 const cardStyles = StyleSheet.create({
   card: {
     width: 340 * sc,
-    height: 130 * sc,
+    minHeight: 100 * sc,
     marginVertical: 5 * sc,
   },
 
   cardImage: {
     width: "100%",
-    height: "100%",
+    alignSelf:'center',
+    minHeight: 100*sc
+    // height: "100%",
+    
+
   },
 
   cardOverlay: {
     // backgroundColor: "rgba(0,0,0, 0.3)",
-    width: "100%",
-    height: "100%",
     alignItems: "flex-start",
     justifyContent: "center",
     paddingHorizontal: 15 * sc,
@@ -199,7 +208,7 @@ const cardStyles = StyleSheet.create({
 
   mainText: {
     fontFamily: globalFonts.primaryMedium,
-    fontSize: 25 * sc,
+    fontSize: 20 * sc,
     marginTop: 10*sc,
     color: themeColors.secondary2,
     marginBottom: 10 * sc,

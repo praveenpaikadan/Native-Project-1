@@ -7,6 +7,7 @@ import { formPageStyles } from '../styles/form-pages-styles';
 import { VerificationModal } from './modal/verify';
 import { checkEmail, resetPassword } from '../utilities/data-center';
 import flashMessage from '../utilities/flash-message';
+import { sc } from '../styles/global-styles';
 
 
 export default ResetPasswordScreen = ({navigation}) => {
@@ -24,6 +25,8 @@ export default ResetPasswordScreen = ({navigation}) => {
     const [validationMessage, setValidationMessage] = useState("")
     const [validationColor, setValidationColor] = useState(false)
     const [passwordOK, setPasswordOK] = useState(false)
+
+    const [sentCode, setSentCode] = useState(false)
 
     const passwordValidation = (value) => {
         const reg = /^(?=.*[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -56,7 +59,6 @@ export default ResetPasswordScreen = ({navigation}) => {
         setIsLoading(true)
         resetPassword({email: email, password: password, code: code})
         .then((response) => {
-            
             if(exist){
                 setIsLoading(false)
                 if(response.status === 200){
@@ -128,7 +130,7 @@ export default ResetPasswordScreen = ({navigation}) => {
         }
 
 
-        if(!firstSubmit){
+        if(!firstSubmit && sentCode){
             if(fromModal){
                 null
             }else{
@@ -146,6 +148,7 @@ export default ResetPasswordScreen = ({navigation}) => {
                     if(response.data.success){
                         setModalVisible(true)
                         setName(response.data.name)
+                        setSentCode(true)
                         setIsLoading(false)
                     }else{  
                         flashMessage('This email id is not registered. Please enter correct email id', 'danger', 8000)
@@ -193,6 +196,8 @@ export default ResetPasswordScreen = ({navigation}) => {
                         <ButtonType1 
                         styling={styles.submitButton} 
                         text={"NEXT"}
+                        textStyling={{fontSize: 20*sc}}
+                        arrow={isLoading?false:20*sc}
                         isLoading={isLoading}
                         onClick={() => sendCode()}
                         disabled={isLoading}
@@ -228,6 +233,7 @@ export default ResetPasswordScreen = ({navigation}) => {
 
                         styling={styles.submitButton}
                         text={"SUBMIT"}
+                        textStyling={{fontSize: 20*sc}}
                         arrow={false}
                         disabled={isLoading}
                         isLoading={isLoading}

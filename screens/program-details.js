@@ -11,6 +11,8 @@ import { ButtonType1 } from "../components/buttons";
 import { SubHeader } from "../components/subheader";
 import { StatusBar } from "expo-status-bar";
 import { BASE_URL } from "../utilities/api";
+import { getFullMediaUrlIfRelative } from "../utilities/helpers";
+import VimeoWebPage from "../components/vimeo-web-player";
 
 
 export default ProgramDetails = ({ navigation, route }) => {
@@ -21,92 +23,115 @@ export default ProgramDetails = ({ navigation, route }) => {
     var video_link = `${BASE_URL}/media/${data.videos[0].filename}`
   }
   
-  console.log(data)
-  var imgSource = data.bgImage
-          ?{uri: data.bgImage, headers: {'X-Access-Token': authToken}}
-          :require('../assets/images/dead-lift.jpg')
+  // console.log(data)
+  // var imgSource = data.bgImage
+  //         ?{uri: data.bgImage, headers: {'X-Access-Token': authToken}}
+  //         :require('../assets/images/dead-lift.jpg')
 
   const backHandler = () => {
     navigation.goBack();
   };
 
-  return (
-    <View style={styles.programDetailsContainer}>
+  const [videoActive, setVideoActive]  = React.useState(false)
+  const [fullScreen, setFullScreen] = React.useState(false);
+
+  return(
+    <View style={{flex: 1}}>
       <StatusBar translucent={true} />
-      <View style={styles.backgroudImageContainer}>
-        <ImageBackground
-          source={imgSource}
-          style={styles.image}
-        >
-          <View style={styles.overlay}>
+      <View style={{ flex: 1}}>
+        <View>
+          <View style={styles.backgroudImageContainer}>
+            <ImageBackground
+            source={{uri: getFullMediaUrlIfRelative(data.coverImage)}}
+            style={styles.image}
+            >
+              <View style={styles.overlay}>
             <SubHeader
-              text={data.programName.split("Aboo Thahir")}
+              text={data.programName}
               onPress={backHandler}
+              
             />
 
+
             <View style={styles.contentContainer}>
-              <Text style={styles.smallHeading}>
-                {data.durationWeeks} week program for {data.level} level.
-              </Text>
               
-             {data.videos[0]? <ButtonType1
-                text={"Watch Video"}
-                play={30}
-                arrow={false}
-                styling={styles.vbutton}
-                textStyling={styles.vbuttonText}
-                onClick={() => {navigation.navigate('VideoPlayer', {link: video_link})}}
-              />
-              :<></>
-            }
-              
-              <Text style={styles.smallHeading}>
-                Category: {'custom category'}
-              </Text>
-              <Text style={styles.smallHeading}>
-                Days Per Week: {data.daysPerWeek}
-              </Text>
-              <Text style={styles.smallHeading}>
-                Equipment: {data.equipments.join(', ')}
-              </Text>
+              {!videoActive?<React.Fragment>
+                {data.videos[0]? <ButtonType1
+                    text={"Watch Introduction"}
+                    play={30}
+                    arrow={false}
+                    styling={styles.vbutton}
+                    textStyling={styles.vbuttonText}
+                    onClick={() => {navigation.navigate('VideoPlayer', {link: video_link})}}
+                  />
+                  :<></>
+                }
+                <ScrollView style={{height: 155*sc}} contentContainerStyle={{ justifyContent: 'center', paddingTop: 10*sc, paddingTop: 10*sc}}>
+                  <Text style={styles.smallHeading}>
+                    Category: {data.category}
+                  </Text>
+
+                  <Text style={styles.smallHeading}>
+                    Program Duration: {data.durationWeeks}
+                  </Text>
+
+                  <Text style={styles.smallHeading}>
+                    Days Per Week: {data.daysPerWeek}
+                  </Text>
+
+                  <Text style={styles.smallHeading}>
+                    Equipments Required: {data.equipments.join(', ')  }
+                  </Text>
+                </ScrollView >
+                
+              </React.Fragment>
+              : <VimeoWebPage embedString={data.videoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen}/>
+
+              }
               
               <ButtonType1
                 text={"Join Now"}
                 arrow={false}
                 styling={styles.button}
                 textStyling={styles.buttonText}
-                onClick={() => navigation.navigate("BuyNow", {data: data, bgImage :imgSource})}
+                onClick={() => navigation.navigate("BuyNow", {data: data})}
               />
             </View>
+
           </View>
-        </ImageBackground>
+
+              </ImageBackground>
+
+          </View>
+        </View>
+          <View style={{flex: 1}}>
+            <ScrollView style={{height: '100%'}}>
+              <Text style={styles.content}>{data.goal}</Text>
+            </ScrollView>
+          </View>
       </View>
-      <ScrollView style={styles.descriptionContainer}>
-        <Text style={styles.content}>{data.productDescription}</Text>
-      </ScrollView>
-    </View>
-  );
-};
+  </View>
+
+  )
+}
 
 const styles = StyleSheet.create({
   programDetailsContainer: {
     width: "100%",
-    height: "100%",
-    marginTop: 40 * sc,
+    flex:1
   },
 
   image: {
     width: "100%",
-    height: "100%",
+    alignSelf:'center',
+    // height: "100%",
   },
 
   backgroudImageContainer: {
-    flex: 1,
+    // flex: 1,
   },
 
   overlay: {
-    width: "100%",
-    height: "100%",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
 
@@ -120,15 +145,18 @@ const styles = StyleSheet.create({
     color: themeColors.secondary2,
     fontSize: 14 * sc,
     fontFamily: globalFonts.primaryMedium,
-    marginVertical: 8 * sc,
+    marginVertical: 4 * sc,
+    textAlign: 'center'
   },
 
   button: {
+    // marginTop: 10*sc,
     minWidth: 200 * sc,
   },
 
   vbutton: {
-    width: 160 * sc,
+    // width: 160 * sc,
+    alignSelf: 'center',
     height: 40*sc
   },
 
@@ -141,6 +169,7 @@ const styles = StyleSheet.create({
   },
 
   descriptionContainer: {
+    backgroundColor: 'pink',
     flex: 1,
     padding: 15 * sc,
   },
@@ -148,8 +177,10 @@ const styles = StyleSheet.create({
   content: {
     color: themeColors.tertiary1,
     fontFamily: globalFonts.primaryRegular,
-    fontSize: 16 * sc,
+    fontSize: 13 * sc,
     textAlign: "justify",
     lineHeight: 30 * sc,
+    paddingBottom: 20*sc,
+    padding: 10*sc
   },
 });

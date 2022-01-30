@@ -36,6 +36,7 @@ export default GetStartedScreen = ({ navigation }) => {
   
           <ButtonType1
             text={"GET STARTED"}
+            textStyling={styles.buttonTextStyling}
             styling={styles.button}
             onClick={() => navigation.push("SignUp")}
           />
@@ -108,4 +109,8 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     alignSelf: "center",
   },
+
+  buttonTextStyling:{
+    fontSize: 25*sc,
+  }
 });

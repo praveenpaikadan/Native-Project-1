@@ -109,7 +109,8 @@ export default SignInScreen = ({navigation}) => {
             />
             <ButtonType1
               styling={{ ...styles.submitButton }}
-              arrow={!isLoading}
+              textStyling={{fontSize: 20*sc}}
+              arrow={isLoading?false:20*sc}
               disabled={isLoading}
               text={"SIGN IN"}
               isLoading={isLoading}

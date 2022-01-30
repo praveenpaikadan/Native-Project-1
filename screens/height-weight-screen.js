@@ -65,15 +65,15 @@ export default HeightWeightScreen = ({ navigation, route }) => {
             
             var user = response.data
             console.log(user)
-            flash(`Hi ${user.name} !, You are in... Sign in and Start tracking your fitness`, 'success', time=4000)
+            flash(`Hi ${user.name} !, You are in... Sign in and Start tracking your fitness`, 'success', 4000)
             navigation.navigate("SignIn")
             break;
           case 409:
-            flash(response.data.errorMessage, 'danger', time=10000)
+            flash(response.data.errorMessage, 'danger', 10000)
             navigation.navigate("SignUp");
             break;
           case 101:
-            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+            flash('Oops Something Happened ...Please check your Internet and try again', 'danger', 10000)
             break;
           default:
             if(response.data.message){
@@ -105,7 +105,7 @@ export default HeightWeightScreen = ({ navigation, route }) => {
             <CreateAccountGraphics style={{ width: "100%" }} />
             <View style={styles.heading}>
               <Text style={styles.mainHeading}>
-                What is your{"\n"}Height and {"\n"}Weight ?
+                What is your Height and Weight ?
               </Text>
             </View>
           </View>
@@ -193,7 +193,8 @@ export default HeightWeightScreen = ({ navigation, route }) => {
               <Text style={styles.errorText}>{errorMessage}</Text>
               <ButtonType1
                 styling={styles.submitButton}
-                arrow={isLoading ? false : true}
+                arrow={isLoading ? false : 20*sc}
+                textStyling={{fontSize: 20*sc}}
                 text={
                   isLoading ? (
                     <ActivityIndicator

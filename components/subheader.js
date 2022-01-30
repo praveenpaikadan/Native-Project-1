@@ -9,7 +9,8 @@ export const SubHeader = ({ text, styling, onPress }) => (
       backgroundColor: "rgba(67,67,67,0.5)",
       flexDirection: "row",
       padding: 10 * sc,
-      paddingRight: 35 * sc,
+      paddingTop: 20*sc,
+      paddingLeft: -35 * sc,
       alignItems: "center",
       ...styling,
     }}
@@ -28,16 +29,20 @@ const backIconStyling = {
   size: 30 * sc,
   color: themeColors.secondary2,
 };
+
 const styles = StyleSheet.create({
-  headerContainer: {},
+  headerContainer: {
+    paddingTop: 20*sc,
+  },
 
   textContainer: {
     flex: 1,
   },
 
   heading: {
+    // marginTop: 20*sc,
     textAlign: "center",
-    fontSize: 20 * sc,
+    fontSize: 18 * sc,
     fontFamily: globalFonts.primaryMedium,
     color: themeColors.secondary2,
   },

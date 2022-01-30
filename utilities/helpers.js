@@ -178,6 +178,9 @@ export const convertdd_mm_yyyyStringToTime = (inpDate) => {
 }
 
 export const getFullMediaUrlIfRelative = (potRelUrl) => {
+    if(!potRelUrl){
+        return potRelUrl
+    }
     if(potRelUrl.substring(0, 7) === `/media/` ){
         return BASE_URL + potRelUrl
     }else{

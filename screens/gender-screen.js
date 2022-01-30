@@ -61,7 +61,7 @@ export default GenderScreen = ({ navigation, route }) => {
         <View style={styles.headerGraphicsContainer}>
           <CreateAccountGraphics style={{ width: "100%" }} />
           <View style={{...styles.heading, transform: [{translateY: -20*sc}]}}>
-            <Text style={styles.mainHeading}>What is your {"\n"}Gender and Date {"\n"}of Birth?</Text>
+            <Text style={styles.mainHeading}>What is your Gender and Date of Birth?</Text>
           </View>
         </View>
 
@@ -98,7 +98,7 @@ export default GenderScreen = ({ navigation, route }) => {
               <Text style={{
                 color: themeColors.primary1,
                 fontFamily: globalFonts.primaryBold,
-                fontSize: 25*sc
+                fontSize: 18*sc
               }}>{dob?dob:'SELECT DOB'}</Text></TouchableOpacity>
           </View>
 
@@ -108,6 +108,8 @@ export default GenderScreen = ({ navigation, route }) => {
               styling={styles.submitButton}
               text={"NEXT"}
               onClick={buttonClickHandler}
+              textStyling={{fontSize: 20*sc}}
+              arrow={20*sc}
             />
           </View>
           

@@ -6,12 +6,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { WorkoutContext } from '../../components/workout-context';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { calculateCalories, format_target } from '../../utilities/helpers';
-import { useEffect } from 'react/cjs/react.development';
 import {WorkoutCard} from '../../components/workout-card'
 import { AuthContext } from '../../components/auth-context';
 import { ButtonType1 } from '../../components/buttons';
 
 export const HistoryList = (props) => {
+    
 
     // Case - will receive data in props if an old worlout details have to be displayed.
     // ...This call wil be initiated  from the complete-workout-history page.
@@ -19,6 +19,11 @@ export const HistoryList = (props) => {
     var {workoutData} = React.useContext(WorkoutContext)
     const {credentials} = React.useContext(AuthContext)
     const List = workoutData?[...workoutData.history]:[]
+    var currTotal = 0
+    for(var i=0; i<List.length; i++){
+        currTotal = currTotal + List[i].workout.length
+    }
+    const workoutTrackedInCurrent = React.useRef(currTotal)
     const listOfDays = List.map((item, index) => item.day)
     
     // Adding equivalent calories to Already done days
@@ -31,6 +36,9 @@ export const HistoryList = (props) => {
     // adding coming up workout list - making a similar object as that of historyc object to make minimum modification in history card component
     var first = true // to find currently active one
     workoutData.program.schedule.forEach((dayData, index) => {
+        if(index+1 > workoutData.program.durationWeeks * workoutData.program.daysPerWeek){
+            return 
+        }
         if(!listOfDays.includes(dayData.day)){
             var dayObj = {}
             dayObj.day = dayData.day
@@ -98,16 +106,17 @@ export const HistoryList = (props) => {
 
     const MONTHS =  ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
-    useEffect(() => {
+    React.useEffect(() => {
         var total = 0
         if(props.data){
             for(var i=0; i<props.data.history.length; i++){
                 total = total + props.data.history[i].workout.length
             }
         }else{
-            for(var i=0; i<List.length; i++){
-                total = total + List[i].workout.length
-            }
+            // for(var i=0; i<List.length; i++){
+            //     total = total + List[i].workout.length
+            // }
+            total = workoutTrackedInCurrent.current
         }
         props.setTotal(total)
     }, [List, defaultData])
@@ -118,6 +127,7 @@ export const HistoryList = (props) => {
         <View>
         <FlatList
             style={{paddingHorizontal: 5*sc}}
+            removeClippedSubviews={true}
             showsVerticalScrollIndicator={false}
             data={props.data?defaultData:List}
             keyExtractor={item => String(item.day)}
