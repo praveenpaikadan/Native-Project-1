@@ -8,7 +8,9 @@ import { ButtonType1 } from './buttons';
 import { Spinner1 } from './loading-spinner';
 import { StatusBar } from 'expo-status-bar';
 
-export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
+export default function VimeoWebPage({embedString, fullScreen, setFullScreen, secondButton}) {
+
+  // second button : {text : 'abc', action : () => {}}
 
   const screenWidth = Dimensions.get('window').width
   const screenHeight = Dimensions.get('window').height
@@ -39,7 +41,6 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
     );
 
     return () => backHandler.remove();
-
 
   })
 
@@ -214,15 +215,30 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen}) {
         </View>
         {fullScreen && exitButtonVisible?<ExitFSButton />: null}
       </View>
-      <ButtonType1 
-        text={"Go Fullscreen"}
-        styling={{width:'100%', borderRadius:0}}
-        textStyling={{fontSize: 10*sc}}
-        arrow={false}
-        small={20*sc}
-        subContainerStyling={{paddingBottom:4*sc,paddingTop:4*sc}}
-        onClick={() => {goFullScreen()}}
-      />
+      <View style={styles.buttonContainer}>
+      <View style={styles.singleButton}>
+        <ButtonType1 
+          text={"Go Fullscreen"}
+          styling={{width:'100%', borderRadius:0}}
+          textStyling={{fontSize: 10*sc}}
+          arrow={false}
+          small={20*sc}
+          subContainerStyling={{paddingBottom:4*sc,paddingTop:4*sc}}
+          onClick={() => {goFullScreen()}}
+        />
+      </View>
+      {secondButton?<View style={styles.singleButton}>
+        <ButtonType1 
+          text={secondButton.text}
+          styling={{width:'100%', borderRadius:0, marginLeft: 1*sc}}
+          textStyling={{fontSize: 10*sc}}
+          arrow={false}
+          small={20*sc}
+          subContainerStyling={{paddingBottom:4*sc,paddingTop:4*sc}}
+          onClick={() => {secondButton.action()}}
+        />
+      </View>:null}
+      </View>
   </View>
   );
 }
@@ -247,5 +263,12 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent',
       height: '100%',
       width: '100%'
+    },
+    buttonContainer: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    singleButton: {
+      flex: 1,
     }
 }); 

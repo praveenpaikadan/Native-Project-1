@@ -23,6 +23,7 @@ import { MessageBox1 } from "../../components/message-box";
 import { EmptyPaper } from "../../assets/svgs/svg-graphics";
 import { BASE_URL } from "../../utilities/api"
 import { getFullMediaUrlIfRelative } from "../../utilities/helpers";
+import { Spinner1 } from "../../components/loading-spinner";
 
 const ProgramCard = ({ heading, shortInfo, level, period, bgImage }) => {
   // var source = bgImage?{uri: bgImage, headers: {'X-Access-Token' : "authToken"}}:require('../../assets/images/dead-lift.jpg')
@@ -170,7 +171,7 @@ export default ProgramList = ({ navigation }) => {
 
 
   if(loading) {
-    return <View style={styles.bottomBox}><ActivityIndicator size={sc*76} color={themeColors.secondary2} /></View>
+    return <View style={styles.bottomBox}><Spinner1 /></View>
   }else{
     return display
   }

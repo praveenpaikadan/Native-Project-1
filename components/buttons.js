@@ -15,7 +15,7 @@ export const ButtonType1 = ({
   textStyling,
   arrow = true,
   isLoading=false,
-  activityIndicatorSize='large',
+  activityIndicatorSize= textStyling && textStyling.fontSize? textStyling.fontSize: 'large',
   play = false,
   onClick,
   disabled,

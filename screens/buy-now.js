@@ -6,6 +6,7 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -17,11 +18,17 @@ import { formPageStyles } from "../styles/form-pages-styles";
 import { testSubscribe } from "../utilities/data-center";
 import { WorkoutContext } from "../components/workout-context";
 import { getFullMediaUrlIfRelative } from "../utilities/helpers";
+import { ScrollView } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
+import { BASE_URL } from "../utilities/api";
 
 export default BuyNow = ({ navigation, route }) => {
 
+  
+
   const { resetWorkoutData } = React.useContext(WorkoutContext)
   const {data} = route.params
+  console.log(data)
   var bgImage = getFullMediaUrlIfRelative(data.coverImage)
 
   const [selected, setSelected] = React.useState(-1) 
@@ -51,7 +58,7 @@ export default BuyNow = ({ navigation, route }) => {
       <StatusBar style="light" translucent={true} />
       <ImageBackground
         source={{uri:bgImage}}
-        style={styles.container}
+        style={{flex: 1}}
       >
         <View style={styles.overlay}>
           <SubHeader
@@ -61,96 +68,105 @@ export default BuyNow = ({ navigation, route }) => {
           />
 
           <View style={styles.contentContainer}>
-            <Text style={styles.about}>
-              Choose the type of plan you want to proceed with. If you need a different plan contact your trainer
-            </Text>
-            <View style={styles.cardContainer}>
-              {data.subscriptionOptions? data.subscriptionOptions.map((item, index) => 
-              <TouchableWithoutFeedback key={index} onPress={() => setSelected(index)}>
-              <View
-                style={[
-                  styles.card,
-                  {
-                    backgroundColor: selected !== index
-                      ? themeColors.tertiary1
-                      : themeColors.tertiary2,
-                  },
-                ]}
-              >
-                <View style={styles.planContainer}>
-                  <Text
+              <Text style={styles.about}>
+                Choose the type of plan you want to proceed with. If you need a different plan contact your trainer
+              </Text>
+              <View style={{flex: 1, margin: 10*sc}}>
+                <ScrollView>
+                  {data.subscriptionOptions? data.subscriptionOptions.map((item, index) => 
+                  <TouchableWithoutFeedback key={index} onPress={() => setSelected(index)}>
+                  <View
                     style={[
-                      styles.planHeading,
+                      styles.card,
                       {
-                        color: selected !== index
-                          ? themeColors.secondary2
-                          : themeColors.tertiary1,
+                        backgroundColor: selected !== index
+                          ? themeColors.tertiary1
+                          : themeColors.tertiary2,
                       },
                     ]}
                   >
-                    {item.planType}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.planContent,
-                      {
-                        color: selected !== index
-                          ? themeColors.secondary2
-                          : themeColors.tertiary1,
-                      },
-                    ]}
-                  >
-                    {item.description}
-                  </Text>
-                </View>
-                <View style={styles.priceContainer}>
-                  <View style={styles.row}>
-                    <FontAwesome5 name="rupee-sign" {...rupeeIconStyling} />
-                    <Text
-                      style={[
-                        priceContent,
-                        {
-                          color: selected !== index
-                            ? themeColors.secondary2
-                            : themeColors.tertiary1,
-                        },
-                      ]}
-                    >
-                      {item.priceInRs}
-                    </Text>
+                    <View style={styles.planContainer}>
+                      <Text
+                        style={[
+                          styles.planHeading,
+                          {
+                            color: selected !== index
+                              ? themeColors.secondary2
+                              : themeColors.tertiary1,
+                          },
+                        ]}
+                      >
+                        {item.planType}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.planContent,
+                          {
+                            color: selected !== index
+                              ? themeColors.secondary2
+                              : themeColors.tertiary1,
+                  
+                          },
+                        ]}
+                      >
+                        {item.description}
+                      </Text>
+                    </View>
+                    <View style={styles.priceContainer}>
+                      <View style={styles.row}>
+                        <FontAwesome5 name="rupee-sign" {...rupeeIconStyling} />
+                        <Text
+                          style={[
+                            priceContent,
+                            {
+                              color: selected !== index
+                                ? themeColors.secondary2
+                                : themeColors.tertiary1,
+                            },
+                          ]}
+                        >
+                          {item.priceInRs}
+                        </Text>
+                      </View>
+                      <View style={styles.row}>
+                        <FontAwesome5
+                          name="rupee-sign"
+                          {...smallrupeeIconStyling}
+                        />
+                        <Text
+                          style={[
+                            styles.priceContent1,
+                            {
+                              color: selected !== index
+                                ? themeColors.secondary2
+                                : themeColors.tertiary1,
+                            },
+                          ]}
+                        >
+                          {item.priceInRs/(item.paymentReccurence?item.paymentReccurence:(data.durationWeeks * data.daysPerWeek)) * 7}/week
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                  <View style={styles.row}>
-                    <FontAwesome5
-                      name="rupee-sign"
-                      {...smallrupeeIconStyling}
-                    />
-                    <Text
-                      style={[
-                        styles.priceContent1,
-                        {
-                          color: selected !== index
-                            ? themeColors.secondary2
-                            : themeColors.tertiary1,
-                        },
-                      ]}
-                    >
-                      {'TBD'}/week
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableWithoutFeedback>) : null}
-                
+                </TouchableWithoutFeedback>) : null}
+              </ScrollView>
+            <Feather name="chevrons-down" size={20*sc} style={{alignSelf:'center', color: themeColors.primary2}}/>
               
             </View>
-            <ButtonType1
-              arrow={false}
-              disabled={selected === -1?true:false}
-              text={"Buy Now"}
-              styling={{ width: 320 * sc }}
-              onClick = {() => buyNowPressHandler()}
-              />
-            <Text style={styles.footText}>Subscription Terms & Details</Text>
+
+            <View>
+              <ButtonType1
+                arrow={false}
+                disabled={selected === -1?true:false}
+                text={"Buy Now"}
+                styling={{ width: 320 * sc }}
+                onClick = {() => buyNowPressHandler()}
+                />
+                <TouchableOpacity onPress={() => {navigation.navigate('WebPage', {url: BASE_URL+'/subscription-terms'})}}>
+                  <Text style={styles.footText}>Subscription Terms & Details</Text>
+                </TouchableOpacity>
+              
+            </View>
           </View>
         </View>
       </ImageBackground>
@@ -198,8 +214,7 @@ const styles = StyleSheet.create({
 
   contentContainer: {
     width: "100%",
-    height: "100%",
-    marginTop: 40 * sc,
+    flex: 1,
     alignItems: "center",
   },
 
@@ -224,7 +239,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2 * sc,
     alignItems: "center",
     width: 320 * sc,
-    height: 90 * sc,
+    minHeight: 90 * sc,
     borderRadius: 10 * sc,
     margin: 5 * sc,
     flexDirection: "row",
@@ -236,6 +251,7 @@ const styles = StyleSheet.create({
   },
 
   footText: {
+    textAlign:'center',
     color: themeColors.secondary2,
     fontSize: 14 * sc,
     fontFamily: globalFonts.primaryRegular,
@@ -250,7 +266,7 @@ const styles = StyleSheet.create({
   },
 
   planContainer: {
-    flex: 2,
+    flex: 1,
   },
 
   planHeading: {
@@ -265,7 +281,11 @@ const styles = StyleSheet.create({
   },
 
   priceContainer: {
-    flex: 1,
+    // flex: 1,
+    minWidth: 80*sc,
+    justifyContent:'flex-start',
+    // backgroundColor:'pink',
+    height:'100%',
     marginLeft: 10 * sc,
     color: themeColors.tertiary1,
     fontFamily: globalFonts.primaryRegular,

@@ -19,9 +19,10 @@ export default ProgramDetails = ({ navigation, route }) => {
 
   const {data} = route.params
 
-  if(data.videos[0]){
-    var video_link = `${BASE_URL}/media/${data.videos[0].filename}`
-  }
+  console.log(data)
+  // if(data.videos[0]){
+  //   var video_link = `${BASE_URL}/media/${data.videos[0].filename}`
+  // }
   
   // console.log(data)
   // var imgSource = data.bgImage
@@ -37,34 +38,36 @@ export default ProgramDetails = ({ navigation, route }) => {
 
   return(
     <View style={{flex: 1}}>
-      <StatusBar translucent={true} />
+      <StatusBar translucent={true} hidden={fullScreen} />
       <View style={{ flex: 1}}>
         <View>
           <View style={styles.backgroudImageContainer}>
-            <ImageBackground
+
+          <ImageBackground
             source={{uri: getFullMediaUrlIfRelative(data.coverImage)}}
             style={styles.image}
             >
               <View style={styles.overlay}>
-            <SubHeader
+            {!fullScreen?<SubHeader
               text={data.programName}
               onPress={backHandler}
-              
-            />
+              styling={{backgroundColor: videoActive?themeColors.primary1:"rgba(67,67,67,0.5)"}}
+            />:null}
 
-
+          {!videoActive?
             <View style={styles.contentContainer}>
-              
-              {!videoActive?<React.Fragment>
-                {data.videos[0]? <ButtonType1
+              <React.Fragment>
+                {/* {data.videos[0]? <ButtonType1 */}
+                {data.videoEmbedString? <ButtonType1
                     text={"Watch Introduction"}
-                    play={30}
+                    play={50*sc}
                     arrow={false}
                     styling={styles.vbutton}
                     textStyling={styles.vbuttonText}
-                    onClick={() => {navigation.navigate('VideoPlayer', {link: video_link})}}
+                    // onClick={() => {navigation.navigate('VideoPlayer', {link: video_link})}}
+                    onClick={() => {setVideoActive(true)}}
                   />
-                  :<></>
+                  :null
                 }
                 <ScrollView style={{height: 155*sc}} contentContainerStyle={{ justifyContent: 'center', paddingTop: 10*sc, paddingTop: 10*sc}}>
                   <Text style={styles.smallHeading}>
@@ -80,27 +83,28 @@ export default ProgramDetails = ({ navigation, route }) => {
                   </Text>
 
                   <Text style={styles.smallHeading}>
-                    Equipments Required: {data.equipments.join(', ')  }
+                    Equipments Required: {data.equipments.join(', ')}
                   </Text>
                 </ScrollView >
+
+                <ButtonType1
+                  text={"Join Now"}
+                  arrow={false}
+                  styling={styles.button}
+                  textStyling={styles.buttonText}
+                  onClick={() => navigation.navigate("BuyNow", {data: data})}
+                />
                 
               </React.Fragment>
-              : <VimeoWebPage embedString={data.videoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen}/>
 
-              }
-              
-              <ButtonType1
-                text={"Join Now"}
-                arrow={false}
-                styling={styles.button}
-                textStyling={styles.buttonText}
-                onClick={() => navigation.navigate("BuyNow", {data: data})}
-              />
             </View>
-
+            : 
+            <View>
+            <VimeoWebPage embedString={data.videoEmbedString} fullScreen={fullScreen} setFullScreen={setFullScreen} secondButton={{text: 'Exit Video', action: () => {setVideoActive(false)} }}/>
+            </View>
+          }
           </View>
-
-              </ImageBackground>
+        </ImageBackground>
 
           </View>
         </View>
@@ -108,6 +112,13 @@ export default ProgramDetails = ({ navigation, route }) => {
             <ScrollView style={{height: '100%'}}>
               <Text style={styles.content}>{data.goal}</Text>
             </ScrollView>
+           {videoActive && !fullScreen?<ButtonType1
+              text={"Join Now"}
+              arrow={false}
+              styling={{borderRadius: 0}}
+              textStyling={styles.buttonText}
+              onClick={() => navigation.navigate("BuyNow", {data: data})}
+            />:null}
           </View>
       </View>
   </View>
@@ -150,22 +161,22 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    // marginTop: 10*sc,
+    marginTop: 10*sc,
     minWidth: 200 * sc,
   },
 
   vbutton: {
     // width: 160 * sc,
     alignSelf: 'center',
-    height: 40*sc
+    height: 30*sc
   },
 
   buttonText: {
-    fontSize: 20 * sc,
+    fontSize: 15 * sc,
   },
 
   vbuttonText: {
-    fontSize: 17 * sc,
+    fontSize: 12 * sc,
   },
 
   descriptionContainer: {

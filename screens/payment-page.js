@@ -18,6 +18,10 @@ export default function PaymentPage({navigation, route}) {
     }
   }
 
+  const handleGoToHomeAfterPayment = () => {
+    console.log('go_to_home')
+  }
+
   payload.type = type
   const [token, settoken] = useState(null)
 
@@ -50,7 +54,7 @@ export default function PaymentPage({navigation, route}) {
         <WebView 
         style={styles.container}
         source={{ uri: BASE_URL + '/payment/payment-page', headers: {'x-access-token' : token, 'x-access-ver': payload}}}
-        onMessage={(message) => {console.log(message)}}
+        onMessage={(message) => {if(message.nativeEvent.data === "go_to_home"){handleGoToHomeAfterPayment()}}}
         onLoadEnd={() => {console.log('loading end');setLoading(false)}}
         scalesPageToFit={true}
         scrollEnabled={false}
