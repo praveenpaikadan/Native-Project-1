@@ -84,8 +84,6 @@ const List = ({data, setReload, navigation}) => {
           refreshControl={<RefreshControl onRefresh={() => setReload()} />}
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => {
-              console.log(item.coverImage)
-              // item.bgImage = item.images[0]?`${BASE_URL}/media/${item.images[0].filename}`:null; 
               navigation.navigate('ProgramDetails', {data: item})}}>
               <ProgramCard
                 styles={styles.cardsContainer}

@@ -9,7 +9,7 @@ export const SubHeader = ({ text, styling, onPress }) => (
       backgroundColor: "rgba(67,67,67,0.5)",
       flexDirection: "row",
       padding: 10 * sc,
-      paddingTop: 20*sc,
+      paddingTop: 30*sc,
       paddingLeft: -35 * sc,
       alignItems: "center",
       ...styling,
@@ -45,5 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 18 * sc,
     fontFamily: globalFonts.primaryMedium,
     color: themeColors.secondary2,
+    marginLeft: -25*sc,
+
   },
 });

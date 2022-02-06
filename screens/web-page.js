@@ -1,10 +1,10 @@
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
-import { Header } from "../components/header";
 import { StatusBar } from "expo-status-bar";
 import WebView from "react-native-webview";
 import { Spinner1 } from "../components/loading-spinner";
 import { themeColors } from "../styles/global-styles";
+import { SubHeader } from "../components/subheader";
 
 
 // general component to load any public webpages
@@ -15,7 +15,7 @@ export default WebPage = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent={true} />
-      <Header title={route.params.heading || 'Personal Trainer'} backButton={true} onPress={() => {navigation.goBack()}} onPressMenu={() => navigation.openDrawer()} />
+      <SubHeader text={route.params.heading || 'Personal Trainer'} onPress={() => {navigation.goBack()}} onPressMenu={() => navigation.openDrawer()} />
       
       <View style={{display: loading? 'flex':'none', alignItems: 'center', justifyContent:'center',...styles.contentContainer}}>
         <Spinner1 /> 

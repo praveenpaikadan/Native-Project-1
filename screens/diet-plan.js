@@ -229,6 +229,7 @@ const BMI = ({weight, height}) => {
         setText('--')
         setAngle(startAngle)
         raiseAngle()
+        
     }, [])
 
     return(
@@ -322,7 +323,7 @@ export default DietPlan = ({ navigation, route }) => {
   const {dayWorkout} = React.useContext(WorkoutContext);
   const {credentials} = React.useContext(AuthContext)
   const [loading, setLoading] = React.useState(0)
-  const compExist = React.useRef(null)
+  const compExist = React.useRef(true)
   const [reloadSwich, setReloadSwitch] = React.useState(true)
   const [noData, setNoData] = React.useState(false)
   const [target, setTarget] = React.useState([])
@@ -336,7 +337,7 @@ export default DietPlan = ({ navigation, route }) => {
     AsyncStorage.getItem('dietPlan')
     .then((saved) => {
         try{
-            if(saved && compExist){
+            if(saved && compExist.current){
                 savedDP = JSON.parse(saved).data
                 savedWater = JSON.parse(saved).water
                 console.log(savedDP[day-1])
@@ -353,7 +354,7 @@ export default DietPlan = ({ navigation, route }) => {
 
     getCompleteDietPlan(programID)
     .then((response) => {
-      if(compExist){
+      if(compExist.current){
         switch (response.status) {
           case 200:
             if(response.data){
@@ -378,7 +379,7 @@ export default DietPlan = ({ navigation, route }) => {
       }  
     })
 
-    return (() => {clearInterval(compExist)})
+    return (() => {compExist.current = false})
 
   }, [reloadSwich])
 
@@ -395,6 +396,7 @@ export default DietPlan = ({ navigation, route }) => {
 //       {title: 'Wake Up', time: 6.5, contents: [{content: 'Drink Warm water - 500ml', _id: 'dsfsadfv'}]}
 //     ]
 
+  const [backBtnDisabled, setBackBtnDisabled] = useState(false)
   return (
     <View ref={compExist} style={{width: '100%', height: '100%'}}>
         <View>
@@ -404,7 +406,8 @@ export default DietPlan = ({ navigation, route }) => {
                 position: 'absolute', 
                 top:35*sc, 
                 left: 15*sc}} 
-                onPress={() => {navigation.goBack()}}>
+                disabled={backBtnDisabled}
+                onPress={() => {setBackBtnDisabled(true);navigation.goBack()}}>
                 <FontAwesome5
                     name="chevron-left"
                     size={25*sc}

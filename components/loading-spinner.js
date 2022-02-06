@@ -16,8 +16,9 @@ export const Spinner1 = (props) => (
       <ActivityIndicator color={themeColors.primary1} size="large"/>
       <Text style={{
           marginTop: 10*sc,
-          fontFamily: globalFonts.primaryLight
-      }}>  Loading ...</Text>
+          fontFamily: globalFonts.primaryLight,
+          textAlign: 'center'
+      }}>{props.text?props.text:'  Loading ...'}</Text>
     </View> 
   )
 

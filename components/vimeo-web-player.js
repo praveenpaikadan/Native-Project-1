@@ -5,8 +5,6 @@ import { ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { themeColors, sc, globalFonts } from '../styles/global-styles';
 import { ButtonType1 } from './buttons';
-import { Spinner1 } from './loading-spinner';
-import { StatusBar } from 'expo-status-bar';
 
 export default function VimeoWebPage({embedString, fullScreen, setFullScreen, secondButton}) {
 

@@ -8,7 +8,7 @@ import { AuthContext } from "./components/auth-context";
 import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FlashMessage from "react-native-flash-message";
-import { getAPIAllLocal, getWorkoutData, postBulkDayWorkout } from "./utilities/data-center";
+import { getAPIAllLocal, getAPICredentials, getWorkoutData, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
 import PaymantPage from "./screens/payment-page";
@@ -281,16 +281,16 @@ export default function App() {
     var response = await getWorkoutData()
     switch (response.status) {
       case 200:
-        if(workoutData)
-        console.log('............................got downloaded data')
-        await resetWorkoutData(response.data)
-        await makeDayWorkout(response.data, null)
-        return true
+        if(response.data)
+          console.log('............................got downloaded data')
+          await resetWorkoutData(response.data)
+          await makeDayWorkout(response.data, null)
+          return true
       case 401:
-        flash('Authorization failed. Please sign in again', 'danger', time=10000)
+        flash('Authorization failed. Please sign in again', 'danger', 10000)
         return false
       case 101:
-        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', time=10000)
+        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', 10000)
         return false
       default:
         if(response.data.message){
@@ -298,6 +298,38 @@ export default function App() {
         }
         return false
       }
+  }
+
+  const downloadAndSetCredentials = async () => {
+    // used only when subscribed or renewed a program 
+    var response = await getAPICredentials()
+    switch (response.status) {
+      case 200:
+        if(response.data)
+          console.log( 'creds after .....................', response.data)
+          await resetCredentials(response.data)
+          return true
+      case 401:
+        flash('Authorization failed. Please sign in again', 'danger', 10000)
+        return false
+      case 101:
+        flash('Oops Something Happened ...Please check your Internet and try again', 'danger', 10000)
+        return false
+      default:
+        if(response.data.message){
+          flash(response.data.message, 'info')
+        }
+        return false
+      }
+  }
+
+  const downloadAndSetCredentialsAndWorkoutDataAfterSubscribe = async () => {
+      setWorkoutDataLoaded(0)
+      var creds = await downloadAndSetCredentials()
+      if(creds){
+        var creds = await downloadAndSetWorkoutData()
+      } 
+      setWorkoutDataLoaded(1) 
   }
 
 // .........................................
@@ -370,7 +402,7 @@ export default function App() {
             credentials, 
             resetCredentials, 
             token, 
-            logOutLocal
+            logOutLocal,
             }}>
           <WorkoutContext.Provider
             value={{ 
@@ -385,7 +417,8 @@ export default function App() {
               setProgramOver, 
               workoutDataLoaded, 
               setWorkoutDataLoaded,
-              downloadAndSetWorkoutData
+              downloadAndSetWorkoutData,
+              downloadAndSetCredentialsAndWorkoutDataAfterSubscribe
             }}>
 
             <AuthStack />

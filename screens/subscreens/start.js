@@ -8,6 +8,7 @@ import { AuthContext } from "../../components/auth-context";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { postInitiateWorkout } from "../../utilities/data-center";
 import flashMessage from "../../utilities/flash-message";
+import BottomBanner from "./bottom-banner";
 
 export default StartSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
@@ -27,19 +28,23 @@ export default StartSubScreen = ({ navigation, onClick, program, programEnded=fa
         downloadAndSetWorkoutData()
         .then((response) => {
           if(!response){
-            flashMessage('Something Happened. Please Check your internet and try again ...')
+            flashMessage('Something Happened. Please Check your internet and try again ...', 'danger')
             setIsLoading(false)    
           }
         })
         .catch(() => {
-            flashMessage('Something Happened. Please Check your internet and try again ...')
+            flashMessage('Something Happened. Please Check your internet and try again ...', 'danger')
             setIsLoading(false)
         })
       }else{
-        flashMessage('Something Happened. Please Check your internet and try again ...')
+        flashMessage('Something Happened. Please Check your internet and try again ...', 'danger')
         setIsLoading(false)
       }
       
+    })
+    .catch(() => {
+      flashMessage('Something Happened. Please Check your internet and try again ...', 'danger')
+        setIsLoading(false)
     })
   }
 
@@ -110,33 +115,8 @@ export default StartSubScreen = ({ navigation, onClick, program, programEnded=fa
       </View>
       }
 
-      <View style={styles.bottomBox}>
-        <ElevatedCardTypeOne styling={styles.card}>
-          <TouchableHighlight onPress={() => {navigation.navigate('Root', {screen : 'DietPlan', params: { programID: dayWorkout.programID, day: dayWorkout.day}})}}>
-          <ImageBackground
-            style={styles.cardImage}
-            source={require("../../assets/images/diet-plan.jpg")}
-          >
-            <View style={styles.cardOverlay}>
-              <Text style={styles.cardBannerText}>
-                Your Diet Plan
-              </Text>
-            </View>
-          </ImageBackground>
-          </TouchableHighlight>
-        </ElevatedCardTypeOne>
+      <BottomBanner navigation={navigation}/>
 
-        <ElevatedCardTypeOne styling={styles.card}>
-          <ImageBackground
-            style={styles.cardImage}
-            source={require("../../assets/images/recipes.jpg")}
-          >
-            <View style={styles.cardOverlay}>
-              <Text style={styles.cardBannerText}>Recipes</Text>
-            </View>
-          </ImageBackground>
-        </ElevatedCardTypeOne>
-      </View>
     </View>
   );
 };

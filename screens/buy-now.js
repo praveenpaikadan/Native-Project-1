@@ -143,7 +143,8 @@ export default BuyNow = ({ navigation, route }) => {
                             },
                           ]}
                         >
-                          {item.priceInRs/(item.paymentReccurence?item.paymentReccurence:(data.durationWeeks * data.daysPerWeek)) * 7}/week
+                          {!item.paymentReccurence ? item.priceInRs/data.durationWeeks : item.priceInRs/item.paymentReccurence*data.daysPerWeek} / week
+                          {/* {item.priceInRs/(item.paymentReccurence?item.paymentReccurence:(data.daysPerWeek))}/week */}
                         </Text>
                       </View>
                     </View>
@@ -162,7 +163,7 @@ export default BuyNow = ({ navigation, route }) => {
                 styling={{ width: 320 * sc }}
                 onClick = {() => buyNowPressHandler()}
                 />
-                <TouchableOpacity onPress={() => {navigation.navigate('WebPage', {url: BASE_URL+'/subscription-terms'})}}>
+                <TouchableOpacity onPress={() => {navigation.navigate('WebPage', {url: BASE_URL+'/subscription-terms', heading: 'Terms and conditions'})}}>
                   <Text style={styles.footText}>Subscription Terms & Details</Text>
                 </TouchableOpacity>
               

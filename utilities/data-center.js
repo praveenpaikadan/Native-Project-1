@@ -109,7 +109,7 @@ const testSubscribe = async (subscriptionDatails) => {
     }
 }
 
-const getWorkoutData = async (id) => {
+const getWorkoutData = async () => {
     try{
         const response = await API.get('workoutdata')
         return response

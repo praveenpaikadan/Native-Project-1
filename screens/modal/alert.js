@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 
   heading: {
     textAlign:'center',
-    fontFamily: globalFonts.primaryBold,
+    fontFamily: globalFonts.primaryMedium,
     color: themeColors.tertiary1,
     marginVertical: 10 * sc,
     // letterSpacing: 0.5 * sc,

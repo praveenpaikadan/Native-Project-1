@@ -19,10 +19,25 @@ import ReminderBox from "../components/reminder"
 
 
 export default HomePage = ({ navigation, route }) => {
-  const {dayWorkout, programOver, setProgramOver, workoutDataLoaded} = React.useContext(WorkoutContext);
+  const {
+    dayWorkout, 
+    programOver, 
+    setProgramOver, 
+    workoutDataLoaded,
+    downloadAndSetCredentialsAndWorkoutDataAfterSubscribe
+  } = React.useContext(WorkoutContext);
+
   const [loading, setLoading] = React.useState(true)
   
   const {credentials} = React.useContext(AuthContext)
+
+  useEffect(() => {
+    console.log('route is ................', route)
+    if(route && route.params && route.params.forceReload){
+      downloadAndSetCredentialsAndWorkoutDataAfterSubscribe()
+    }
+  }, [route])
+
   useEffect (() => {
 
 

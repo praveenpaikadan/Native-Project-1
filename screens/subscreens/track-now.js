@@ -7,6 +7,7 @@ import { WorkoutContext } from "../../components/workout-context";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Reminder from "../../components/reminder";
 import { AuthContext } from "../../components/auth-context";
+import BottomBanner from "./bottom-banner";
 
 export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
@@ -97,33 +98,7 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
       </View>
       }
 
-      <View style={styles.bottomBox}>
-        <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
-          <TouchableHighlight onPress={() => {navigation.navigate('Root', {screen : 'DietPlan', params: { programID: dayWorkout.programID, day: dayWorkout.day}})}}>
-          <ImageBackground
-            style={styles.cardImage}
-            source={require("../../assets/images/diet-plan.jpg")}
-          >
-            <View style={styles.cardOverlay}>
-              <Text style={styles.cardBannerText}>
-                Your Diet Plan
-              </Text>
-            </View>
-          </ImageBackground>
-          </TouchableHighlight>
-        </ElevatedCardTypeOne>
-
-        <ElevatedCardTypeOne styling={programEnded? styles.smallcard:styles.card}>
-          <ImageBackground
-            style={styles.cardImage}
-            source={require("../../assets/images/recipes.jpg")}
-          >
-            <View style={styles.cardOverlay}>
-              <Text style={styles.cardBannerText}>Recipes</Text>
-            </View>
-          </ImageBackground>
-        </ElevatedCardTypeOne>
-      </View>
+      <BottomBanner navigation={navigation}/>
     </View>
   );
 };
