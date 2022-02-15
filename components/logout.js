@@ -16,9 +16,7 @@ export const Logout = (props) => {
     await uploadPendingWorkout()
     setLogoutWarn(true)
     logoutUser()
-    .then(() => {
-      logOutLocal()
-    }) 
+    logOutLocal()
   }
   
   return(

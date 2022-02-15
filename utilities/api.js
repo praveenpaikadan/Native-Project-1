@@ -1,16 +1,17 @@
 // to be removed in production
-
-import Constants from "expo-constants";
-const { manifest } = Constants;
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 import flash from "./flash-message";
 
+import Constants from "expo-constants";
+const { manifest } = Constants;
 const ap = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
   ? manifest.debuggerHost.split(`:`).shift().concat(`:3567`)
   : `api.example.com`;
-
 export const BASE_URL = `http://${ap}/api/v1`
+
+// export const BASE_URL = `https://personal-training-app.herokuapp.com/api/v1`
+
 
 const getAuthTokenFromLocal =  async() => {
   authToken = await AsyncStorage.getItem('authToken')
@@ -48,7 +49,7 @@ API.interceptors.response.use( async response => {
 
     if(response.status === 403){
       console.log('Not logged in ........................')
-      flash(`You are logged out. Please log in again`, 'success', time=4000)
+      flash(`You are logged out. Please log in again`, 'success', 4000)
     }
     return response
 })

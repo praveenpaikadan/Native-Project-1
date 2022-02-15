@@ -21,29 +21,6 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
 
   const webViewRef = useRef();
 
- 
-  useEffect(() => {
-    const backAction = () => {
-      if(fullScreen){
-        setFullScreen(false)
-        return true
-      }else{
-        return false
-      }
-      
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-
-  })
-
-
-
   var html = `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -56,6 +33,7 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
 
   *{
     box-sizing: border-box;
+    border: 0px;
   }
 
   .messageText{
@@ -73,6 +51,7 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
 
   iframe{
     width: 100%;
+    max-height: 250px;
   }
   </style>
 
@@ -83,6 +62,8 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
 
     <script>
       var body = document.getElementsByTagName("div")[0];
+      var iframe 
+      var originalIframeWidth
       function outputsize() {
         window.ReactNativeWebView.postMessage(JSON.stringify({height: body.offsetHeight, width: body.offsetWidth}))
       }
@@ -95,7 +76,6 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
 
       function checkAndHandleInternetConnectivity() {
         if(!isInternetConnected()){
-          // body.innerHTML = ${"<h1 class=${'messageText'}>No network. Tap to try again</h1>"};
           body.innerHTML = '<h1 class="messageText">No network. Tap to try again</h1>';
           body.addEventListener("click", () => {
             window.ReactNativeWebView.postMessage(JSON.stringify({rerender: 1}))
@@ -110,17 +90,22 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
   </body>
   </html>`
 
-
   const handleDivSizeChange = (data) => {
     if(!webViewRef){
       return
     }
     setBackgroundColor('black')
-    if(data.height > screenWidth && fullScreen){
-      setDynamicWidth(data.width*screenWidth/data.height)
-    }else{
-      setDynamicHeight(data.height)
+    if(fullScreen){
+      setDynamicWidth(screenHeight)
+      setDynamicHeight(screenWidth)
+      return
     }
+    setDynamicHeight(data.height)
+    // if(data.height > screenWidth && fullScreen){
+    //   setDynamicWidth(data.width*screenWidth/data.height)
+    // }else{
+    //   setDynamicHeight(data.height)
+    // }
   }
 
   const Spinner = () => (
@@ -129,7 +114,6 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
       <Text style={styles.loadingText}>  Loading ...</Text>
     </View> 
   )
-
 
   const nonFsStyle = {
     outer: {width: '100%', height: dynamicHeight + 27*sc, backgroundColor: backgroundColor},
@@ -149,8 +133,43 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
   }
 
   const goFullScreen = () => {
+    webViewRef.current.injectJavaScript(`
+    iframe = document.getElementsByTagName("iframe")[0]
+    originalIframeWidth = iframe.style.height
+    iframe.style.maxHeight = "${screenWidth}px"; 
+    iframe.style.height = "${screenWidth}px"; `
+    );
     setFullScreen(true)
   }
+
+  const exitFullscreen = () => {
+    webViewRef.current.injectJavaScript(`
+    iframe = document.getElementsByTagName("iframe")[0]
+    iframe.style.height = originalIframeWidth + "px";
+    iframe.style.maxHeight = "${250}px";`
+    );
+    setFullScreen(false)
+  }
+
+  useEffect(() => {
+    const backAction = () => {
+      if(fullScreen){
+        exitFullscreen()
+        return true
+      }else{
+        return false
+      }
+      
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+
+  })
 
   const [loading, setLoading] = useState(true)
   const [exitButtonVisible, setExitButtonVisible] = useState(false)
@@ -177,7 +196,7 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
         styling={{height: height, minWidth: 0}}
         subContainerStyling={{padding: 10*sc, paddingTop: 10*sc, paddingBottom: 10*sc, alignSelf: 'center'}}
         arrow={false}
-        onClick={() => {setFullScreen(false)}}
+        onClick={() => {exitFullscreen()}}
       />
     </View>
   )}
@@ -195,8 +214,13 @@ export default function VimeoWebPage({embedString, fullScreen, setFullScreen, se
               onMessage={(message) => {
                 var data = JSON.parse(message.nativeEvent.data)
                 console.log(data)
+                if(data.fsPressed){
+                  fullScreen? exitFullscreen():goFullScreen()
+                  return
+                }
                 if(data.rerender === 1){
                   webViewRef.current.reload();
+                  return
                 }
                 if(data.height !== undefined && data.width !== undefined){
                   handleDivSizeChange(data)

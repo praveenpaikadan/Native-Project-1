@@ -143,7 +143,7 @@ export default BuyNow = ({ navigation, route }) => {
                             },
                           ]}
                         >
-                          {!item.paymentReccurence ? item.priceInRs/data.durationWeeks : item.priceInRs/item.paymentReccurence*data.daysPerWeek} / week
+                          {Math.round((!item.paymentReccurence || item.paymentReccurence === 9999) ? item.priceInRs/data.durationWeeks : item.priceInRs/item.paymentReccurence*data.daysPerWeek)} / week
                           {/* {item.priceInRs/(item.paymentReccurence?item.paymentReccurence:(data.daysPerWeek))}/week */}
                         </Text>
                       </View>

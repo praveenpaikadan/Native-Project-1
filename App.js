@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { StyleSheet } from "react-native";
@@ -8,11 +8,10 @@ import { AuthContext } from "./components/auth-context";
 import { WorkoutContext } from "./components/workout-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FlashMessage from "react-native-flash-message";
-import { getAPIAllLocal, getAPICredentials, getWorkoutData, postBulkDayWorkout } from "./utilities/data-center";
+import { getAPICredentials, getWorkoutData, postBulkDayWorkout } from "./utilities/data-center";
 import flash from './utilities/flash-message'
 import { today } from "./utilities/helpers";
-import PaymantPage from "./screens/payment-page";
-import VimeoWebPage from "./components/vimeo-web-player";
+
 
 
 //Currently we are at day cjanging. The client is ok. It compare the complete status and dayCompeted and today () determine if the day is the same day or a different day. Next step is to bring this function the server. 
@@ -23,7 +22,14 @@ export default function App() {
 
   // for showing loading screen
   const [appReady, setAppReady] = useState(0);
+
+  // to handle loading state of home page
   const [workoutDataLoaded, setWorkoutDataLoaded] = useState(0)
+  // 0 - checking with server, 
+  // 1 checked and we have OR we have locally, 
+  // -1 checked and we do not have, 
+  // 99 - Error checking => workout data 
+
   // states that stores loacal data. All are loaded when app starts. 
   // The navigation flow happens according to the availablility of this data.
   // The app decides to show the signIn screen or signup screen when authtoken is 'null' based on this 
@@ -281,22 +287,25 @@ export default function App() {
     var response = await getWorkoutData()
     switch (response.status) {
       case 200:
-        if(response.data)
+        if(response.data){
           console.log('............................got downloaded data')
           await resetWorkoutData(response.data)
           await makeDayWorkout(response.data, null)
-          return true
+          return 1  // refer state initiation for code description above
+        }else{
+          return -1 
+        }
       case 401:
         flash('Authorization failed. Please sign in again', 'danger', 10000)
-        return false
+        return 99
       case 101:
         flash('Oops Something Happened ...Please check your Internet and try again', 'danger', 10000)
-        return false
+        return 99
       default:
         if(response.data.message){
           flash(response.data.message, 'info')
         }
-        return false
+        return 99
       }
   }
 
@@ -327,9 +336,12 @@ export default function App() {
       setWorkoutDataLoaded(0)
       var creds = await downloadAndSetCredentials()
       if(creds){
-        var creds = await downloadAndSetWorkoutData()
-      } 
-      setWorkoutDataLoaded(1) 
+        var result = await downloadAndSetWorkoutData() 
+        setWorkoutDataLoaded(result)
+        return
+      }
+      setWorkoutDataLoaded(99) 
+      flash('Something Happened. We were unable lo load your workout data. Please try again', 'danger')
   }
 
 // .........................................
@@ -375,16 +387,11 @@ export default function App() {
       if(workoutdata_temp){
         await makeDayWorkout(JSON.parse(workoutdata_temp), JSON.parse(dayWorkout_temp))
         setWorkoutDataLoaded(1)
-        downloadAndSetWorkoutData()
+        downloadAndSetWorkoutData()  // If we have local 'workoutDataLoaded willl always be 1
       }else{  // If workout data = null, wait until the server confirms that.
         var result = await downloadAndSetWorkoutData() 
-        if(result){
-          setWorkoutDataLoaded(1)
-        }else{
-          setWorkoutDataLoaded(-1)
-        }  
+          setWorkoutDataLoaded(result)  
       }
-
     }catch(e){
       // TBD => Handle failures
       console.log(e)

@@ -1,37 +1,32 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Keyboard, ActivityIndicator } from "react-native";
 import { KeyboardHideOnTouchOutside } from "../components/keyboard-responsive";
-
 import { CreateAccountGraphics } from "../assets/svgs/svg-graphics";
 import { ButtonType1 } from "../components/buttons";
 import { formPageStyles } from "../styles/form-pages-styles";
 import { HeightWeightManGraphics } from "../assets/svgs/svg-graphics";
 import { sc, themeColors } from "../styles/global-styles";
 import Slider from "@react-native-community/slider";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "../components/auth-context";
 import { postNewUserData } from "../utilities/data-center";
 import flash from '../utilities/flash-message';
+import { calculateBMI } from "../utilities/helpers";
 
 export default HeightWeightScreen = ({ navigation, route }) => {
 
 
   const [weight, setWeight] = useState(60);
   const [height, setHeight] = useState(160);
+  const [BMI, setBMI] = useState(calculateBMI(160, 60))
+
   const [displayStatus, setDisplayStatus] = useState("flex");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  const { storedCredentials, setStoredCredentials } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const minHeight = 120;
   const maxHeight = 220;
 
   const minWeight = 30;
   const maxWeight = 210;
-
-  const data = { ...route.params };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -61,8 +56,7 @@ export default HeightWeightScreen = ({ navigation, route }) => {
     .then((response) => {
         console.log(response.status, response.data)
         switch (response.status) {
-          case 200:
-            
+          case 200: 
             var user = response.data
             console.log(user)
             flash(`Hi ${user.name} !, You are in... Sign in and Start tracking your fitness`, 'success', 4000)
@@ -83,16 +77,13 @@ export default HeightWeightScreen = ({ navigation, route }) => {
           }
       setIsLoading(false)
     })
+    .catch((err) => {
+      setIsLoading(false)
+      flash('Something Happened. Please try again', 'danger' )
+    })
 
   };
 
-  const persistLogin = (credentials) => {
-    AsyncStorage.setItem("Credentials", JSON.stringify(credentials))
-      .then(() => {
-        setStoredCredentials(credentials);
-      })
-      .catch((error) => console.log(error));
-  };
 
   return (
     <KeyboardHideOnTouchOutside>
@@ -114,6 +105,13 @@ export default HeightWeightScreen = ({ navigation, route }) => {
             <View style={styles.dataContainer}>
               <View style={styles.dataTopContainer}>
                 <View style={styles.infoLeftContainer}>
+
+                  <View style={styles.subInfoLeftContainer}>
+                    <Text style={styles.hwTag}>Your BMI</Text>
+                    <Text style={{...styles.hwValue, color: BMI.color}}>{BMI.value}</Text>
+                    <Text style={{...styles.hwTagBold, color: BMI.color}}>{BMI.condition}</Text>
+                  </View>
+
                   <View style={styles.subInfoLeftContainer}>
                     <Text style={styles.hwTag}>Your Weight</Text>
                     <Text style={styles.hwValue}>{weight} kg</Text>
@@ -154,6 +152,7 @@ export default HeightWeightScreen = ({ navigation, route }) => {
                       value={height}
                       onValueChange={(value) => {
                         setHeight(value);
+                        setBMI(calculateBMI(height, weight))
                       }}
                     />
                   </View>
@@ -182,6 +181,7 @@ export default HeightWeightScreen = ({ navigation, route }) => {
                       value={weight}
                       onValueChange={(value) => {
                         setWeight(value);
+                        setBMI(calculateBMI(height, weight));
                       }}
                     />
                   )}
@@ -195,16 +195,9 @@ export default HeightWeightScreen = ({ navigation, route }) => {
                 styling={styles.submitButton}
                 arrow={isLoading ? false : 20*sc}
                 textStyling={{fontSize: 20*sc}}
-                text={
-                  isLoading ? (
-                    <ActivityIndicator
-                      size="large"
-                      color={themeColors.secondary2}
-                    />
-                  ) : (
-                    "NEXT"
-                  )
-                }
+                disabled={isLoading}
+                text={'NEXT'}
+                isLoading={isLoading}
                 onClick={buttonClickHandler}
               />
             </View>

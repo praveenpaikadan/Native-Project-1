@@ -208,6 +208,11 @@ export const formPageStyles = StyleSheet.create({
     opacity: 0.6,
   },
 
+  hwTagBold: {
+    fontFamily: globalFonts.primaryMedium,
+    opacity: 0.6,
+  },
+
   hwValue: {
     fontFamily: globalFonts.primaryBold,
     fontSize: 30 * sc,

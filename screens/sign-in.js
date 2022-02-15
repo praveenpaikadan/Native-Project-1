@@ -55,11 +55,7 @@ export default SignInScreen = ({navigation}) => {
           case 200:
             await resetCredentials(response.data)
             var result = await downloadAndSetWorkoutData()
-            if(result){
-              setWorkoutDataLoaded(1)
-            }else{
-              setWorkoutDataLoaded(-1)
-            }
+            setWorkoutDataLoaded(result)
             break;
           case 401:
             setIsLoading(false)

@@ -187,3 +187,15 @@ export const getFullMediaUrlIfRelative = (potRelUrl) => {
         return potRelUrl
     }
 }
+
+export const calculateBMI = (height, weight) => {
+    var bmi = weight/(height*height/10000)
+    var cond = null
+    var col = 'orange'
+    if(bmi<18.5){cond = 'UNDER WEIGHT'; col = 'orange'}
+    else if(bmi>=18.5 && bmi<25 ){cond = 'HEALTHY'; col = 'green'}
+    else if(bmi>=25 && bmi<30 ){cond = 'OVER WEIGHT'; col = 'orange'}
+    else{cond = 'OBESE'; col = 'red'}
+
+    return {value: bmi.toFixed(1), condition: cond, color: col}
+}

@@ -139,7 +139,7 @@ export default ProgramList = ({ navigation }) => {
         setDisplay(
           <MessageBox1 
             setReload={setReload} 
-            message = 'Something Happened on our side. Please try again or contact your trainer to resolve the issue. ERR_CODE: DBFETCHERR'
+            message = 'Something Happened. Plese check your network and tap to try again..'
           />)
           
         case 101:
@@ -147,7 +147,7 @@ export default ProgramList = ({ navigation }) => {
           setDisplay(
             <MessageBox1 
               setReload={setReload} 
-              message = 'Something Happened. Plese check your network and tap to try Again..'
+              message = 'Something Happened. Plese check your network and tap to try again..'
             />)
           break;
         
@@ -157,7 +157,7 @@ export default ProgramList = ({ navigation }) => {
             setDisplay(
               <MessageBox1 
                 setReload={setReload} 
-                message = 'Something Happened. Please tap to try Again..'
+                message = 'Something Happened. Please tap to try again..'
               />)
             }
             break; 
@@ -262,17 +262,17 @@ const styles = StyleSheet.create({
 
   pickText: {
     fontFamily: globalFonts.primaryMedium,
-    opacity: 0.7,
-    fontSize: 14 * sc,
+    // opacity: 0.7,
+    fontSize: 10 * sc,
     color: themeColors.secondary2,
-    backgroundColor: themeColors.tertiary1,
+    backgroundColor: themeColors.primary1,
     paddingVertical: 3 * sc,
     paddingHorizontal: 10 * sc,
     borderRadius: 10 * sc,
   },
 
   triangle: {
-    opacity: 0.7,
+    // opacity: 0.7,
     width: 0,
     height: 0,
     borderLeftWidth: 15 * sc,
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
-    borderTopColor: themeColors.tertiary1,
+    borderTopColor: themeColors.primary1,
     marginBottom: 5 * sc,
   },
 

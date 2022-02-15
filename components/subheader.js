@@ -8,15 +8,17 @@ export const SubHeader = ({ text, styling, onPress }) => (
     style={{
       backgroundColor: "rgba(67,67,67,0.5)",
       flexDirection: "row",
-      padding: 10 * sc,
-      paddingTop: 30*sc,
+      paddingHorizontal: 10 * sc,
+      paddingTop: 20*sc,
       paddingLeft: -35 * sc,
       alignItems: "center",
       ...styling,
     }}
   >
     <TouchableOpacity onPress={onPress}>
+      <View style={{padding: 10*sc, paddingRight: 15*sc}}>
       <Feather name="chevron-left" {...backIconStyling} />
+      </View>
     </TouchableOpacity>
 
     <View style={styles.textContainer}>

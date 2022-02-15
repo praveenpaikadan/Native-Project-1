@@ -82,7 +82,7 @@ export default function PaymentPage({navigation, route}) {
       <StatusBar translucent={true} />
 
       <View style={{display: loading? 'flex':'none', alignItems: 'center', justifyContent:'center',...styles.contentContainer}}>
-        <Spinner1 text={'Please wait while \nLoading Order details ..'} /> 
+        <Spinner1 text={'Please wait while \nloading order details ..'} /> 
       </View>
 
       <View style={{display: loading? 'none':'flex', ...styles.contentContainer}}>

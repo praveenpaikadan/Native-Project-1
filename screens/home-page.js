@@ -1,38 +1,30 @@
 import * as React from "react";
-import { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Image, ImageBackground, ActivityIndicator } from "react-native";
+import { useEffect } from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { TabMenu } from "../components/tab-menu";
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
 import ProgramList from "./subscreens/program-list";
 import TrackNowSubScreen from "./subscreens/track-now";
 import { AuthContext } from "../components/auth-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import ProfileBox from "../components/profilebox";
 import BodyCalendar from "../components/body-calendar";
 import MyWorkouts from "./modal/my-workouts";
 import StartSubScreen from "./subscreens/start"
-import ReminderBox from "../components/reminder"
-
+import { MessageBox1 } from "../components/message-box";
 
 
 export default HomePage = ({ navigation, route }) => {
   const {
     dayWorkout, 
-    programOver, 
-    setProgramOver, 
     workoutDataLoaded,
     downloadAndSetCredentialsAndWorkoutDataAfterSubscribe
   } = React.useContext(WorkoutContext);
 
-  const [loading, setLoading] = React.useState(true)
-  
-  const {credentials} = React.useContext(AuthContext)
-
   useEffect(() => {
-    console.log('route is ................', route)
+    // console.log('route is ................', route)
     if(route && route.params && route.params.forceReload){
       downloadAndSetCredentialsAndWorkoutDataAfterSubscribe()
     }
@@ -59,6 +51,13 @@ export default HomePage = ({ navigation, route }) => {
   };
 
 
+  // workoutLoaded : 0, 1, -1, 99 => 
+  // 0: loading, 
+  // 1: Have workout data, 
+  // -1: Checked with server no workout data, 
+  // 99: No local workout data and error checking with server
+  // Why this is not controlled by day workout? day workut take some time to get into state once workout data is fetched, the program list gets triggered by this short time,
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" translucent={true} />
@@ -66,41 +65,58 @@ export default HomePage = ({ navigation, route }) => {
       <View style={styles.contentContainer}>
         <ProfileBox />
         {
-        workoutDataLoaded === 1?
 
-                <View style={styles.dataContainer}>
-                  {![null, [], '', undefined].includes(dayWorkout)
-                  ? 
-                  (
-                    !dayWorkout.started
-                    ?
-                    <StartSubScreen 
-                      navigation={navigation}
-                      programEnded = {dayWorkout.finalDay && dayWorkout.complete}
-                      programName = {dayWorkout.programName}
-                      program={dayWorkout.programName+ ": Day " +dayWorkout.day}
-                      onClick={() => navigation.navigate("Root", { screen: "TrackNow" })}
-                    />
-                    :
-                    <TrackNowSubScreen
-                      navigation={navigation}
-                      programEnded = {dayWorkout.finalDay && dayWorkout.complete}
-                      programName = {dayWorkout.programName}
-                      program={dayWorkout.programName+ ": Day " +dayWorkout.day}
-                      onClick={() =>navigation.navigate("Root", { screen: "TrackNow" })}
-                    />
-                  ) 
-                  : 
-                  (
-                    <ProgramList navigation={navigation}/>
-                  )
-                  }
-                </View>
+        workoutDataLoaded === 1 && dayWorkout
 
-        :<View style={{...styles.dataContainer, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator color={themeColors.primary1} size={40*sc}/>
-          <Text style={{fontFamily: globalFonts.primaryRegular, opacity: 0.4, marginTop: 10*sc}}>   Loading your workout...</Text>
+        ?
+
+          <View style={styles.dataContainer}>
+            {!dayWorkout.started
+              ?
+              <StartSubScreen 
+                navigation={navigation}
+                programEnded = {dayWorkout.finalDay && dayWorkout.complete}
+                programName = {dayWorkout.programName}
+                program={dayWorkout.programName+ ": Day " +dayWorkout.day}
+                onClick={() => navigation.navigate("Root", { screen: "TrackNow" })}
+              />
+              :
+              <TrackNowSubScreen
+                navigation={navigation}
+                programEnded = {dayWorkout.finalDay && dayWorkout.complete}
+                programName = {dayWorkout.programName}
+                program={dayWorkout.programName+ ": Day " +dayWorkout.day}
+                onClick={() =>navigation.navigate("Root", { screen: "TrackNow" })}
+              />
+            }
           </View>
+
+        :
+
+        (workoutDataLoaded === -1  
+
+          ?
+
+          <ProgramList navigation={navigation}/>
+
+          :
+
+          (workoutDataLoaded === 99
+          
+          ?
+          
+          <MessageBox1 message={'Something Went wrong. Tap to try again.'} setReload={downloadAndSetCredentialsAndWorkoutDataAfterSubscribe}/>
+
+          :
+          
+          <View style={{...styles.dataContainer, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator color={themeColors.primary1} size={40*sc}/>
+            <Text style={{fontFamily: globalFonts.primaryRegular, opacity: 0.4, marginTop: 10*sc}}>   Loading your workout...</Text>
+          </View>
+          
+          )
+        
+        )
 
         }
       </View>

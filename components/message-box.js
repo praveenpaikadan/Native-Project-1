@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { themeColors,sc, globalFonts} from '../styles/global-styles';
 import { ButtonType1 } from './buttons';
 
@@ -23,7 +23,7 @@ export const MessageBox1 = (props) => {
                     textStyling={{fontSize: 20*sc}}
 
                     />:
-                    <FontAwesome5 style={styles.reload} name="redo" size={50*sc} color={themeColors.primary1} onPress={() => props.setReload()}/>
+                    <Ionicons style={styles.reload} name="reload-circle" size={50*sc} color={themeColors.primary1} onPress={() => props.setReload()}/>
                 :<></>}
             </View>
             )
@@ -32,13 +32,13 @@ export const MessageBox1 = (props) => {
 
 const styles = StyleSheet.create({
     messageBox:{
-        
+        // backgroundColor: 'pink',
         display: 'flex',
         justifyContent:'center',
         alignItems:'center',
         fontSize:30*sc,
         width:'80%', 
-        height:'100%',
+        height:'65%',
         alignSelf:'center'
     },
 

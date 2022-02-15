@@ -14,41 +14,17 @@ import flash from '../utilities/flash-message'
 import { Alert } from "../screens/modal/alert";
 import { ProfilePhoto } from "../components/profile-photo";
 import { Logout } from "../components/logout";
+import { WorkoutContext } from "../components/workout-context";
+import flashMessage from "../utilities/flash-message";
 
 export default DrawerContent = (props) => {
 
-  const [logoutWarn, setLogoutWarn] = React.useState(false)
-  const {setLoggedIn, uploadPendingWorkout} = React.useContext(AuthContext)
-  const handleSignOut = async () => {
-    await uploadPendingWorkout()
-    setLogoutWarn(true)
-    logoutUser()
-    .then(async response => {
-      if(response.status == 200){
-        flash(`Succesfully Logged out`, 'success')
-        await AsyncStorage.removeItem('credentials')
-        await AsyncStorage.removeItem('workoutData')
-        await AsyncStorage.removeItem('authToken')
-        await AsyncStorage.removeItem('dayWorkout')
-        await AsyncStorage.removeItem('pendingDayWorkouts')
-    setLoggedIn(false)
-      }else{
-        flash('Failed to logout from server', 'danger')
-        await AsyncStorage.removeItem('credentials')
-        await AsyncStorage.removeItem('workoutData')
-        await AsyncStorage.removeItem('authToken')
-        await AsyncStorage.removeItem('dayWorkout')
-        await AsyncStorage.removeItem('pendingDayWorkouts')
-      }
-    })
-    .catch(() => {flash('Failed to logout from server', 'danger')})
-    
-  }
-
-  
 
   const { credentials } =
     React.useContext(AuthContext);
+
+  const { dayWorkout } = React.useContext(WorkoutContext)
+
 
 
   return (
@@ -93,19 +69,30 @@ export default DrawerContent = (props) => {
             icon={() => <FontAwesome5 name="shopping-bag" {...iconStyling} />}
             onPress={() => props.navigation.navigate("Store")}
           />
+
           <DrawerItem
             label="Track Now"
             labelStyle={styles.menuText}
             icon={() => (
               <FontAwesome5 name="dumbbell" {...dumbbellIconStyling} />
             )}
-            onPress={() => props.navigation.navigate("TrackNow")}
+            onPress={() => {
+              if(dayWorkout){
+                props.navigation.navigate("TrackNow");  
+              }else{
+                flashMessage('You need to choose a program to start tracking your fitness', 'info')
+                props.navigation.navigate("Home"); 
+              }
+            }}
           />
-          <DrawerItem
+
+          {/* <DrawerItem
             label="Notifications"
             labelStyle={styles.menuText}
             icon={() => <Ionicons name="notifications" {...iconStyling} />}
-          />
+          /> */}
+
+
           <DrawerItem
             label="Contact trainer"
             labelStyle={styles.menuText}
