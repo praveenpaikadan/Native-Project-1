@@ -18,6 +18,7 @@ import { getCompleteDietPlan } from "../utilities/data-center";
 import flashMessage from "../utilities/flash-message";
 import { MessageBox1 } from "../components/message-box";
 import { EmptyPaper } from "../assets/svgs/svg-graphics";
+import { Spinner1 } from "../components/loading-spinner";
 
 const createContentsList = (contents) => {
     return contents.map((item) => {return item.content})
@@ -323,8 +324,7 @@ export default DietPlan = ({ navigation, route }) => {
   const [water, setWater] = React.useState(0)
 
   React.useEffect(() => {
-
-    var savedDP = null 
+    var savedDP = null  // diet plan
     var savedWater = null
     AsyncStorage.getItem('dietPlan')
     .then((saved) => {
@@ -370,8 +370,15 @@ export default DietPlan = ({ navigation, route }) => {
           }
       }  
     })
+    .catch(() => {
+        if(savedDP){
+              flashMessage('Showing saved diet plan. Check your internet and try again obtain latest one.', 'info')
+        }else{
+            setLoading(-1)
+        }
+    })
 
-    return (() => {compExist.current = false})
+    // return (() => {compExist.current = false})
 
   }, [reloadSwich])
 
@@ -390,7 +397,7 @@ export default DietPlan = ({ navigation, route }) => {
 
   const [backBtnDisabled, setBackBtnDisabled] = useState(false)
   return (
-    <View ref={compExist} style={{width: '100%', height: '100%'}}>
+    <View ref={compExist} style={{width: '100%', height: '100%' }}>
         <View>
             <StatusBar style="light" translucent={true} />
             <DietPlanGraphics style={{width: '100%'}}/>
@@ -606,7 +613,7 @@ export default DietPlan = ({ navigation, route }) => {
         // if response is 200 null
         <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>
             <MessageBox1 
-            setReload={() => {setReloadSwitch(!reloadSwich)}} 
+            setReload={() => {setLoading(0); setReloadSwitch(!reloadSwich)}} 
             reloadbutton={true}
             message = 'You have no dietplans assigned. Please contact trainer...'
             ><EmptyPaper /></MessageBox1>
@@ -618,7 +625,8 @@ export default DietPlan = ({ navigation, route }) => {
         
         (loading === 0?
             <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>
-                <ActivityIndicator style={{alignSelf: 'center', }}size={70} color={themeColors.primary1}/>
+                <Spinner1 text='Loading your diet plan'/>
+                {/* <ActivityIndicator style={{alignSelf: 'center', }}size={70} color={themeColors.primary1}/> */}
             </View>
             : 
             <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>

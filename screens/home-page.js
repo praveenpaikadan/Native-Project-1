@@ -6,7 +6,6 @@ import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
 import ProgramList from "./subscreens/program-list";
 import TrackNowSubScreen from "./subscreens/track-now";
-import { AuthContext } from "../components/auth-context";
 import { StatusBar } from "expo-status-bar";
 import { WorkoutContext } from "../components/workout-context";
 import ProfileBox from "../components/profilebox";

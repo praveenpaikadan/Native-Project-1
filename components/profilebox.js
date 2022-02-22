@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
-import { calculateCalories } from "../utilities/helpers";
+import { calculateCalories, calculateBMI } from "../utilities/helpers";
 import { AuthContext } from "./auth-context";
 import { WorkoutContext } from "./workout-context";
 import { ProfilePhoto } from "./profile-photo";
@@ -17,6 +17,8 @@ export default ProfileBox = () => {
       var workoutsTracked = 0
       var caloriesBurned = 0
     }
+
+    const {value, condition} = calculateBMI(credentials.height, credentials.weight)
     
   
     const data = {
@@ -51,7 +53,8 @@ export default ProfileBox = () => {
                 </Text>
                 <Text style={styles.rowItemTag}>Workout Tracked</Text>
               </View>
-              <View style={styles.profileDataRowItem}>
+              
+              {/* <View style={styles.profileDataRowItem}>
                 <View
                   style={{ flexDirection: "row", justifyContent: "center" }}
                 >
@@ -61,7 +64,20 @@ export default ProfileBox = () => {
                   <Text style={styles.rowItemTag}>kCal</Text>
                 </View>
                 <Text style={styles.rowItemTag}>Calories Burned</Text>
+              </View> */}
+
+              <View style={styles.profileDataRowItem}>
+                <View
+                  style={{ flexDirection: "row", justifyContent: "center" }}
+                >
+                  <Text style={styles.rowItemValue}>
+                    {value}
+                  </Text>
+                  <Text style={styles.rowItemTag}></Text>
+                </View>
+                <Text style={styles.rowItemTag}>{`BMI - ${condition.toLowerCase()}`}</Text>
               </View>
+
             </View>
           </View>
         </View>
@@ -128,7 +144,7 @@ const styles = StyleSheet.create({
     },
   
     profileName: {
-      fontFamily: globalFonts.primaryMedium,
+      fontFamily: globalFonts.primaryRegular,
       color: themeColors.secondary1,
       opacity: 0.7,
       fontSize: 18 * sc,
@@ -138,7 +154,7 @@ const styles = StyleSheet.create({
     rowItemValue: {
       // flex:1,
       fontSize: 22 * sc,
-      fontFamily: globalFonts.primaryMedium,
+      fontFamily: globalFonts.primaryRegular,
       color: themeColors.secondary1,
       opacity: 0.7,
     },

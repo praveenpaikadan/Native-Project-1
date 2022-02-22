@@ -17,6 +17,7 @@ export default MyWorkouts = ({ visible, closeMenu, active, setactive }) => {
     closeMenu();
     if(dayWorkout){
       navigation.navigate("TrackNow");
+      return
     }
     navigation.navigate("Home");
     flashMessage('You need to choose a program to start tracking your fitness', 'info')
@@ -26,6 +27,7 @@ export default MyWorkouts = ({ visible, closeMenu, active, setactive }) => {
     closeMenu();
     if(dayWorkout){
       navigation.navigate("WorkoutHistory");
+      return
     }
     navigation.navigate("Home");
     flashMessage('You need to choose a program to view workout plan', 'info')

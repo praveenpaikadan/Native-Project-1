@@ -118,16 +118,17 @@ export const AgendaCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(today(true))
   const [loading, setLoading] = useState(true);
 
-  const compRef = useRef(null)
+  const compRef = useRef(true)
   
   useEffect(() => {
+
     setLoading(true)
     AsyncStorage.getItem('workoutData')
     .then((res) => {
       var tempItem = {}
       var tempMarked = {}
       var programName = ""
-      if(res){
+      if(res && compRef.current){
         var response = JSON.parse(res)
         if(response.history){
           response.history.forEach((dayDetail) => {
@@ -145,9 +146,8 @@ export const AgendaCalendar = () => {
           })
         }
       }
-      if(compRef){
-        console.log('Updating statesssssssssssssssssssss')
-        console.log(programName, '\n\n\n',tempItem,   '\n\n\n',  tempMarked, '\n\n\n')
+      if(compRef.current){
+        // console.log(programName, '\n\n\n',tempItem,   '\n\n\n',  tempMarked, '\n\n\n')
         setProgram(programName)
         setItems(tempItem)
         setMarked(tempMarked)
@@ -155,6 +155,8 @@ export const AgendaCalendar = () => {
         setTimeout(() => {setDownText(false)}, 1000)
       }    
     })
+
+    return () => {compRef.current = false}
   }, [])
 
   

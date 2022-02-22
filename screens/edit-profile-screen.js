@@ -354,10 +354,12 @@ const styles = StyleSheet.create({
   },
 
   infoDetails: {
-    fontFamily: globalFonts.primaryBold,
+    fontFamily: globalFonts.primaryMedium,
     color: themeColors.tertiary1,
     fontSize: 16 * sc,
     letterSpacing: 1.2 * sc,
+    width: '90%',
+    overflow: 'hidden'
   },
 
   pencilIconContainer: {

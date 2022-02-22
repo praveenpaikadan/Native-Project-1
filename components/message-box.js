@@ -20,7 +20,7 @@ export const MessageBox1 = (props) => {
                     onClick={() => props.setReload()}
                     arrow={false}
                     styling={{opacity: 0.9}}
-                    textStyling={{fontSize: 20*sc}}
+                    textStyling={{fontSize: 15*sc}}
 
                     />:
                     <Ionicons style={styles.reload} name="reload-circle" size={50*sc} color={themeColors.primary1} onPress={() => props.setReload()}/>

@@ -76,7 +76,7 @@ export const WorkoutCard = (props) => {
                         }
                         <View style={cardStyles.textContainer}>
                             <Text style={cardStyles.program}>{props.programName}: Day {props.day} - {props.muscles}</Text>
-                            <Text style={cardStyles.calories}>{`${dot?'Equivalent Calories: ':'Calories burnt:'}` } {props.data.calsBurned}Kcal</Text>
+                            {/* <Text style={cardStyles.calories}>{`${dot?'Equivalent Calories: ':'Calories burnt:'}` } {props.data.calsBurned}Kcal</Text> */}
                             <Text style={cardStyles.calories}>{'Total Exercises:' } {props.data.workoutsTracked}</Text>
                         </View>
                     </View>
@@ -208,7 +208,7 @@ export const WorkoutCard = (props) => {
                     }
                     <View style={cardStyles.textContainer}>
                         <Text style={cardStyles.program}>{props.programName}:{'\n'}Day {props.day} - {props.muscles}</Text>
-                        <Text style={cardStyles.calories}>{`${dot?'Equivalent Calories: ':'Calories burnt:'}` } {props.data.calsBurned}Kcal</Text>
+                        {/* <Text style={cardStyles.calories}>{`${dot?'Equivalent Calories: ':'Calories burnt:'}` } {props.data.calsBurned}Kcal</Text> */}
                         <Text style={cardStyles.calories}>{'Total Exercises:' } {props.data.workoutsTracked}</Text>
                     </View>
                 </View>

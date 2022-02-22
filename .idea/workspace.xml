@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ce9b9341-fa59-414b-98b4-a7a6555ef0ed" name="Default Changelist" comment="" />
+    <list default="true" id="ce9b9341-fa59-414b-98b4-a7a6555ef0ed" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/message-box.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/message-box.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/diet-plan.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/diet-plan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/home-page.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/home-page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/modal/my-workouts.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/modal/my-workouts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/subscreens/track-now.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/subscreens/track-now.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/constants.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

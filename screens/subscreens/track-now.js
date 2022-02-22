@@ -8,6 +8,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import Reminder from "../../components/reminder";
 import { AuthContext } from "../../components/auth-context";
 import BottomBanner from "./bottom-banner";
+import { WeightHistory } from "../../components/weight-history";
 
 export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded=false, programName}) => {
 
@@ -56,8 +57,8 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
         {message?<Reminder message={message} pressHandler={reminderPressHandler} danger={dangerMessage} />:null}
         <View>
           <Text style={{...styles.topBoxTagText, 
-            backgroundColor: completed?themeColors.primary1:themeColors.tertiary3,
-            color: !completed?'black':'white', 
+            backgroundColor: completed?'transparent':themeColors.tertiary3,
+            color: !completed?'black':themeColors.primary1, 
             }}>{!completed?pointerText:'You completed today\'s workout'}</Text>
           {!completed?<View style={styles.triangle} />:<View style={{height: 8*sc}}></View>}
         </View>
@@ -97,8 +98,10 @@ export default TrackNowSubScreen = ({ navigation, onClick, program, programEnded
 
       </View>
       }
-
-      <BottomBanner navigation={navigation}/>
+      <View style={styles.bottomBoxWrapper}>
+        <WeightHistory navigation={navigation} data={credentials.weightHistory} />
+        <BottomBanner navigation={navigation}/>
+      </View>
     </View>
   );
 };
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
   topBoxTagText: {
     fontSize: 12 * sc,
     alignSelf: "center",
-    fontFamily: globalFonts.primaryLight,
+    fontFamily: globalFonts.primaryRegular,
     padding: 4 * sc,
     borderRadius: 2 * sc,
     backgroundColor: themeColors.tertiary3,
@@ -210,5 +213,9 @@ const styles = StyleSheet.create({
     marginTop: 10*sc,
     textAlign: 'center',
     textDecorationLine: 'underline'
+  },
+
+  bottomBoxWrapper:{
+    flex: 1,
   }
 });

@@ -121,6 +121,7 @@ export default function App() {
     workoutID: workoutData._id,
     programName: workoutData.program.programName,
     programID: workoutData.program._id,
+    totalProgramDays: workoutData.program.durationWeeks * workoutData.program.daysPerWeek,
     complete: false,
     level: workoutData.program.level,
     dayWorkoutPlan: dayWorkoutPlan,

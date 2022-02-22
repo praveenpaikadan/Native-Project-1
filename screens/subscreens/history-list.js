@@ -26,7 +26,7 @@ export const HistoryList = (props) => {
     const workoutTrackedInCurrent = React.useRef(currTotal)
     const listOfDays = List.map((item, index) => item.day)
     
-    // Adding equivalent calories to Already done days
+    // Adding equivalent calories to Already done days <= commenting this out as the feature is temporarily disabled
     for(let i=0; i<List.length; i++){
         var stats = calculateCalories([List[i]], workoutData.calsPerRepList)  // calculateCalories will take array of history and reference list for calcualting calories.
         List[i]['calsBurned'] = stats['caloriesBurned']

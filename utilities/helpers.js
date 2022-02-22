@@ -40,6 +40,7 @@ export const calculateCalories = (history, refList) => {  // refList is an on=bj
         history.forEach(dayData => {
           var workout = dayData.workout
           workoutsTracked = workoutsTracked + workout.length
+          {/*
           workout.forEach(exercise => {
               // Needs to review this approach
               var calsPerRep = refList[exercise['exerciseID']]?refList[exercise['exerciseID']]:0
@@ -49,13 +50,18 @@ export const calculateCalories = (history, refList) => {  // refList is an on=bj
                 })
               calsBurned = calsBurned + (calsPerRep * totalReps)
           })
+        */}
         })
       }
 
-    calsBurned = (calsBurned/1000).toFixed(2)
-    if(workoutsTracked > 99999){
+    
+
+    if(workoutsTracked > 9999){
         workoutsTracked = String(Math.floor(workoutsTracked/1000) + 'k')
     }
+
+    {/*
+    calsBurned = (calsBurned/1000).toFixed(2)
     if(calsBurned <10){
         null;
     }else{
@@ -66,6 +72,7 @@ export const calculateCalories = (history, refList) => {  // refList is an on=bj
             calsBurned = String(Math.floor(calsBurned/1000) + 'k')
         }
     }
+     */}
     return {caloriesBurned: calsBurned, workoutsTracked: workoutsTracked}
 }
 
