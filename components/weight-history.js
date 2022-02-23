@@ -21,7 +21,7 @@ export const WeightHistory = ({navigation, style, data}) => {
     const returnLinearlyInterpolated = (startObj, endObj) => {
 
         // inputObject of form {date: ..., value: ... }
-        console.log('startDate', startObj, 'enddate', endObj)
+        // console.log('startDate', startObj, 'enddate', endObj)
         var startDate = new Date(startObj.date).getTime()
         var startValue = startObj.weight
         var endDate = new Date(endObj.date).getTime()
@@ -30,12 +30,12 @@ export const WeightHistory = ({navigation, style, data}) => {
         var outputWithEnd = []
         var steps = ((endDate - startDate)/86400000)
 
-        console.log(".......", steps)
+        // console.log(".......", steps)
 
         var increment = (endValue - startValue)/steps
         // console.log(increment)
 
-        for(let i = 1;i < steps; i++){
+        for(let i = 1;i <= steps; i++){
             outputWithEnd.push(Number((startValue + (increment*i)).toFixed(1))) 
         }
 
@@ -44,7 +44,12 @@ export const WeightHistory = ({navigation, style, data}) => {
     }
 
     const generateWeightData = (inpData) => {
+        
+       
+
         var filtered = []
+
+        // collecting the last value updated ina day and removing erratic data forming a sanitised array of objects
         for(let i = 0; i< inpData.length; i++){
             var date = new Date(inpData[i].date).toLocaleDateString()
             var nextDate = i+1 < inpData.length? new Date(inpData[i+1].date).toLocaleDateString(): null;
@@ -55,17 +60,31 @@ export const WeightHistory = ({navigation, style, data}) => {
                 filtered.push(a)
             }
         }
+
+        var today = new Date().toISOString().substring(0, 10)
+        
+        //  adding todays date if its not the last date
+        if(filtered[filtered.length -1].date !== today){
+            let lastEntry = {date: today, weight: filtered[filtered.length -1].weight}
+            console.log('1............', lastEntry)
+            console.log('2............', filtered[0])
+            filtered.push(lastEntry)
+        }
+
+        // console.log('Filtered Is', filtered)
+
         let finalData = {
             data: [filtered[0].weight], 
             startDate: filtered[0].date, 
             endDate:filtered[filtered.length-1].date
         }
         
-        console.log(filtered)
         for(let i=0; i < filtered.length-1; i++){
-            finalData.data.push(...returnLinearlyInterpolated(filtered[i], filtered[i+1]))
+            console.log(filtered[i], filtered[i+1] )
+            var linearlyInterpolatedValues = returnLinearlyInterpolated(filtered[i], filtered[i+1]) 
+            console.log(linearlyInterpolatedValues)
+            finalData.data.push(...linearlyInterpolatedValues)
         }
-
         return finalData
     } 
 
@@ -92,11 +111,13 @@ export const WeightHistory = ({navigation, style, data}) => {
     
 
     // console.log(modifiedData)
-    // console.log(labels)
+    // console.log(data)
     return(
+
         <View style={{...styles.wrapper, ...style}}>
-            <View style={{justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
-                <Text style={{...styles.workoutStatusLabel, textAlign: 'left', alignSelf: 'flex-start', marginLeft:28}}>Your weight profile (kg):</Text>
+            <View style={{...styles.halfSide, justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
+                <Text style={{...styles.workoutStatusLabel}}>Your weight profile</Text>
+                <Text style={{...styles.weightMessage, opacity: data[1]?0:1}}>Updating your weight regularly will help your trainer to craft your workout and diet plan precisely</Text>
                 <LineChart
                     withScrollableDot = {
                         true
@@ -112,8 +133,8 @@ export const WeightHistory = ({navigation, style, data}) => {
                         }
                     ]
                     }}
-                    width={210} // from react-nativer
-                    height={105}
+                    width={200} // from react-nativer
+                    height={90}
                     // yAxisLabel=""
                     yAxisSuffix=" kg"
                     yAxisInterval={1} // optional, defaults to 1
@@ -144,6 +165,7 @@ export const WeightHistory = ({navigation, style, data}) => {
                             fontSize: 9*sc,
                             marginVertical: 0,
                             paddingTop: 0,
+                            zIndex: 100,
                         },
 
                         propsForHorizontalLabels: {
@@ -151,7 +173,7 @@ export const WeightHistory = ({navigation, style, data}) => {
                         },
 
                         propsForVerticalLabels:{
-                            y: 105,
+                            y: 100,
                             // x: 1
                         },
 
@@ -168,8 +190,8 @@ export const WeightHistory = ({navigation, style, data}) => {
                             // backgroundColor: themeColors.primary1,
                             backgroundColor: 'transparent',
                             borderRadius: 2,
-                            marginTop: 23,
-                            marginLeft: 20,
+                            marginTop: 10,
+                            marginLeft: 0,
                         },
                         
                         scrollableInfoTextStyle: {
@@ -208,11 +230,12 @@ export const WeightHistory = ({navigation, style, data}) => {
 
                     // bezier
                     style={{
-                        marginVertical: 0,
                         opacity: 0.8, 
-                        transform: [{translateX: -50}],
-                        marginRight: -4
-                        
+                        // transform: [{translateX: -25}],
+                        marginTop: 0,
+                        marginRight: -6,
+                        marginLeft: -50,
+                        paddingBottom: 10         
                     }}
                     
 
@@ -220,7 +243,7 @@ export const WeightHistory = ({navigation, style, data}) => {
                 />
             </View>
 
-            <View style={{flexDirection: 'column', justifyContent: 'space-between',  transform: [{translateX: -15}]}}>
+            <View style={{...styles.halfSide, flexDirection: 'column', justifyContent: 'space-between'}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <View>
                         <ProgressChart
@@ -273,7 +296,7 @@ export const WeightHistory = ({navigation, style, data}) => {
                                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                 
                                 style: {
-                                borderRadius: 16
+                                    borderRadius: 16,
                                 },
                                 propsForDots: {
                                 r: "6",
@@ -300,6 +323,7 @@ export const WeightHistory = ({navigation, style, data}) => {
             </View>
             
         </View>
+    
         )
 } 
 
@@ -307,16 +331,32 @@ const styles = StyleSheet.create({
     wrapper:{
         // backgroundColor: 'pink',
         display: 'flex',
-        justifyContent:'space-between',
+        justifyContent:'space-evenly',
         alignItems:'center',
-        fontSize:30*sc,
-        maxWidth:360, 
+        // fontSize:30*sc,
+        // maxWidth:360,
+         width: '100%',
         // height:'70%',
         alignSelf:'center',
-        paddingBottom: 10*sc,
         flexDirection: 'row',
         marginTop: 10,
+        marginBottom: 2*sc,
+
     },
+
+    halfSide: {
+        width: '45%',
+    },
+
+    weightMessage: {
+        position: 'absolute',
+        fontFamily: globalFonts.primaryRegular,
+        fontSize: 10,
+        width: '80%',
+        textAlign: 'center',
+        alignSelf: 'center',
+        top: 22,
+    },  
 
     text:{
         textAlign:'center',
@@ -344,6 +384,7 @@ const styles = StyleSheet.create({
         backgroundColor: themeColors.tertiary2,
         borderColor: themeColors.primary1,
         borderWidth: 1,
+        alignSelf: 'center',
         // opacity: 0.8, 
 
     },
