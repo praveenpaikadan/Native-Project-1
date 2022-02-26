@@ -15,10 +15,10 @@ export const SubHeader = ({ text, styling, onPress }) => (
       ...styling,
     }}
   >
-    <TouchableOpacity onPress={onPress}>
-      <View style={{padding: 10*sc, paddingRight: 15*sc}}>
+    <TouchableOpacity onPress={onPress} style={{width: 50*sc, height: 50*sc, justifyContent: 'center', alignItems:'center', zIndex: 1000}}>
+
       <Feather name="chevron-left" {...backIconStyling} />
-      </View>
+
     </TouchableOpacity>
 
     <View style={styles.textContainer}>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 18 * sc,
     fontFamily: globalFonts.primaryMedium,
     color: themeColors.secondary2,
-    marginLeft: -25*sc,
+    marginLeft: -45*sc,
 
   },
 });

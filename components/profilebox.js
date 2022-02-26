@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     //////profile container
     profileWrapper: {
       width: "100%",
-      height: 120 * sc,
+      height: 100 * sc,
     },
   
     profileContainer: {
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
   
     profilePhotoContainer: {
       backgroundColor: themeColors.tertiary3,
-      flex: 1,
+      // flex: 1,
       marginRight: 2 * sc,
-      width: "100%",
+      width: 100*sc,
       height: "100%",
     },
     
     profilePhoto: {
-      width: "100%",
+      width: 100*sc,
       height: "100%",
     },
   
@@ -147,13 +147,13 @@ const styles = StyleSheet.create({
       fontFamily: globalFonts.primaryRegular,
       color: themeColors.secondary1,
       opacity: 0.7,
-      fontSize: 18 * sc,
+      fontSize: 16 * sc,
       paddingLeft: 8 * sc,
     },
   
     rowItemValue: {
       // flex:1,
-      fontSize: 22 * sc,
+      fontSize: 16 * sc,
       fontFamily: globalFonts.primaryRegular,
       color: themeColors.secondary1,
       opacity: 0.7,

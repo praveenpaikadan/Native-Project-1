@@ -404,7 +404,10 @@ export default DietPlan = ({ navigation, route }) => {
             <TouchableOpacity style={{          //Back Button
                 position: 'absolute', 
                 top:35*sc, 
-                left: 15*sc}} 
+                left: 15*sc,
+                width: 40*sc,
+                height: 40*sc
+                }} 
                 disabled={backBtnDisabled}
                 onPress={() => {setBackBtnDisabled(true);navigation.goBack()}}>
                 <FontAwesome5
@@ -417,7 +420,7 @@ export default DietPlan = ({ navigation, route }) => {
                 top: 30*sc, 
                 left: 45*sc,
                 fontFamily: globalFonts.primaryRegular,
-                fontSize: 30*sc,
+                fontSize: 25*sc,
                 color: themeColors.primary2,
                 }}>Diet Plan</Text>
 
@@ -447,7 +450,7 @@ export default DietPlan = ({ navigation, route }) => {
             <View style={{                     // Profile avatar
                 ...styles.avatar, 
                 position:'absolute', 
-                top: 110*sc, 
+                top: 100*sc, 
                 left: 20*sc,
                 width: 100*sc, 
                 height: 100*sc}}>
@@ -615,7 +618,7 @@ export default DietPlan = ({ navigation, route }) => {
             <MessageBox1 
             setReload={() => {setLoading(0); setReloadSwitch(!reloadSwich)}} 
             reloadbutton={true}
-            message = 'You have no dietplans assigned. Please contact trainer...'
+            message = 'You have no diet plans assigned. Please contact trainer...'
             ><EmptyPaper /></MessageBox1>
         </View>
         )
@@ -699,6 +702,7 @@ const styles = StyleSheet.create({
     borderRadius: 75 * sc,
     borderWidth: 3 * sc,
     borderColor: themeColors.primary2,
+    backgroundColor: themeColors.primary1,
     overflow: 'hidden',
   },
 

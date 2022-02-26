@@ -109,7 +109,7 @@ export default EditProfileScreen = ({ navigation }) => {
     //edit box starts here------------------------------------------------------
     visible?<View style={{...styles.editBox}}>
         <TouchableOpacity 
-          style={{position: 'absolute', right: 15*sc, top: 10*sc}}
+          style={{position: 'absolute', right: 0*sc, top: 0*sc, width: 60*sc, height: 40*sc, alignItems: 'center', justifyContent:'center'}}
           onPress = {() => {setVisible(false); setNewVal(''); setTempDate(null)}}>
           <Feather name="x-circle" color={themeColors.tertiary1} size={22*sc}/>
         </TouchableOpacity>
@@ -264,7 +264,7 @@ export default EditProfileScreen = ({ navigation }) => {
             <Text style={styles.infoDetails}>{credentials.email}</Text>
             <View style={styles.line}></View>
           </View>
-          <Pencil id='email' tag='Email Address' icon={<MailIcon />} />
+          {/* <Pencil id='email' tag='Email Address' icon={<MailIcon />} /> */}
         </View>
       </View>
        

@@ -113,7 +113,7 @@ export default function App() {
   const dayWorkoutShape = (workoutData, currentDay) => {
     var dayWorkoutPlan = workoutData.program.schedule.find(obj => {return obj.day === currentDay})
 
-    console.log("................................", dayWorkoutPlan)
+    // console.log("................................", dayWorkoutPlan)
     var exerciseList = dayWorkoutPlan? dayWorkoutPlan.exercises : []
     return{
     day : currentDay,
@@ -122,11 +122,13 @@ export default function App() {
     programName: workoutData.program.programName,
     programID: workoutData.program._id,
     totalProgramDays: workoutData.program.durationWeeks * workoutData.program.daysPerWeek,
+    programGeneralInstructions: workoutData.program.generalInstructions,
     complete: false,
     level: workoutData.program.level,
     dayWorkoutPlan: dayWorkoutPlan,
     // finalDay: currentDay === workoutData.program.schedule.length,
     finalDay: currentDay === workoutData.program.durationWeeks * workoutData.program.daysPerWeek ,
+
     workout: exerciseList.map((exercise, index) => {
       return {
           exerciseNumber: index+1,

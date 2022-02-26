@@ -18,35 +18,27 @@ export const WeightHistory = ({navigation, style, data}) => {
 
     // support function for generate weight data
     // returns an array of interpolated values between start item and end item, with end value and not start value
-    const returnLinearlyInterpolated = (startObj, endObj) => {
-
-        // inputObject of form {date: ..., value: ... }
-        // console.log('startDate', startObj, 'enddate', endObj)
-        var startDate = new Date(startObj.date).getTime()
-        var startValue = startObj.weight
-        var endDate = new Date(endObj.date).getTime()
-        var endValue = endObj.weight
-
-        var outputWithEnd = []
-        var steps = ((endDate - startDate)/86400000)
-
-        // console.log(".......", steps)
-
-        var increment = (endValue - startValue)/steps
-        // console.log(increment)
-
-        for(let i = 1;i <= steps; i++){
-            outputWithEnd.push(Number((startValue + (increment*i)).toFixed(1))) 
-        }
-
-        // console.log(outputWithStartAndEnd)
-        return outputWithEnd
-    }
+    
 
     const generateWeightData = (inpData) => {
-        
-       
 
+        const returnLinearlyInterpolated = (startObj, endObj) => {
+            // inputObject of form {date: ..., value: ... }
+            var startDate = new Date(startObj.date).getTime()
+            var startValue = startObj.weight
+            var endDate = new Date(endObj.date).getTime()
+            var endValue = endObj.weight
+    
+            var outputWithEnd = []
+            var steps = ((endDate - startDate)/86400000)
+    
+            var increment = (endValue - startValue)/steps
+            for(let i = 1;i <= steps; i++){
+                outputWithEnd.push(Number((startValue + (increment*i)).toFixed(1))) 
+            }
+            return outputWithEnd
+        }
+        
         var filtered = []
 
         // collecting the last value updated ina day and removing erratic data forming a sanitised array of objects
@@ -66,13 +58,10 @@ export const WeightHistory = ({navigation, style, data}) => {
         //  adding todays date if its not the last date
         if(filtered[filtered.length -1].date !== today){
             let lastEntry = {date: today, weight: filtered[filtered.length -1].weight}
-            console.log('1............', lastEntry)
-            console.log('2............', filtered[0])
             filtered.push(lastEntry)
         }
 
         // console.log('Filtered Is', filtered)
-
         let finalData = {
             data: [filtered[0].weight], 
             startDate: filtered[0].date, 
@@ -80,9 +69,9 @@ export const WeightHistory = ({navigation, style, data}) => {
         }
         
         for(let i=0; i < filtered.length-1; i++){
-            console.log(filtered[i], filtered[i+1] )
+            // console.log(filtered[i], filtered[i+1] )
             var linearlyInterpolatedValues = returnLinearlyInterpolated(filtered[i], filtered[i+1]) 
-            console.log(linearlyInterpolatedValues)
+            // console.log(linearlyInterpolatedValues)
             finalData.data.push(...linearlyInterpolatedValues)
         }
         return finalData
@@ -93,6 +82,7 @@ export const WeightHistory = ({navigation, style, data}) => {
     var labels = modifiedData.data.map(() => "")
     labels[0] = new Date(modifiedData.startDate).getDate() +' '+ MONTHS_LOWER[new Date(modifiedData.startDate).getMonth()]
     labels[labels.length - 1] = new Date(modifiedData.endDate).getDate() +' '+ MONTHS_LOWER[new Date(modifiedData.startDate).getMonth()]
+
 
     // calculating total exercise done => Any exercise with atleast oe set done is considered done
     const [doneExCount, setDoneExCount] = useState(0)
@@ -115,7 +105,7 @@ export const WeightHistory = ({navigation, style, data}) => {
     return(
 
         <View style={{...styles.wrapper, ...style}}>
-            <View style={{...styles.halfSide, justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
+            <View style={{...styles.halfSide, justifyContent: 'center', alignItems: 'center', zIndex: 1, marginBottom: -10}}>
                 <Text style={{...styles.workoutStatusLabel}}>Your weight profile</Text>
                 <Text style={{...styles.weightMessage, opacity: data[1]?0:1}}>Updating your weight regularly will help your trainer to craft your workout and diet plan precisely</Text>
                 <LineChart

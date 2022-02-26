@@ -35,7 +35,7 @@ export const Header = ({
     </TouchableOpacity>
     ) : null}
     <View style={styles.textContainer}>
-      <Text style={styles.headerText}>{title?title:'Personal Trainer'}</Text>
+      <Text style={styles.headerText}>{title?title:'GoGiFit'}</Text>
     </View>
     <View>
       <TouchableOpacity style={styles.menuContainer} onPress={onPressMenu}>
@@ -51,14 +51,15 @@ const styles = StyleSheet.create({
     backgroundColor: themeColors.primary1,
     width: "100%",
     paddingTop: 30,
-    paddingBottom: 10,
+    paddingBottom: 7,
     paddingHorizontal: 20,
     alignItems: "center",
   },
   headerText: {
-    fontSize: 26 * sc,
+    fontSize: 22 * sc,
     fontFamily: globalFonts.primaryMedium,
     color: themeColors.secondary2,
+    marginRight: -30*sc
   },
 
   textContainer: {
@@ -71,6 +72,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 8 * sc,
     alignItems: "center",
+    position: 'absolute',
+    bottom: 8*sc,
+    left: 10*sc
   },
 
   backButtonText: {
