@@ -10,7 +10,6 @@ import { sc, themeColors, globalFonts } from "../styles/global-styles";
 import { ButtonType1 } from "../components/buttons";
 import { SubHeader } from "../components/subheader";
 import { StatusBar } from "expo-status-bar";
-import { BASE_URL } from "../utilities/api";
 import { getFullMediaUrlIfRelative } from "../utilities/helpers";
 import VimeoWebPage from "../components/vimeo-web-player";
 

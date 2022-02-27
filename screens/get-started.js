@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { StyleSheet, View, Text, ImageBackground, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ImageBackground, ActivityIndicator, Linking, TouchableWithoutFeedback } from "react-native";
 import { OrangeLogo1 } from "../assets/svgs/svg-logos";
 import { themeColors, sc } from "../styles/global-styles";
 import { ButtonType1 } from "../components/buttons";
@@ -42,9 +42,17 @@ export default GetStartedScreen = ({ navigation }) => {
           />
         </View>
         <View style={styles.socialContainer}>
-          <AntDesign name="instagram" size={36} color="#434343" />
-          <AntDesign name="facebook-square" size={36} color="#434343" />
-          <AntDesign name="youtube" size={36} color="#434343" />
+          <TouchableWithoutFeedback onPress={() => {Linking.openURL('https://www.instagram.com/aboothahiru/')}}>
+            <AntDesign name="instagram" size={36} color="#434343" />
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={() => {Linking.openURL('https://www.facebook.com/aboothahirgogifit/')}}>
+            <AntDesign name="facebook-square" size={36} color="#434343" />
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={() => {Linking.openURL('https://youtube.com/channel/UCUIl1oGW-Re5VbBqIu29K2Q')}}>
+            <AntDesign name="youtube" size={36} color="#434343" />
+          </TouchableWithoutFeedback>
         </View>
       </View>
       }
@@ -101,7 +109,7 @@ const styles = StyleSheet.create({
   logo: {
     flexDirection: "row",
     flex: 1,
-    alignSelf: "flex-start",
+    alignSelf: "center",
   },
 
   button: {

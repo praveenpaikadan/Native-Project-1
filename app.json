@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "AbooThahir",
-    "slug": "AbooThahir",
+    "name": "GoGiFit",
+    "slug": "GoGiFit",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/at-icon.png",
+    "icon": "./assets/ggf_logo150X150.png",
     "splash": {
-      "image": "./assets/at-splash-screen.png",
+      "image": "./assets/ggf_splash_1080X1920.png",
       "resizeMode": "contain",
       "backgroundColor": "#FF4C00"
     },
@@ -22,13 +22,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/at-icon.png",
+        "foregroundImage": "./assets/ggf_logo150X150.png",
         "backgroundColor": "#FF4C00"
       },
-      "package": "testbuild.apk"
+      "package": "gogifit.apk"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/ggf_logo150X150.png"
     }
   }
 }

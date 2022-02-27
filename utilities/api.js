@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 import flash from "./flash-message";
 
+
 // import Constants from "expo-constants";
 // const { manifest } = Constants;
 // const ap = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
@@ -30,6 +31,7 @@ const API = axios.create({
 API.interceptors.request.use(
   async config => {
       config.headers['X-Access-Token'] = await AsyncStorage.getItem('authToken')
+      config.headers['X-api-key'] = ''
       return config;
   },
   error => Promise.reject(error)

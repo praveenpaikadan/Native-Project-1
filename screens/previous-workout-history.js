@@ -17,7 +17,7 @@ const ProgramCard = ({ id, heading, shortInfo, level, period, bgImage, startDate
 
     var {credentials} = React.useContext(AuthContext)
     var currWID = credentials.currentWorkout.workoutID
-    var source = bgImage?{uri: bgImage, headers: {'X-Access-Token' : "authToken"}}:require('../assets/images/dead-lift.jpg')
+    var source = bgImage?{uri: bgImage, headers: {'X-Access-Token' : "authToken"}}:require('../assets/images/get-started.jpg')
     return (
       <ElevatedCardTypeOne styling={cardStyles.card}>
         <ImageBackground style={cardStyles.cardImage} source={source}>
