@@ -1,9 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { View, FlatList, StyleSheet, Image } from 'react-native';
 import { sc } from '../styles/global-styles';
 import { getFullMediaUrlIfRelative } from '../utilities/helpers';
-import { ElevatedCardTypeOne } from './cards';
-
 
 export const ImageGallery1 = ({urlArray, width, height, borderRadius}) => {
 

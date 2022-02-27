@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { sc, globalFonts, themeColors} from '../styles/global-styles';
-import { Dimensions } from 'react-native';
 import {
     LineChart,
     ProgressChart

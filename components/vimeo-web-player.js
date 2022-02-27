@@ -1,6 +1,6 @@
 
 import React, {useEffect, useState, useRef} from 'react';
-import { StyleSheet, View, Text, Animated, Dimensions, Modal, BackHandler } from 'react-native';
+import { StyleSheet, View, Text, Dimensions,  BackHandler } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { themeColors, sc, globalFonts } from '../styles/global-styles';

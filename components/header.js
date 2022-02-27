@@ -2,11 +2,9 @@ import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import {
   globalFonts,
-  globalStyles,
   sc,
   themeColors,
 } from "../styles/global-styles";
-import { formPageStyles } from "../styles/form-pages-styles";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 

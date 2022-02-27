@@ -5,21 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ce9b9341-fa59-414b-98b4-a7a6555ef0ed" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/components/profilebox.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/profilebox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/set-reps-time.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/set-reps-time.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/weight-history.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/weight-history.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigation/drawer-content.js" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/drawer-content.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/buy-now.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/buy-now.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/diet-plan.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/diet-plan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/edit-profile-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/edit-profile-screen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/exercise-guide.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/exercise-guide.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/exercise-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/exercise-screen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/profile-screen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/profile-screen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/subscreens/exerciselist.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/subscreens/exerciselist.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/subscreens/program-list.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/subscreens/program-list.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

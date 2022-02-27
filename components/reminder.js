@@ -17,7 +17,7 @@ export default ReminderBox = ({message, pressHandler, danger}) => {
         color: danger?'white':themeColors.primary1,
         textAlign: 'center',
         marginHorizontal: 10*sc,
-        marginVertical: 10*sc
+        marginVertical: 6*sc
     }
 
   });

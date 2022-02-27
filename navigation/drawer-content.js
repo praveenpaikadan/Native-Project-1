@@ -7,11 +7,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../components/auth-context";
-import { logoutUser } from "../utilities/data-center";
-import flash from '../utilities/flash-message'
-import { Alert } from "../screens/modal/alert";
 import { ProfilePhoto } from "../components/profile-photo";
 import { Logout } from "../components/logout";
 import { WorkoutContext } from "../components/workout-context";
