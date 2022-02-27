@@ -330,10 +330,11 @@ const styles = StyleSheet.create({
 
   cardContainer: {
     alignItems: "center",
+    width: '100%'
   },
 
   programCard: {
-    width: 320 * sc,
+    width: '90%',
     height: 60 * sc,
     backgroundColor: themeColors.primary2,
     opacity: 0.7,
@@ -368,7 +369,7 @@ const styles = StyleSheet.create({
   },
 
   workoutCard: {
-    width: 150 * sc,
+    width: '49%',
     height: 60,
     backgroundColor: themeColors.primary2,
     opacity: 0.7,
@@ -396,8 +397,9 @@ const styles = StyleSheet.create({
   },
 
   signOut: {
-    width: 100 * sc,
-    height: 40 * sc,
+    // width: 100 * sc,
+    // height: 40 * sc,
+
     backgroundColor: themeColors.primary2,
     opacity: 0.7,
     marginTop: 40 * sc,
@@ -411,5 +413,8 @@ const styles = StyleSheet.create({
   signOutText: {
     fontFamily: globalFonts.primaryBold,
     color: themeColors.secondary2,
+    fontSize: 14*sc,
+    paddingHorizontal: 5*sc,
+    paddingVertical: 8*sc
   },
 });

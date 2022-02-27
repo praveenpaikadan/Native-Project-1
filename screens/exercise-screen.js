@@ -90,7 +90,7 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   }
 
   const setSaveHandler = (val) => {
-    console.log(index, isFocussed)
+    // console.log(index, isFocussed)
     var orgDayWorkout = {...dayWorkout}   
     orgDayWorkout.workout[index].reps[isFocussed] = val
     resetDayWorkout(orgDayWorkout)
@@ -120,9 +120,9 @@ const ExerciseComponent = ({navigation, item, index, setExerciseIndex, totalExer
   // var image1 ={uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=0', true)}
   // var image2 = {uri: makeMediaUrl('?by=ExId&id='+item.exerciseID+'&index=1', true)}
 
-  console.log(item)
+  // console.log(item)
   return(
-  <View style={styles.scrollView}>
+  <View style={styles.scrollViewItem}>
     <View style={styles.excersiceCardContainer}>
     {loadStatsModel?<PreviousStatsModel visible={prevStatsModelVisible} exercise={{...item, programName: dayWorkout.programName, workoutID: dayWorkout.workoutID}} setVisible={setPrevStatsModelVisible} />:null}
     <ExerciseCard
@@ -272,7 +272,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
   const [discarding, setDiscarding] = useState(0) // // 0 for default, 2 for saving status, 1 for succesfull save -1 for failed
 
   useEffect(() => {
-    console.log('Rerendered')
+    // console.log('Rerendered')
     scrollIndex();
   }, [exerciseIndex]);
 
@@ -295,7 +295,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
     resetWorkoutData(orgWorkoutData)
     postDayWorkout(orgDayWorkout)
     .then((response) => {
-        console.log(response.status, response.data)
+        // console.log(response.status, response.data)
         switch (response.status) {
           case 200:
             flash(`Succesfully saved workout data`, 'success', 4000)
@@ -322,7 +322,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
   };
 
   const continueEditingHandler = () => {
-    console.log('Continue.. editing')
+    // console.log('Continue.. editing')
     setSaving(0)
     setShowWorkoutComplete(false)
   }
@@ -346,7 +346,7 @@ export default ExerciseScreen = ({ navigation, route }) => {
     makeDayWorkout(orgWorkoutData, null)
     postDiscardWorkout(reqBody)
     .then((response) => {
-        console.log(response.status, response.data)
+        // console.log(response.status, response.data)
         switch (response.status) {
           case 200:
             flash(`Succesfully deleted today's workout`, 'success', 4000)
@@ -455,6 +455,10 @@ const arrowIconStyling = {
 const styles = StyleSheet.create({
   container: {
     height: windowHeight,
+  },
+
+  scrollViewItem: {
+    width: windowWidth,
   },
 
   excersiceCardContainer: {

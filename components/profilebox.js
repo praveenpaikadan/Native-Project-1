@@ -66,7 +66,7 @@ export default ProfileBox = () => {
                 <Text style={styles.rowItemTag}>Calories Burned</Text>
               </View> */}
 
-              <View style={styles.profileDataRowItem}>
+              <View style={{...styles.profileDataRowItem, marginRight: 0}}>
                 <View
                   style={{ flexDirection: "row", justifyContent: "center" }}
                 >

@@ -378,10 +378,11 @@ const styles = StyleSheet.create({
   mainHeading: {
     alignSelf:'center',
     fontFamily: globalFonts.primaryBold,
-    fontSize: 20 * sc, //font size
+    fontSize: 16 * sc, //font size
     opacity: 0.8,
     color: themeColors.tertiary1,
-    paddingVertical: 5 * sc,
+    paddingVertical: 3 * sc,
+    marginTop: 3*sc
   },
 
   topTabsContainer:{

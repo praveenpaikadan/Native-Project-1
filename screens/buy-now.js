@@ -71,10 +71,10 @@ export default BuyNow = ({ navigation, route }) => {
               <Text style={styles.about}>
                 Choose the type of plan you want to proceed with. If you need a different plan contact your trainer
               </Text>
-              <View style={{flex: 1, margin: 10*sc}}>
-                <ScrollView>
+              <View style={{flex: 1, margin: 10*sc, width: '100%'}}>
+                <ScrollView style={{width: '100%'}}>
                   {data.subscriptionOptions? data.subscriptionOptions.map((item, index) => 
-                  <TouchableWithoutFeedback key={index} onPress={() => setSelected(index)}>
+                  <TouchableWithoutFeedback style={{width: '100%'}} key={index} onPress={() => setSelected(index)}>
                   <View
                     style={[
                       styles.card,
@@ -239,7 +239,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2 * sc,
     alignItems: "center",
-    width: 320 * sc,
+    // width: 320 * sc,
+    width: '95%',
+    alignSelf: 'center',
     minHeight: 90 * sc,
     borderRadius: 10 * sc,
     margin: 5 * sc,

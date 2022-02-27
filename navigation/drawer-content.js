@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
   headingContainer: {
     justifyContent: "center",
     alignItems: "center",
+    flex: 1
   },
 
   heading: {
@@ -161,10 +162,13 @@ const styles = StyleSheet.create({
     fontSize: 16 * sc,
     letterSpacing: 1 * sc,
     marginBottom: 10 * sc,
+    textAlign: 'left',
+    alignSelf:'flex-start'
   },
 
   heightWeightContainer: {
     flexDirection: "row",
+    alignSelf: 'flex-start'
   },
 
   heightWeightTextContainer: {
@@ -180,12 +184,12 @@ const styles = StyleSheet.create({
 
   heightWeightText: {
     fontFamily: globalFonts.primaryRegular,
-    fontSize: 12 * sc,
+    fontSize: 11 * sc,
   },
 
   number: {
     fontFamily: globalFonts.primaryMedium,
-    fontSize: 12 * sc,
+    fontSize: 11 * sc,
   },
 
   line: {

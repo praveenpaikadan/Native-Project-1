@@ -124,7 +124,7 @@ export default EditProfileScreen = ({ navigation }) => {
                 
                 <View style={{flexDirection: 'row'}}>
                   
-                  <View style={{flexDirection: 'column', width:200*sc}}>
+                  <View style={{flexDirection: 'column', flex: 1}}>
                     {
                     tag.id !== "dob"?
                     <TextInput 
@@ -146,7 +146,7 @@ export default EditProfileScreen = ({ navigation }) => {
                       </Text>
                     </TouchableOpacity>
                     }
-                    <View style={{...styles.line, width: 200*sc}}></View>
+                    <View style={styles.line}></View>
                   </View>
                   
                   <ButtonType1
@@ -154,7 +154,7 @@ export default EditProfileScreen = ({ navigation }) => {
                     isLoading = {saving}
                     arrow={false}
                     text='SAVE'
-                    styling={{marginLeft: 10*sc,marginTop: 8*sc, width: 70*sc, height: 30*sc, borderWidth: saving? 0:2*sc, borderColor: themeColors.primary1}}
+                    styling={{marginLeft: 10*sc,marginTop: 8*sc, height: 30*sc, borderWidth: saving? 0:2*sc, borderColor: themeColors.primary1}}
                     textStyling={{fontSize: 12*sc}}
                     small={10*sc}
                     invertColor={true}
@@ -328,13 +328,20 @@ const styles = StyleSheet.create({
 
   userInfoContainer: {
     marginTop: 220 * sc,
+    width: '100%',
+    // backgroundColor: 'pink',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
 
   contentContainer: {
     flexDirection: "row",
     paddingHorizontal: 20 * sc,
+    alignSelf: 'center',
+    // backgroundColor: 'pink',
     width: "100%",
     marginVertical: 12.5 * sc,
+    // marginRight: 10*sc,
   },
 
   iconContainer: {
@@ -343,7 +350,9 @@ const styles = StyleSheet.create({
   },
 
   deatilsContainer: {
+    flex: 1,
     marginLeft: 20 * sc,
+    marginRight: 16*sc
   },
 
   infoHeading: {
@@ -358,7 +367,7 @@ const styles = StyleSheet.create({
     color: themeColors.tertiary1,
     fontSize: 16 * sc,
     letterSpacing: 1.2 * sc,
-    width: '90%',
+    width: '100%',
     overflow: 'hidden'
   },
 
@@ -368,7 +377,7 @@ const styles = StyleSheet.create({
   },
 
   line: {
-    width: 250 * sc,
+    width: '100%',
     height: 2 * sc,
     backgroundColor: themeColors.tertiary1,
   },

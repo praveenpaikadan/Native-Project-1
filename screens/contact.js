@@ -3,14 +3,13 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } fr
 import { Header } from "../components/header";
 import { globalFonts, sc, themeColors } from "../styles/global-styles";
 import { StatusBar } from "expo-status-bar";
-import { FontAwesome5, AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import * as Linking from 'expo-linking';
 import { getTrainerContact } from "../utilities/data-center";
 import { getImageUrl } from "../utilities/helpers";
 import { MessageBox1 } from "../components/message-box";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GeneralInfoModel from "./modal/general-info-model";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Item = ({icon, text, link}) => {
   const styles= {
@@ -118,14 +117,13 @@ export default Contact = ({ navigation }) => {
         </View>  
         <View style={styles.footerContainer}>
           <TouchableOpacity onPress={() => {if(data.infolink){Linking.openURL(data.infolink);}}}>
-            <Text style={{fontFamily: globalFonts.primaryLight, fontSize: 12*sc, textAlign:'center'}}>{data.info}</Text> 
+            <Text style={{fontFamily: globalFonts.primaryLight, fontSize: 15*sc}}>{data.info}</Text> 
           </TouchableOpacity>
         </View>   
         {data.detailedWriteup?<TouchableOpacity onPress={() => {setWriteupModalVisible(true)}} style={styles.footerContainer}>
           <Text style={{fontFamily: globalFonts.primaryLight, fontSize: 15*sc, textAlign: 'center', color: themeColors.primary1}}>{'Read more about your trainer'}</Text> 
           <GeneralInfoModel visible={writeupModalVisible} setVisible={setWriteupModalVisible} data={{heading: data.name, subheading: 'Profile', content: data.detailedWriteup}}/>
         </TouchableOpacity>:null} 
-
       </View>:
       (loading === 0?
       <View style={{flex:1, justifyContent: 'center', marginBottom: 100*sc}}>
@@ -140,20 +138,7 @@ export default Contact = ({ navigation }) => {
       )
       }
 
-      <View style={styles.socialContainer}>
-          <TouchableOpacity onPress={() => {Linking.openURL('https://www.instagram.com/aboothahiru/')}}>
-            <AntDesign name="instagram" size={36} color="#434343" />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {Linking.openURL('https://www.facebook.com/aboothahirgogifit/')}}>
-            <AntDesign name="facebook-square" size={36} color="#434343" />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {Linking.openURL('https://youtube.com/channel/UCUIl1oGW-Re5VbBqIu29K2Q')}}>
-            <AntDesign name="youtube" size={36} color="#434343" />
-          </TouchableOpacity>
-        </View>
-
+      
     </View>
   );
 };
@@ -205,7 +190,7 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     width: '100%',
-    padding: 10*sc
+    padding: 20*sc
   },
 
   topRight:{
@@ -223,16 +208,6 @@ const styles = StyleSheet.create({
   text2:{
     fontFamily: globalFonts.primaryLight,
      color: themeColors.primary1,
-  },
-  socialContainer: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    paddingBottom: 10*sc,
-    paddingTop: 10*sc,
-    backgroundColor: themeColors.tertiary3
-  },
-
+  }
 
 });

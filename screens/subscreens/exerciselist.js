@@ -35,7 +35,7 @@ export const ExerciseCard = (props) => {
                 fontSize: 16 * sc,
                 color: themeColors.tertiary1,
                 marginHorizontal: 10 * sc,
-                width: 115 * sc,
+                // width: 115 * sc,
                 ...props.exerciseNameStyling,
               }}
             >
@@ -83,7 +83,7 @@ const cardStyles = StyleSheet.create({
     alignSelf:'center'
   },
   card: {
-    width: 340 * sc,
+    width: '97.5%',
     paddingVertical: 5*sc,
     marginVertical: 5 * sc,
     backgroundColor: themeColors.primary2,

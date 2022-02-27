@@ -67,6 +67,8 @@ export const WeightHistory = ({navigation, style, data}) => {
             startDate: filtered[0].date, 
             endDate:filtered[filtered.length-1].date
         }
+
+        // console.log(filtered)
         
         for(let i=0; i < filtered.length-1; i++){
             // console.log(filtered[i], filtered[i+1] )
@@ -74,6 +76,7 @@ export const WeightHistory = ({navigation, style, data}) => {
             // console.log(linearlyInterpolatedValues)
             finalData.data.push(...linearlyInterpolatedValues)
         }
+
         return finalData
     } 
 
@@ -185,7 +188,7 @@ export const WeightHistory = ({navigation, style, data}) => {
                         },
                         
                         scrollableInfoTextStyle: {
-                            fontSize: 10,
+                            fontSize: 10*sc,
                             fontFamily: globalFonts.primaryMedium,
                             color: themeColors.primary1,
                             marginHorizontal: 2,
@@ -195,11 +198,11 @@ export const WeightHistory = ({navigation, style, data}) => {
                         },
 
                         // scrollable tooltip
-                        scrollableInfoTextDecorator: (value, index) => {return String(value?value + ' kg':'')},
+                        scrollableInfoTextDecorator: (value) => {return String(value?value + ' kg':'')},
 
                         scrollableInfoSize: {
-                            width: 35,
-                            height: 15
+                            width: 50*sc,
+                            height: 15*sc,
                         },
                         
                         scrollableInfoOffset: 15,
@@ -235,7 +238,7 @@ export const WeightHistory = ({navigation, style, data}) => {
 
             <View style={{...styles.halfSide, flexDirection: 'column', justifyContent: 'space-between'}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <View>
+                    <View style={{alignItems:'center'}}>
                         <ProgressChart
                             data={{labels: [], data: [doneExCount/dayWorkout.workout.length]}}
                             width={75}
@@ -268,7 +271,7 @@ export const WeightHistory = ({navigation, style, data}) => {
                         <Text style={styles.workoutStatusLabel}>{`Today's \nWorkout Status`}</Text>
                     </View>
                     
-                    <View>
+                    <View style={{alignItems:'center'}}>
                         <ProgressChart
                             data={{labels: [], data: [dayWorkout.day/dayWorkout.totalProgramDays]}}
                             width={75}
@@ -329,7 +332,7 @@ const styles = StyleSheet.create({
         // height:'70%',
         alignSelf:'center',
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 10*sc,
         marginBottom: 2*sc,
 
     },
@@ -341,7 +344,7 @@ const styles = StyleSheet.create({
     weightMessage: {
         position: 'absolute',
         fontFamily: globalFonts.primaryRegular,
-        fontSize: 10,
+        fontSize: 10*sc,
         width: '80%',
         textAlign: 'center',
         alignSelf: 'center',
@@ -368,9 +371,9 @@ const styles = StyleSheet.create({
     },
 
     updateWeightButton:{
-        width: 60,
-        height: 25,
-        marginTop:10,
+        width: 60*sc,
+        height: 25*sc,
+        marginTop:10*sc,
         backgroundColor: themeColors.tertiary2,
         borderColor: themeColors.primary1,
         borderWidth: 1,
@@ -380,22 +383,23 @@ const styles = StyleSheet.create({
     },
 
     buttonTextStyling:{
-        fontSize: 10,
+        fontSize: 10*sc,
         color: themeColors.primary1,
         fontFamily: globalFonts.primaryRegular,
     },
 
     workoutStatusInsideLabelContainer:{
         position: 'absolute',
+        // backgroundColor:'yellow',
         width: '100%',
-        margin: 'auto',
-        top: 21,
+        // margin: 'auto',
+        top: 19*sc,
     },
 
     workoutStatusInsideLabel:{
         textAlign: 'center',
         fontFamily: globalFonts.primaryLight,
-        fontSize: 8,
+        fontSize: 8*sc,
         opacity: 0.5
     }
 

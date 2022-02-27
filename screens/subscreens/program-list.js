@@ -184,9 +184,11 @@ const cardIconStyling = {
 
 const cardStyles = StyleSheet.create({
   card: {
-    width: 340 * sc,
+    // width: 340 * sc,
+    width: '97.5%',
     minHeight: 100 * sc,
     marginVertical: 5 * sc,
+    alignSelf:'center',
   },
 
   cardImage: {
@@ -195,7 +197,6 @@ const cardStyles = StyleSheet.create({
     minHeight: 100*sc
     // height: "100%",
     
-
   },
 
   cardOverlay: {

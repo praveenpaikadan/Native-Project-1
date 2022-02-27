@@ -450,7 +450,7 @@ export default DietPlan = ({ navigation, route }) => {
             <View style={{                     // Profile avatar
                 ...styles.avatar, 
                 position:'absolute', 
-                top: 100*sc, 
+                top: 110*sc, 
                 left: 20*sc,
                 width: 100*sc, 
                 height: 100*sc}}>
@@ -459,9 +459,89 @@ export default DietPlan = ({ navigation, route }) => {
                     filename={credentials.profilePhoto?credentials.profilePhoto.filename:null} 
                 /></View>
 
+                <TouchableOpacity 
+                    onPress={() => {navigation.navigate('EditProfile')}}
+                    style={{                  // Height and weight
+                    position: 'absolute', 
+                    top: 110*sc,
+                    left: 130*sc,
+                    width: 100*sc,
+                    flexDirection: 'row',
+                    height:80*sc
+                    }}>
+
+                    <View style={{
+                        alignItems: 'center',                    
+                        marginBottom: 10*sc,
+                        justifyContent:'space-evenly',
+                        }}>
+                        <FontAwesome5
+                            name="weight"
+                            size={17*sc}
+                            color={themeColors.secondary2}
+                        />
+                        <FontAwesome5
+                            name="ruler-vertical"
+                            size={17*sc}
+                            color={themeColors.secondary2}
+                        />
+                    </View>
+                    
+                    <View style={{
+                        alignItems: 'center',                    
+                        marginBottom: 10*sc,
+                        justifyContent:'space-evenly',
+                        alignItems:'flex-start',
+                        marginLeft:10*sc
+                        }}>   
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems:'flex-start'
+                            }}>
+                            <Text style={{
+                                fontFamily: globalFonts.primaryMedium,
+                                color: themeColors.primary2,
+                                marginRight: 5*sc,
+                                fontSize: 14*sc,
+                            }}>{credentials.weight} kg</Text>
+                            <FontAwesome5
+                            name="edit"
+                            size={10*sc}
+                            color={themeColors.secondary2}
+                            />
+                        </View>
+                        
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems:'flex-start'
+                            }}>
+                            <Text style={{
+                                fontFamily: globalFonts.primaryMedium,
+                                color: themeColors.primary2,
+                                marginRight: 5*sc,
+                                fontSize: 14*sc,
+                            }}>{credentials.height} cm</Text>
+                            <FontAwesome5
+                            name="edit"
+                            size={10*sc}
+                            color={themeColors.secondary2}
+                            />
+                        </View>
+                    </View>   
+                    <Text style={{
+                        fontFamily: globalFonts.primaryLight,
+                        color: themeColors.primary2,
+                        fontSize: 10*sc,
+                        position: 'absolute',
+                        bottom: 6*sc,
+                        left: 14*sc
+                    }}
+                    >(Tap to edit)</Text>             
+                </TouchableOpacity>
+
             <View style={{
                 position: 'absolute',
-                top: 80*sc,
+                top: 75*sc,
                 right: 23*sc,
                 alignItems: 'flex-end',
             }}>
@@ -471,6 +551,7 @@ export default DietPlan = ({ navigation, route }) => {
                     textShadowColor: 'rgba(0,0,0,0.5)', 
                     textShadowOffset: { width: 0, height: 1},
                     textShadowRadius: 30,
+                    fontSize: 14*sc
                     }}>Day</Text>
                 
                 <Text style={{
@@ -508,84 +589,6 @@ export default DietPlan = ({ navigation, route }) => {
                 }}
                 >{todayInWord().split(' ')[1].replace('-', ' ').replace('-', ' ')}</Text>
                 
-                <TouchableOpacity 
-                    onPress={() => {navigation.navigate('EditProfile')}}
-                    style={{                  // Height and weight
-                    position: 'absolute', 
-                    top: 30*sc,
-                    right: 105*sc,
-                    width: 100*sc,
-                    flexDirection: 'row',
-                    height:80*sc
-                    }}>
-
-                    <View style={{
-                        alignItems: 'center',                    
-                        marginBottom: 10*sc,
-                        justifyContent:'space-evenly',
-                        }}>
-                        <FontAwesome5
-                            name="weight"
-                            size={17*sc}
-                            color={themeColors.secondary2}
-                        />
-                        <FontAwesome5
-                            name="ruler-vertical"
-                            size={17*sc}
-                            color={themeColors.secondary2}
-                        />
-                        
-                    </View>
-                    
-                    <View style={{
-                        alignItems: 'center',                    
-                        marginBottom: 10*sc,
-                        justifyContent:'space-evenly',
-                        alignItems:'flex-start',
-                        marginLeft:10*sc
-                        }}>   
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems:'flex-start'
-                            }}>
-                            <Text style={{
-                                fontFamily: globalFonts.primaryMedium,
-                                color: themeColors.primary2,
-                                marginRight: 5*sc
-                            }}>{credentials.weight} kg</Text>
-                            <FontAwesome5
-                            name="edit"
-                            size={10*sc}
-                            color={themeColors.secondary2}
-                            />
-                        </View>
-                        
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems:'flex-start'
-                            }}>
-                            <Text style={{
-                                fontFamily: globalFonts.primaryMedium,
-                                color: themeColors.primary2,
-                                marginRight: 5*sc
-                            }}>{credentials.height} cm</Text>
-                            <FontAwesome5
-                            name="edit"
-                            size={10*sc}
-                            color={themeColors.secondary2}
-                            />
-                        </View>
-                    </View>   
-                    <Text style={{
-                        fontFamily: globalFonts.primaryLight,
-                        color: themeColors.primary2,
-                        fontSize: 10*sc,
-                        position: 'absolute',
-                        bottom: 6*sc,
-                        left: 14*sc
-                    }}
-                    >(Tap to edit)</Text>             
-                </TouchableOpacity>
             </View>
         </View>
 

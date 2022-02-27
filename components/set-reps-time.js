@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text,TextInput, StyleSheet, ToastAndroid, ActivityIndicator} from "react-native";
+import {View, Text,TextInput, StyleSheet, ToastAndroid, ActivityIndicator, Platform} from "react-native";
 import {themeColors, globalFonts, sc} from "../styles/global-styles";
 import { Fontisto } from "@expo/vector-icons";
 import { ButtonType1 } from "./buttons";
@@ -16,13 +16,17 @@ export const RepInput = ({reRender, dv, type, dataChangeHandler}) => {
         if (!['0', '--', 0, ''].includes(field1) &&  !['0', '--', 0, ''].includes(field2)){
           dataChangeHandler(field1+'X'+field2)
         }else{
-          ToastAndroid.show("Enter both weight and reps ...", ToastAndroid.BOTTOM);
+          if(Platform.OS === 'android'){
+            ToastAndroid.show("Enter both weight and reps ...", ToastAndroid.BOTTOM);
+          }
         }
       }else{
         if (!['0', '--', 0, ''].includes(field1)){
           dataChangeHandler(type!==1?field1: field1*60)   // converting entered mins to second
         }else{
-          ToastAndroid.show(`Enter ${type===0?'reps':'minutes'} ...`, ToastAndroid.BOTTOM);
+          if(Platform.OS === 'android'){
+           ToastAndroid.show(`Enter ${type===0?'reps':'minutes'} ...`, ToastAndroid.BOTTOM);
+          }
         }
       }
     }
