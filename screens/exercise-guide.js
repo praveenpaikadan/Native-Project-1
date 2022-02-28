@@ -8,17 +8,12 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { ButtonType1 } from "../components/buttons";
-import data from "../assets/data/data.json";
 import { Header } from "../components/header";
 import { ElevatedCardTypeOne } from "../components/cards";
 import { themeColors, sc, globalFonts } from "../styles/global-styles";
 import { StatusBar } from "expo-status-bar";
-import { WorkoutContext } from "../components/workout-context";
 import { AuthContext } from "../components/auth-context";
 import { getExercise } from "../utilities/data-center";
-import { makeMediaUrl } from "../utilities/helpers";
-import VideoPlayer from "../components/video-player";
 import VimeoWebPage from "../components/vimeo-web-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import flashMessage from "../utilities/flash-message";

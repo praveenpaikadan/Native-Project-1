@@ -24,7 +24,7 @@ import EditProfileScreen from "../screens/edit-profile-screen";
 import ExerciseGuideScreen from "../screens/exercise-guide";
 import Contact from "../screens/contact";
 import Store from "../screens/store";
-import VPlayer from "../components/video-player";
+// import VPlayer from "../components/video-player";
 import DietPlan from "../screens/diet-plan";
 import CompleteDiet from "../screens/complete-diet";
 import ResetPasswordScreen from "../screens/reset-password";
@@ -54,7 +54,7 @@ const Root = () => {
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="Store" component={Store} />
       <Stack.Screen name="ExerciseGuide" component={ExerciseGuideScreen} />
-      <Stack.Screen name="VideoPlayer" component={VPlayer} />
+      {/* <Stack.Screen name="VideoPlayer" component={VPlayer} /> */}
       <Stack.Screen name="Contact" component={Contact} />
       <Stack.Screen name="DietPlan" component={DietPlan} />
       <Stack.Screen name="ComplateDietPlan" component={CompleteDiet} />
